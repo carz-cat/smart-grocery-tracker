@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#070b14">
+  <meta name="description" content="Smart Grocery & Budget Safety Tracker - PWA Mobile Pendamping Belanja Bulanan & Pengendali Anggaran Siswa Rantau">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="SmartGrocery">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" type="image/svg+xml" href="./icons/icon.svg">
+  <link rel="apple-touch-icon" href="./icons/icon.svg">
+  <title>Smart Grocery &amp; Budget Safety Tracker | PWA Mobile</title>
+  
+  <link rel="stylesheet" href="./css/styles.css">
+</head>
+<body>
+  <!-- Desktop Canvas Container for Center 375px/430px Mobile UI -->
+  <div class="desktop-canvas">
+    <div class="desktop-ambient-glow"></div>
+
+    <!-- Desktop Controls Overlay -->
+    <div class="desktop-controls-overlay">
+      <button id="btnToggleWidth" class="btn-desktop-pill" title="Ubah format tampilan">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect width="14" height="20" x="5" y="2" rx="2" ry="2"/>
+          <path d="M12 18h.01"/>
+        </svg>
+        <span class="one-line">Format: 375px / 430px</span>
+      </button>
+      <button id="btnResetData" class="btn-desktop-pill" title="Reset ke data awal DT2">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+          <path d="M3 3v5h5"/>
+        </svg>
+        <span class="one-line">Reset Data DT2</span>
+      </button>
+    </div>
+
+    <!-- Smartphone Mobile Shell (Max 430px, 375px viewport optimized) -->
+    <main class="mobile-app-shell" id="appShell">
+      <!-- Simulated Notch / Dynamic Island Bar -->
+      <div class="notch-bar">
+        <div class="dynamic-island">
+          <div class="island-camera"></div>
+          <div class="island-cart-live">
+            <span class="live-pulse"></span>
+            <span id="islandItemCount">5 Items</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- App Header: Sesi Belanja, Selector Toko & Tanggal (F-01) -->
+      <header class="app-header">
+        <div class="header-top-row">
+          <div class="brand-badge">
+            <div class="brand-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="8" cy="21" r="1"/>
+                <circle cx="19" cy="21" r="1"/>
+                <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/>
+              </svg>
+            </div>
+            <div class="brand-text">
+              <h1>Smart Grocery</h1>
+              <span>Budget Safety Tracker</span>
+            </div>
+          </div>
+
+          <!-- Header Actions: Theme Toggle (Dark / Light Mode) -->
+          <div class="header-actions">
+            <button class="theme-toggle-btn" id="btnThemeToggle" title="Ganti Tema (Dark / Light)">
+              <svg id="themeIconSun" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+                <circle cx="12" cy="12" r="5"/>
+                <line x1="12" y1="1" x2="12" y2="3"/>
+                <line x1="12" y1="21" x2="12" y2="23"/>
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                <line x1="1" y1="12" x2="3" y2="12"/>
+                <line x1="21" y1="12" x2="23" y2="12"/>
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+              </svg>
+              <svg id="themeIconMoon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Session Controls: Store Picker & Date Picker (F-01) -->
+        <div class="session-controls-bar">
+          <div class="store-selector-trigger" id="btnOpenStorePicker" role="button" tabindex="0">
+            <div class="store-info">
+              <div class="store-icon-pill">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/>
+                  <circle cx="12" cy="10" r="3"/>
+                </svg>
+              </div>
+              <div class="store-names">
+                <span class="label-mini">Lokasi Toko</span>
+                <span class="store-name-text one-line" id="headerStoreName">Lotte Mart Grocery - Puri Indah</span>
+              </div>
+            </div>
+            <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m6 9 6 6 6-6"/>
+            </svg>
+          </div>
+
+          <div class="date-selector-box" title="Pilih tanggal belanja">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect width="18" height="18" x="3" y="4" rx="2" ry="2"/>
+              <line x1="16" x2="16" y1="2" y2="6"/>
+              <line x1="8" x2="8" y1="2" y2="6"/>
+              <line x1="3" x2="21" y1="10" y2="10"/>
+            </svg>
+            <input type="date" id="sessionDatePicker" aria-label="Tanggal Sesi Belanja">
+          </div>
+        </div>
+
+        <!-- Quick Trolley Ticker -->
+        <div class="trolley-ticker">
+          <div class="ticker-item">
+            <span class="ticker-label one-line">Total Item</span>
+            <span class="ticker-val one-line" id="tickerItemCount">5</span>
+          </div>
+          <div class="ticker-item">
+            <span class="ticker-label one-line">Total Qty</span>
+            <span class="ticker-val one-line" id="tickerTotalQty">5</span>
+          </div>
+          <div class="ticker-item">
+            <span class="ticker-label one-line">Total Belanja</span>
+            <span class="ticker-val accent one-line" id="tickerGrandTotal">Rp 200.000</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- Safety Cap / Budget Controller Bar (F-05) -->
+      <section class="safety-cap-container" aria-label="Status Anggaran Belanja">
+        <div class="budget-metric-row">
+          <div class="budget-metric-title">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/>
+              <path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/>
+            </svg>
+            <span class="one-line">Safety Cap</span>
+            <span class="budget-status-pill pill-safe one-line" id="budgetStatusPill">Aman (57.1%)</span>
+          </div>
+          <div class="budget-figures">
+            <span class="spent one-line" id="capSpentText">Rp 200.000</span>
+            <span class="cap one-line" id="capLimitText"> / Rp 350.000</span>
+          </div>
+        </div>
+
+        <!-- Dynamic Visual Gauge Track -->
+        <div class="budget-progress-track">
+          <div class="budget-progress-fill fill-safe" id="budgetProgressFill" style="width: 57.1%;"></div>
+        </div>
+
+        <!-- Warning / Over Budget Alert Banner (F-05) -->
+        <div class="safety-alert-banner banner-safe" id="safetyAlertBanner">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;">
+            <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/>
+            <line x1="12" x2="12" y1="9" y2="13"/>
+            <line x1="12" x2="12.01" y1="17" y2="17"/>
+          </svg>
+          <span id="safetyAlertMessage">Status Anggaran Aman</span>
+        </div>
+      </section>
+
+      <!-- Main Scrollable Content Area -->
+      <div class="app-main-content">
+        <!-- TAB 1: BELANJA (TROLI AKTIF) -->
+        <section class="tab-panel active" id="tabBelanja" aria-label="Troli Belanja">
+          <div class="cart-action-bar">
+            <div class="cart-title-group">
+              <h2 class="one-line">Keranjang Troli</h2>
+              <p class="one-line" id="cartSubtitle">Live session supermarket</p>
+            </div>
+            <!-- Dedicated Button to Clear All Cart Items -->
+            <button class="btn-quick-clear-cart" id="btnQuickClearCart" title="Hapus semua barang dari troli">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 6h18"/>
+                <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
+                <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
+              </svg>
+              <span>Kosongkan Troli</span>
+            </button>
+          </div>
+
+          <!-- Category Quick Filter Chips -->
+          <div class="category-filter-scroll" id="categoryFilterContainer">
+            <button class="filter-chip active" data-category="ALL">Semua</button>
+            <button class="filter-chip" data-category="Bahan Pokok">🌾 Pokok</button>
+            <button class="filter-chip" data-category="Minyak & Bumbu">🧂 Bumbu</button>
+            <button class="filter-chip" data-category="Telur & Susu">🥛 Telur/Susu</button>
+            <button class="filter-chip" data-category="Kebersihan & Mandi">🧼 Mandi</button>
+            <button class="filter-chip" data-category="Protein & Daging">🍗 Lauk</button>
+            <button class="filter-chip" data-category="Kebutuhan Lainnya">📦 Lainnya</button>
+          </div>
+
+          <!-- Mobile Item Cards Container (F-01, F-02, F-04) -->
+          <div class="grocery-items-list" id="groceryItemsContainer">
+            <!-- Dynamically populated via app.js -->
+          </div>
+
+          <!-- Empty Trolley State (Skenario Uji 8 UX) -->
+          <div class="empty-trolley-state" id="emptyCartState" style="display: none;">
+            <div class="empty-icon">
+              <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="8" cy="21" r="1"/>
+                <circle cx="19" cy="21" r="1"/>
+                <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/>
+              </svg>
+            </div>
+            <h3>Keranjang Belanja Masih Kosong</h3>
+            <p>Keranjang belanja masih kosong, silakan scan atau tambahkan kebutuhan pokok pertamamu.</p>
+          </div>
+
+          <!-- Checkout & Finish Action Bar (F-06) -->
+          <div class="cart-checkout-actions" id="cartCheckoutActions">
+            <button class="btn-finish-shopping" id="btnFinishSession">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 6 9 17l-5-5"/>
+              </svg>
+              <span class="one-line">Selesai Belanja &amp; Simpan Struk</span>
+            </button>
+          </div>
+        </section>
+
+        <!-- TAB 2: RIWAYAT TOKO & MULTI-STORE DATABASE (F-06) -->
+        <section class="tab-panel" id="tabRiwayat" aria-label="Riwayat Toko">
+          <div class="history-header">
+            <div>
+              <h2 class="one-line">Riwayat Belanja &amp; Database Multi-Toko</h2>
+              <p class="one-line" style="font-size: 11px; color: var(--text-muted);">Database pembanding harga resmi antar supermarket</p>
+            </div>
+          </div>
+
+          <!-- Multi-Store Price Comparison Matrix Tool (F-06 & F-04) -->
+          <div class="multi-store-card">
+            <div class="multi-store-title">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#06b6d4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" x2="18" y1="20" y2="10"/>
+                <line x1="12" x2="12" y1="20" y2="4"/>
+                <line x1="6" x2="6" y1="20" y2="14"/>
+              </svg>
+              <span class="one-line">Cek Harga Bahan Pokok Antar Toko</span>
+            </div>
+            <p class="multi-store-desc">Cek harga komparasi di Lotte Mart, Super Indo, &amp; Indomaret Fresh.</p>
+            <div class="search-comparison-box">
+              <input type="text" class="search-comparison-input" id="inputCompareSearch" placeholder="Contoh: Minyak Goreng, Beras, Telur..." value="Beras 5kg">
+              <button class="btn-icon-soft" id="btnExecuteSearchCompare" title="Cari">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="11" cy="11" r="8"/>
+                  <path d="m21 21-4.3-4.3"/>
+                </svg>
+              </button>
+            </div>
+            <div class="comparison-results-box" id="comparisonResultsContainer">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+
+          <!-- Saved Sessions Timeline -->
+          <h3 class="one-line" style="font-size: 14px; font-weight: 700; color: var(--text-primary); margin-bottom: 8px;">Daftar Sesi Belanja Lampau</h3>
+          <div class="history-sessions-list" id="historySessionsContainer">
+            <!-- Dynamically populated -->
+          </div>
+        </section>
+
+        <!-- TAB 3: ANGGARAN & SAFETY CAP PLANNER (F-05) -->
+        <section class="tab-panel" id="tabAnggaran" aria-label="Pengendali Anggaran">
+          <div class="budget-view-card">
+            <h3 class="one-line">Pengaturan Batas Dompet (Safety Cap)</h3>
+            <p>Pagu batas belanja bulanan kamu. Peringatan waspada di 90% dan banner merah di &gt;100%.</p>
+
+            <div class="budget-input-group">
+              <label for="inputBudgetCap">Batas Maksimal Dompet</label>
+              <div class="budget-input-wrapper">
+                <span>Rp</span>
+                <input type="text" inputmode="numeric" class="budget-large-input" id="inputBudgetCap" value="350.000">
+              </div>
+            </div>
+
+            <!-- DT2 Quick Budget Chips: Termasuk Rp 100.000 (Skenario Uji 5) & Rp 350.000 (Kasus Rian) -->
+            <div class="quick-budget-chips">
+              <button class="btn-chip-budget" data-amount="100000">Rp 100.000 (Uji DT2)</button>
+              <button class="btn-chip-budget" data-amount="200000">Rp 200.000</button>
+              <button class="btn-chip-budget" data-amount="350000">Rp 350.000 (Rian)</button>
+              <button class="btn-chip-budget" data-amount="500000">Rp 500.000</button>
+              <button class="btn-chip-budget" data-amount="600000">Rp 600.000</button>
+            </div>
+          </div>
+
+          <!-- Financial Health Breakdown -->
+          <div class="budget-view-card">
+            <h3 class="one-line">Rincian Pengeluaran Sesi Ini</h3>
+            <div class="calc-row">
+              <span class="one-line">Total Harga Normal</span>
+              <span id="budgetSummaryRaw" style="font-family: var(--font-mono); font-weight: 700;">Rp 257.000</span>
+            </div>
+            <div class="calc-row" style="color: #fbbf24; margin-top: 4px;">
+              <span class="one-line">Total Potongan Diskon</span>
+              <span id="budgetSummarySavings" style="font-family: var(--font-mono); font-weight: 700;">-Rp 65.000</span>
+            </div>
+            <div class="calc-row total-bold">
+              <span class="one-line">Total Bayar Bersih</span>
+              <span id="budgetSummaryNet">Rp 192.000</span>
+            </div>
+            <div class="calc-row" style="margin-top: 6px; font-weight: 700;">
+              <span class="one-line">Sisa Saldo Dompet</span>
+              <span id="budgetSummaryRemaining" style="font-family: var(--font-mono); color: var(--emerald-light);">Rp 158.000</span>
+            </div>
+          </div>
+
+          <!-- Emergency Triage Card (F-05) -->
+          <div class="triage-card" id="triageCard" style="display: none;">
+            <div class="triage-header">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="12" y1="8" x2="12" y2="12"/>
+                <line x1="12" y1="16" x2="12.01" y2="16"/>
+              </svg>
+              <span class="one-line">Triage Belanja Darurat</span>
+            </div>
+            <p class="triage-desc">Dompet menipis atau over budget! Pangkas item sekunder ini agar anggaran kembali aman:</p>
+            <div class="triage-items-list" id="triageItemsContainer">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+
+          <!-- Category Spending Breakdown -->
+          <div class="budget-view-card">
+            <h3 class="one-line">Alokasi Pengeluaran per Kategori</h3>
+            <div class="category-breakdown-list" id="categoryBreakdownContainer">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- SINGLE FLOATING ACTION BUTTON (FLOAT DI KANAN BAWAH) -->
+      <button class="floating-add-btn" id="btnFloatingAdd" title="Tambah Barang Baru" aria-label="Tambah Barang">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="5" x2="12" y2="19"/>
+          <line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+      </button>
+
+      <!-- Floating Bottom Navigation Bar (Ergonomis Lucide Icons) -->
+      <nav class="bottom-nav-bar" aria-label="Navigasi Menu Utama">
+        <button class="nav-item active" id="navBelanja" data-tab="tabBelanja">
+          <div class="nav-icon-container">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="8" cy="21" r="1"/>
+              <circle cx="19" cy="21" r="1"/>
+              <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/>
+            </svg>
+            <span class="nav-badge-count" id="navCartBadge">5</span>
+          </div>
+          <span class="nav-label one-line">Belanja</span>
+        </button>
+
+        <button class="nav-item" id="navRiwayat" data-tab="tabRiwayat">
+          <div class="nav-icon-container">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 3v5h5"/>
+              <path d="M3.05 13A9 9 0 1 0 6 5.3L3 8"/>
+              <path d="M12 7v5l4 2"/>
+            </svg>
+          </div>
+          <span class="nav-label one-line">Riwayat Toko</span>
+        </button>
+
+        <button class="nav-item" id="navAnggaran" data-tab="tabAnggaran">
+          <div class="nav-icon-container">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/>
+              <path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/>
+            </svg>
+          </div>
+          <span class="nav-label one-line">Anggaran</span>
+        </button>
+      </nav>
+
+      <!-- Toast Notification Container -->
+      <div class="toast-container" id="toastContainer"></div>
+
+      <!-- Confirmation Modal for Clear Cart (Skenario Uji 8 Non-blocking) -->
+      <div class="modal-backdrop" id="modalConfirmClearCartBackdrop">
+        <div class="bottom-sheet" style="max-height: 260px;" role="dialog" aria-modal="true">
+          <div class="sheet-drag-handle"></div>
+          <div class="sheet-header">
+            <h2 class="sheet-title one-line" style="color: var(--crimson);">Kosongkan Seluruh Troli?</h2>
+            <button class="sheet-close-btn" id="btnCancelClearCart" aria-label="Batal">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="6" x2="6" y2="18"/>
+                <line x1="6" y1="6" x2="18" y2="18"/>
+              </svg>
+            </button>
+          </div>
+          <div class="sheet-body" style="gap: 12px;">
+            <p style="font-size: 12.5px; color: var(--text-secondary); line-height: 1.5;">Apakah Anda yakin ingin menghapus seluruh barang yang berada di keranjang troli belanja sesi ini?</p>
+            <div style="display: flex; gap: 8px;">
+              <button type="button" class="btn-clear-cart" id="btnConfirmClearCartAction" style="flex: 1; padding: 12px; background: rgba(239, 68, 68, 0.15); border-color: var(--crimson); font-weight: 800;">
+                Ya, Kosongkan Troli
+              </button>
+              <button type="button" class="btn-sheet-submit" id="btnDismissClearCart" style="flex: 1; padding: 12px; background: var(--bg-input); color: var(--text-primary); box-shadow: none;">
+                Batal
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==========================================================================
+           MODALS / BOTTOM SHEETS
+           ========================================================================== -->
+
+      <!-- Sheet 1: Tambah / Edit Item Belanja (F-01, F-02, F-03, F-04) -->
+      <div class="modal-backdrop" id="sheetAddItemBackdrop">
+        <div class="bottom-sheet" role="dialog" aria-modal="true" aria-labelledby="addItemTitle">
+          <div class="sheet-drag-handle"></div>
+          <div class="sheet-header">
+            <h2 class="sheet-title one-line" id="addItemTitle">Catat Item Belanja</h2>
+            <button class="sheet-close-btn" id="btnCloseAddItemSheet" aria-label="Tutup">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="6" x2="6" y2="18"/>
+                <line x1="6" y1="6" x2="18" y2="18"/>
+              </svg>
+            </button>
+          </div>
+
+          <form class="sheet-body" id="formAddItem" novalidate>
+            <input type="hidden" id="inputEditItemId" value="">
+
+            <!-- Quick Staples Autocomplete Chips for Speed -->
+            <div class="form-field">
+              <label class="form-label one-line">Pilihan Cepat Skenario Uji DT2</label>
+              <div class="quick-staples-scroll" id="quickStaplesChips">
+                <!-- Dynamically populated -->
+              </div>
+            </div>
+
+            <!-- Product Name (STRICTLY REQUIRED - F-01) -->
+            <div class="form-field">
+              <label class="form-label one-line" for="inputItemName">Nama Produk * (Wajib Diisi)</label>
+              <input type="text" id="inputItemName" class="input-text" placeholder="Contoh: Beras Rojolele, Minyak Goreng 2L" required autocomplete="off">
+              <span id="itemNameError" style="font-size: 11px; color: var(--crimson); display: none; font-weight: 700;">Wajib mengisi nama barang!</span>
+            </div>
+
+            <!-- Category (Includes 'Bahan Pokok' for Skenario Uji 1) -->
+            <div class="form-field">
+              <label class="form-label one-line" for="selectItemCategory">Kategori Produk *</label>
+              <select id="selectItemCategory" class="select-input">
+                <option value="Bahan Pokok">🌾 Bahan Pokok</option>
+                <option value="Minyak & Bumbu">🧂 Minyak &amp; Bumbu</option>
+                <option value="Telur & Susu">🥛 Telur &amp; Susu</option>
+                <option value="Kebersihan & Mandi">🧼 Kebersihan &amp; Mandi</option>
+                <option value="Protein & Daging">🍗 Protein &amp; Daging</option>
+                <option value="Sayur & Buah">🥦 Sayur &amp; Buah</option>
+                <option value="Makanan Instan/Frozen">🍜 Makanan Instan / Frozen</option>
+                <option value="Kopi & Minuman">☕ Kopi &amp; Minuman</option>
+                <option value="Snack & Camilan">🍪 Snack &amp; Camilan</option>
+                <option value="ATK & Perkuliahan">📚 ATK &amp; Perkuliahan</option>
+                <option value="Apotek & Kesehatan">💊 Apotek &amp; Kesehatan</option>
+                <option value="Kebutuhan Lainnya">📦 Kebutuhan Lainnya</option>
+              </select>
+            </div>
+
+            <!-- Satuan Harus Ada Tombol (Includes 'karung/5kg' for Skenario Uji 1) -->
+            <div class="form-field">
+              <label class="form-label one-line">Pilih Tombol Satuan Barang *</label>
+              <div class="unit-buttons-grid" id="unitButtonsGrid">
+                <button type="button" class="btn-unit-chip" data-unit="karung/5kg">karung/5kg</button>
+                <button type="button" class="btn-unit-chip active" data-unit="pcs">pcs</button>
+                <button type="button" class="btn-unit-chip" data-unit="kg">kg</button>
+                <button type="button" class="btn-unit-chip" data-unit="pack">pack</button>
+                <button type="button" class="btn-unit-chip" data-unit="liter">liter</button>
+                <button type="button" class="btn-unit-chip" data-unit="pouch">pouch</button>
+                <button type="button" class="btn-unit-chip" data-unit="botol">botol</button>
+                <button type="button" class="btn-unit-chip" data-unit="ikat">ikat</button>
+                <button type="button" class="btn-unit-chip" data-unit="kaleng">kaleng</button>
+              </div>
+              <input type="hidden" id="selectItemUnit" value="pcs">
+            </div>
+
+            <!-- Quantity & Unit Price in Grid -->
+            <div class="form-grid-2">
+              <div class="form-field">
+                <label class="form-label one-line" for="inputItemQty">Jumlah (Qty) *</label>
+                <input type="number" step="any" min="0.1" id="inputItemQty" class="input-text input-large-numeric" value="1" inputmode="decimal" required>
+              </div>
+
+              <div class="form-field">
+                <label class="form-label one-line" for="inputItemUnitPrice">Harga Satuan (Rp) *</label>
+                <input type="text" id="inputItemUnitPrice" class="input-text input-large-numeric" placeholder="Contoh: 74.000" inputmode="numeric" required>
+              </div>
+            </div>
+
+            <!-- Realtime Price Comparator Feedback Preview (F-04) -->
+            <div id="itemSheetComparatorPreview" class="comparator-preview-pill comp-none" style="display: none;">
+              <span id="compSymbol">↑</span>
+              <span id="compText" class="one-line">Membandingkan dengan harga riwayat...</span>
+            </div>
+
+            <!-- Tiered Discount Input & Quick Presets (F-03) -->
+            <div class="discount-field-box">
+              <label class="form-label one-line" for="inputItemDiscount">Diskon (Tunggal atau Bertingkat)</label>
+              <input type="text" id="inputItemDiscount" class="input-text" placeholder="Contoh: 25% atau 50% + 20% atau Rp 15.000">
+              <div class="discount-presets-grid">
+                <button type="button" class="btn-discount-preset" data-preset="25%">25% (Sabun Cuci)</button>
+                <button type="button" class="btn-discount-preset" data-preset="50% + 20%">50% + 20% (Wajan)</button>
+                <button type="button" class="btn-discount-preset" data-preset="10%">10%</button>
+                <button type="button" class="btn-discount-preset" data-preset="20%">20%</button>
+                <button type="button" class="btn-discount-preset" data-preset="50%">50%</button>
+                <button type="button" class="btn-discount-preset" data-preset="Beli 1 Gratis 1">Beli 1 Gratis 1 (50%)</button>
+              </div>
+            </div>
+
+            <!-- Optional Notes -->
+            <div class="form-field">
+              <label class="form-label one-line" for="inputItemNotes">Catatan Tambahan (Opsional)</label>
+              <input type="text" id="inputItemNotes" class="input-text" placeholder="Contoh: Cek exp date, merek Bimoli">
+            </div>
+
+            <!-- Live Calculation Summary Card (F-02 & F-03) -->
+            <div class="sheet-live-calc-card">
+              <div class="calc-row">
+                <span class="one-line">Harga Satuan Setelah Diskon</span>
+                <span id="modalCalcUnitPrice" style="font-family: var(--font-mono); font-weight: 700;">Rp 0</span>
+              </div>
+              <div class="calc-row">
+                <span class="one-line">Potongan Hemat</span>
+                <span id="modalCalcDiscount" style="font-family: var(--font-mono); color: #fbbf24;">Rp 0 (0%)</span>
+              </div>
+              <div class="calc-row total-bold">
+                <span class="one-line">Total Baris (Qty × Harga Akhir)</span>
+                <span id="modalCalcRowTotal">Rp 0</span>
+              </div>
+            </div>
+
+            <button type="submit" class="btn-sheet-submit" id="btnSubmitItem">
+              Simpan ke Troli Belanja
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Sheet 2: Supermarket Location Selector with GPS (F-01) -->
+      <div class="modal-backdrop" id="sheetStorePickerBackdrop">
+        <div class="bottom-sheet" role="dialog" aria-modal="true">
+          <div class="sheet-drag-handle"></div>
+          <div class="sheet-header">
+            <h2 class="sheet-title one-line">Pilih Lokasi Belanja</h2>
+            <button class="sheet-close-btn" id="btnCloseStorePicker" aria-label="Tutup">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="6" x2="6" y2="18"/>
+                <line x1="6" y1="6" x2="18" y2="18"/>
+              </svg>
+            </button>
+          </div>
+          <div class="sheet-body">
+            <!-- GPS Detection Button -->
+            <button type="button" class="btn-detect-gps" id="btnDetectGpsStore">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <circle cx="12" cy="12" r="10"/>
+                <polygon points="12 2 15 9 22 12 15 15 12 22 9 15 2 12 9 9 12 2"/>
+              </svg>
+              <span>Deteksi Lokasi Terdekat (GPS)</span>
+            </button>
+
+            <p style="font-size: 12px; color: var(--text-secondary); margin-top: 4px;">Pilih toko supermarket tempat kamu belanja saat ini:</p>
+            
+            <div id="storeListContainer" style="display: flex; flex-direction: column; gap: 8px;">
+              <!-- Populated dynamically -->
+            </div>
+
+            <!-- Add Custom Store -->
+            <div style="margin-top: 10px; padding-top: 12px; border-top: 1px solid var(--border-subtle);">
+              <label class="form-label one-line">Tambah Toko / Tempat Belanja Baru</label>
+              <div style="display: flex; gap: 8px; margin-top: 6px;">
+                <input type="text" id="inputNewStore" class="input-text" placeholder="Nama toko / minimarket baru">
+                <button type="button" class="btn-sheet-submit" id="btnAddCustomStore" style="padding: 10px 16px; font-size: 13px; white-space: nowrap;">+ Toko</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sheet 3: Detail Struk Riwayat Sesi (F-06) -->
+      <div class="modal-backdrop" id="sheetReceiptDetailBackdrop">
+        <div class="bottom-sheet" role="dialog" aria-modal="true">
+          <div class="sheet-drag-handle"></div>
+          <div class="sheet-header">
+            <h2 class="sheet-title one-line" id="receiptModalTitle">Detail Struk Belanja</h2>
+            <button class="sheet-close-btn" id="btnCloseReceiptDetail" aria-label="Tutup">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="6" x2="6" y2="18"/>
+                <line x1="6" y1="6" x2="18" y2="18"/>
+              </svg>
+            </button>
+          </div>
+          <div class="sheet-body" id="receiptDetailBody">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal 4: Konfirmasi Aman Kosongkan Seluruh Troli (UX & F-06A Non-Blocking) -->
+      <div class="modal-backdrop" id="modalConfirmClearCartBackdrop">
+        <div class="confirm-dialog-card" role="alertdialog" aria-modal="true" aria-labelledby="confirmClearTitle" aria-describedby="confirmClearDesc">
+          <div class="confirm-icon-danger">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 6h18"/>
+              <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
+              <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
+              <line x1="10" y1="11" x2="10" y2="17"/>
+              <line x1="14" y1="11" x2="14" y2="17"/>
+            </svg>
+          </div>
+          <h3 class="confirm-title" id="confirmClearTitle">Kosongkan Seluruh Troli?</h3>
+          <p class="confirm-desc" id="confirmClearDesc">
+            Semua barang yang sedang berada di keranjang belanja akan dihapus sekaligus. Tindakan ini tidak dapat dibatalkan.
+          </p>
+          <div class="confirm-actions-row">
+            <button type="button" class="btn-confirm-cancel" id="btnCancelClearCart">Batal</button>
+            <button type="button" class="btn-confirm-delete" id="btnConfirmClearCartAction">Ya, Hapus Semua</button>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Main ES Module Application Script -->
+  <script type="module" src="./js/app.js"></script>
+
+  <!-- Service Worker Registration for PWA Standalone Mode -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then(reg => console.log('Service Worker OK:', reg.scope))
+          .catch(err => console.warn('Service Worker registration skipped:', err));
+      });
+    }
+  </script>
+</body>
+</html>

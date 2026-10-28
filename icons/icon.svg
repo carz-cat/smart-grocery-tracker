@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="50%" stop-color="#111827"/>
+      <stop offset="100%" stop-color="#064e3b"/>
+    </linearGradient>
+    <linearGradient id="accentGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#10b981"/>
+      <stop offset="100%" stop-color="#06b6d4"/>
+    </linearGradient>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fbbf24"/>
+      <stop offset="100%" stop-color="#f59e0b"/>
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="12" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <!-- Background with rounded squircle -->
+  <rect width="512" height="512" rx="112" fill="url(#bgGrad)"/>
+  
+  <!-- Subtle border highlight -->
+  <rect x="8" y="8" width="496" height="496" rx="104" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="4"/>
+
+  <!-- Glowing background aura -->
+  <circle cx="256" cy="240" r="160" fill="url(#accentGrad)" opacity="0.18" filter="url(#glow)"/>
+
+  <!-- Shopping Trolley & Shield Symbol -->
+  <g transform="translate(40, 20)">
+    <!-- Trolley Wheels -->
+    <circle cx="160" cy="370" r="24" fill="#0f172a" stroke="#10b981" stroke-width="12"/>
+    <circle cx="160" cy="370" r="8" fill="#10b981"/>
+
+    <circle cx="320" cy="370" r="24" fill="#0f172a" stroke="#10b981" stroke-width="12"/>
+    <circle cx="320" cy="370" r="8" fill="#10b981"/>
+
+    <!-- Trolley Frame & Basket -->
+    <path d="M 80,120 L 130,120 L 175,290 L 350,290 L 385,170 L 145,170" 
+          fill="none" stroke="url(#accentGrad)" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+    
+    <!-- Basket Grid Lines -->
+    <path d="M 210,170 L 225,290 M 270,170 L 280,290 M 330,170 L 335,290" 
+          fill="none" stroke="rgba(16, 185, 129, 0.45)" stroke-width="8" stroke-linecap="round"/>
+    <path d="M 160,230 L 368,230" 
+          fill="none" stroke="rgba(16, 185, 129, 0.45)" stroke-width="8" stroke-linecap="round"/>
+
+    <!-- Trolley Handle -->
+    <path d="M 60,95 L 95,95" 
+          fill="none" stroke="#38bdf8" stroke-width="18" stroke-linecap="round"/>
+
+    <!-- Safety Budget Shield in center -->
+    <g transform="translate(256, 175) scale(0.9)">
+      <path d="M 0,-45 Q 40,-45 50,-10 C 50,45 20,80 0,95 C -20,80 -50,45 -50,-10 Q -40,-45 0,-45 Z"
+            fill="#0f172a" stroke="url(#goldGrad)" stroke-width="10"/>
+      <!-- Rupiah / Checkmark Icon -->
+      <path d="M -18,12 L -5,25 L 22,-8" 
+            fill="none" stroke="#10b981" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+  </g>
+
+  <!-- App Title Banner -->
+  <text x="256" y="455" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-weight="800" font-size="34" fill="#ffffff" text-anchor="middle" letter-spacing="1.5">SMART GROCERY</text>
+  <text x="256" y="485" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-weight="600" font-size="20" fill="#10b981" text-anchor="middle" letter-spacing="3">BUDGET SAFETY TRACKER</text>
+</svg>

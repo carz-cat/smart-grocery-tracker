@@ -1,0 +1,44 @@
+{
+  "name": "Smart Grocery & Budget Safety Tracker",
+  "short_name": "SmartGrocery",
+  "description": "PWA Pendamping Belanja Bulanan & Pengendali Anggaran Siswa Rantau",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+  "orientation": "portrait-primary",
+  "background_color": "#0b0f19",
+  "theme_color": "#0b0f19",
+  "categories": ["finance", "shopping", "productivity", "utilities"],
+  "icons": [
+    {
+      "src": "./icons/icon.svg",
+      "sizes": "192x192 512x512 any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Mulai Belanja",
+      "short_name": "Belanja",
+      "description": "Buka keranjang troli belanja sesi sekarang",
+      "url": "./index.html#belanja",
+      "icons": [{ "src": "./icons/icon.svg", "sizes": "96x96" }]
+    },
+    {
+      "name": "Cek Anggaran",
+      "short_name": "Anggaran",
+      "description": "Pantau batas limit dompet dan pengeluaran",
+      "url": "./index.html#anggaran",
+      "icons": [{ "src": "./icons/icon.svg", "sizes": "96x96" }]
+    },
+    {
+      "name": "Riwayat Toko",
+      "short_name": "Riwayat",
+      "description": "Bandingkan harga antar toko supermarket",
+      "url": "./index.html#riwayat",
+      "icons": [{ "src": "./icons/icon.svg", "sizes": "96x96" }]
+    }
+  ]
+}
