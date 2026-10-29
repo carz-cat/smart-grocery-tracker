@@ -1,5 +1,5 @@
 /**
- * Firebase App, Google Analytics & Authentication
+ * Firebase App, Google Analytics, Authentication & Cloud Firestore Realtime Sync
  * Project: grocerytracker-9ef9b
  */
 
@@ -12,9 +12,16 @@ import {
   signInWithEmailAndPassword, 
   createUserWithEmailAndPassword, 
   signOut, 
-  onAuthStateChanged,
+  onAuthStateChanged, 
   updateProfile 
 } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+import { 
+  getFirestore, 
+  doc, 
+  setDoc, 
+  getDoc, 
+  onSnapshot 
+} from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
 export const firebaseConfig = {
   apiKey: "AIzaSyDsQJnaG88UWoliGvAOU5cvf9ctJrIJ4Rg",
@@ -30,6 +37,7 @@ export let app = null;
 export let analytics = null;
 export let auth = null;
 export let googleProvider = null;
+export let db = null;
 
 try {
   app = initializeApp(firebaseConfig);
@@ -42,7 +50,7 @@ try {
       console.log("Firebase Analytics initialized:", firebaseConfig.measurementId);
     }
   }).catch((err) => {
-    console.debug("Firebase Analytics not supported in this environment:", err.message);
+    console.debug("Firebase Analytics notice:", err.message);
   });
 
   // Initialize Auth
@@ -50,6 +58,10 @@ try {
   googleProvider = new GoogleAuthProvider();
   googleProvider.setCustomParameters({ prompt: 'select_account' });
   console.log("Firebase Auth initialized.");
+
+  // Initialize Cloud Firestore for Realtime Multi-Device Sync
+  db = getFirestore(app);
+  console.log("Firebase Cloud Firestore initialized.");
 } catch (error) {
   console.warn("Firebase initialization skipped or offline:", error.message);
 }
@@ -60,5 +72,9 @@ export {
   createUserWithEmailAndPassword, 
   signOut, 
   onAuthStateChanged, 
-  updateProfile 
+  updateProfile,
+  doc,
+  setDoc,
+  getDoc,
+  onSnapshot
 };

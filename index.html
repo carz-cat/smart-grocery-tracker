@@ -13,12 +13,16 @@
   <link rel="apple-touch-icon" href="./icons/icon.svg">
   <title>Keranjang Pintar | Smart Grocery &amp; Budget Tracker</title>
   
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  
   <!-- Premium Modern Typography: Plus Jakarta Sans, Outfit, JetBrains Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600;700&family=Outfit:wght@500;600;700;800&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="./css/styles.css">
+  <link rel="stylesheet" href="./css/styles.css?v=2.2.0">
 </head>
 <body>
   <!-- Desktop Canvas Container -->
@@ -1056,17 +1060,23 @@
   </div>
 
   <!-- Firebase SDK & Analytics (Project: grocerytracker-9ef9b) -->
-  <script type="module" src="./js/firebase-config.js"></script>
+  <script type="module" src="./js/firebase-config.js?v=2.2.0"></script>
 
   <!-- Main ES Module Application Script -->
-  <script type="module" src="./js/app.js"></script>
+  <script type="module" src="./js/app.js?v=2.2.0"></script>
 
   <!-- Service Worker Registration for PWA Standalone Mode -->
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js')
-          .then(reg => console.log('Service Worker OK:', reg.scope))
+        navigator.serviceWorker.register('./sw.js?v=2.2.0')
+          .then(reg => {
+            console.log('Service Worker OK:', reg.scope);
+            // Check for service worker updates immediately
+            if (typeof reg.update === 'function') {
+              reg.update();
+            }
+          })
           .catch(err => console.warn('Service Worker registration skipped:', err));
       });
     }

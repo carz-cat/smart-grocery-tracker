@@ -202,6 +202,107 @@ export class GroceryStoreManager {
 
     // Connect to Server SSE for true multi-device realtime synchronization (F-06B)
     this.initServerRealtimeSync();
+
+    // Connect to Cloud Firestore onSnapshot() for Multi-Device Live Sync (HP & PC)
+    this.firestoreDb = null;
+    this.firestoreDoc = null;
+    this.firestoreSetDoc = null;
+    this.firestoreOnSnapshot = null;
+    this.firestoreUnsubscribe = null;
+    this.lastLocalWriteTimestamp = 0;
+    this.initFirestoreRealtimeSync();
+  }
+
+  async initFirestoreRealtimeSync() {
+    if (typeof window === 'undefined') return;
+
+    try {
+      const fb = await import('./firebase-config.js');
+      if (fb && fb.db && fb.onSnapshot && fb.doc) {
+        this.firestoreDb = fb.db;
+        this.firestoreDoc = fb.doc;
+        this.firestoreSetDoc = fb.setDoc;
+        this.firestoreOnSnapshot = fb.onSnapshot;
+
+        this.listenToFirestoreSession();
+      }
+    } catch (err) {
+      console.warn('Firestore realtime sync dynamic import notice:', err.message);
+    }
+  }
+
+  getFirestoreDocId() {
+    if (this.userId && this.userId !== 'default' && this.userId !== 'guest') {
+      return `session_${this.userId}`;
+    }
+    return 'session_shared_realtime';
+  }
+
+  listenToFirestoreSession() {
+    if (this.firestoreUnsubscribe) {
+      try { this.firestoreUnsubscribe(); } catch (_) {}
+      this.firestoreUnsubscribe = null;
+    }
+
+    if (!this.firestoreDb || !this.firestoreOnSnapshot || !this.firestoreDoc) return;
+
+    try {
+      const docId = this.getFirestoreDocId();
+      const docRef = this.firestoreDoc(this.firestoreDb, 'grocery_sessions', docId);
+
+      this.firestoreUnsubscribe = this.firestoreOnSnapshot(docRef, (docSnap) => {
+        if (docSnap.exists()) {
+          const cloudData = docSnap.data();
+          if (cloudData && cloudData.updatedAt && cloudData.updatedAt !== this.lastLocalWriteTimestamp) {
+            // Received cloud update from another device (HP, tablet, or PC)!
+            this.activeSession.store = cloudData.store || this.activeSession.store;
+            this.activeSession.date = cloudData.date || this.activeSession.date;
+            if (cloudData.budgetCap !== undefined) {
+              this.activeSession.budgetCap = cloudData.budgetCap;
+            }
+            if (Array.isArray(cloudData.items)) {
+              this.activeSession.items = cloudData.items;
+            }
+
+            // Persist to local storage
+            try {
+              if (typeof localStorage !== 'undefined') {
+                localStorage.setItem(this.getStorageKey(STORAGE_KEYS.ACTIVE_SESSION), JSON.stringify(this.activeSession));
+              }
+            } catch (_) {}
+
+            // Re-render UI on this device instantly without reloading!
+            this.notify(false);
+          }
+        }
+      }, (err) => {
+        console.warn('Firestore onSnapshot listener notice:', err.message);
+      });
+    } catch (err) {
+      console.warn('Error attaching Firestore onSnapshot:', err);
+    }
+  }
+
+  async syncToFirestore() {
+    if (!this.firestoreDb || !this.firestoreSetDoc || !this.firestoreDoc) return;
+
+    try {
+      const docId = this.getFirestoreDocId();
+      const docRef = this.firestoreDoc(this.firestoreDb, 'grocery_sessions', docId);
+      const timestamp = Date.now();
+      this.lastLocalWriteTimestamp = timestamp;
+
+      await this.firestoreSetDoc(docRef, {
+        store: this.activeSession.store,
+        date: this.activeSession.date,
+        budgetCap: this.activeSession.budgetCap,
+        items: this.activeSession.items,
+        updatedAt: timestamp,
+        userId: this.userId || 'shared'
+      }, { merge: true });
+    } catch (err) {
+      console.warn('Firestore sync write notice:', err.message);
+    }
   }
 
   setUserId(userId) {
@@ -210,6 +311,7 @@ export class GroceryStoreManager {
     this.history = this.loadHistory();
     this.stores = this.loadStores();
     this.checklist = this.loadChecklist();
+    this.listenToFirestoreSession();
     this.notify();
   }
 
@@ -301,6 +403,7 @@ export class GroceryStoreManager {
       }
       if (shouldBroadcast) {
         this.broadcastUpdate();
+        this.syncToFirestore(); // Cloud Firestore onSnapshot() realtime push to all other devices!
       }
       this.notify();
     } catch (e) {}
