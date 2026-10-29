@@ -1,6 +1,7 @@
 /**
  * Smart Grocery & Budget Safety Tracker
  * Module: Main Application Controller (PWA Native App Style)
+ * Aesthetic: Midnight Ocean Blue & Black Cat
  */
 
 import { GroceryStoreManager, CATEGORIES, UNITS, MASTER_CATALOG } from './store.js';
@@ -23,6 +24,21 @@ class SmartGroceryApp {
       btnToggleWidth: document.getElementById('btnToggleWidth'),
       btnResetData: document.getElementById('btnResetData'),
       
+      // Auth Gatekeeper Screen Elements
+      authGatekeeperScreen: document.getElementById('authGatekeeperScreen'),
+      btnGateTabLogin: document.getElementById('btnGateTabLogin'),
+      btnGateTabRegister: document.getElementById('btnGateTabRegister'),
+      authGateAlert: document.getElementById('authGateAlert'),
+      btnGateGoogleLogin: document.getElementById('btnGateGoogleLogin'),
+      formGateLogin: document.getElementById('formGateLogin'),
+      gateLoginEmail: document.getElementById('gateLoginEmail'),
+      gateLoginPassword: document.getElementById('gateLoginPassword'),
+      formGateRegister: document.getElementById('formGateRegister'),
+      gateRegName: document.getElementById('gateRegName'),
+      gateRegEmail: document.getElementById('gateRegEmail'),
+      gateRegPassword: document.getElementById('gateRegPassword'),
+      btnGateGuestLogin: document.getElementById('btnGateGuestLogin'),
+
       // Mini Sound Toggle
       btnSoundToggle: document.getElementById('btnSoundToggle'),
       soundIconOn: document.getElementById('soundIconOn'),
@@ -33,10 +49,11 @@ class SmartGroceryApp {
       headerUserAvatar: document.getElementById('headerUserAvatar'),
       headerAuthLabel: document.getElementById('headerAuthLabel'),
 
-      // Theme Toggle
+      // Theme Toggle & Cat Badge
       btnThemeToggle: document.getElementById('btnThemeToggle'),
       themeIconSun: document.getElementById('themeIconSun'),
       themeIconMoon: document.getElementById('themeIconMoon'),
+      themeCatBadge: document.getElementById('themeCatBadge'),
 
       // Header & Session
       headerStoreName: document.getElementById('headerStoreName'),
@@ -64,16 +81,21 @@ class SmartGroceryApp {
       safetyAlertBanner: document.getElementById('safetyAlertBanner'),
       safetyAlertMessage: document.getElementById('safetyAlertMessage'),
 
-      // Tab Panels & Bottom Nav
+      // Tab Panels & Bottom Nav (5 Tabs)
       tabBelanja: document.getElementById('tabBelanja'),
-      tabRiwayat: document.getElementById('tabRiwayat'),
+      tabRencana: document.getElementById('tabRencana'),
+      tabKatalog: document.getElementById('tabKatalog'),
+      tabKalkulator: document.getElementById('tabKalkulator'),
       tabAnggaran: document.getElementById('tabAnggaran'),
+
       navBelanja: document.getElementById('navBelanja'),
-      navRiwayat: document.getElementById('navRiwayat'),
+      navRencana: document.getElementById('navRencana'),
+      navKatalog: document.getElementById('navKatalog'),
+      navKalkulator: document.getElementById('navKalkulator'),
       navAnggaran: document.getElementById('navAnggaran'),
       navCartBadge: document.getElementById('navCartBadge'),
 
-      // Cart Tab
+      // Tab 1: Belanja (Cart)
       groceryItemsContainer: document.getElementById('groceryItemsContainer'),
       emptyCartState: document.getElementById('emptyCartState'),
       cartCheckoutActions: document.getElementById('cartCheckoutActions'),
@@ -82,13 +104,37 @@ class SmartGroceryApp {
       btnQuickClearCart: document.getElementById('btnQuickClearCart'),
       btnFinishSession: document.getElementById('btnFinishSession'),
 
-      // History Tab
-      historySessionsContainer: document.getElementById('historySessionsContainer'),
-      inputCompareSearch: document.getElementById('inputCompareSearch'),
-      btnExecuteSearchCompare: document.getElementById('btnExecuteSearchCompare'),
-      comparisonResultsContainer: document.getElementById('comparisonResultsContainer'),
+      // Tab 2: Rencana Belanja (Checklist)
+      checklistCounterPill: document.getElementById('checklistCounterPill'),
+      checklistProgressFill: document.getElementById('checklistProgressFill'),
+      formAddChecklist: document.getElementById('formAddChecklist'),
+      inputChecklistName: document.getElementById('inputChecklistName'),
+      selectChecklistCat: document.getElementById('selectChecklistCat'),
+      inputChecklistEstPrice: document.getElementById('inputChecklistEstPrice'),
+      btnTransferAllChecked: document.getElementById('btnTransferAllChecked'),
+      checklistItemsContainer: document.getElementById('checklistItemsContainer'),
 
-      // Budget Tab
+      // Tab 3: Katalog & Paket Hemat 1-Klik
+      btnOneClickBundleKos: document.getElementById('btnOneClickBundleKos'),
+      catalogGridContainer: document.getElementById('catalogGridContainer'),
+
+      // Tab 4: Kalkulator & Pembanding Kemasan
+      inputPkgSizeA: document.getElementById('inputPkgSizeA'),
+      inputPkgPriceA: document.getElementById('inputPkgPriceA'),
+      pkgUnitCostA: document.getElementById('pkgUnitCostA'),
+      inputPkgSizeB: document.getElementById('inputPkgSizeB'),
+      inputPkgPriceB: document.getElementById('inputPkgPriceB'),
+      pkgUnitCostB: document.getElementById('pkgUnitCostB'),
+      verdictHeadline: document.getElementById('verdictHeadline'),
+      verdictDetail: document.getElementById('verdictDetail'),
+      calcToolPrice: document.getElementById('calcToolPrice'),
+      calcToolDiscount: document.getElementById('calcToolDiscount'),
+      checkAuditVat: document.getElementById('checkAuditVat'),
+      calcToolResultNet: document.getElementById('calcToolResultNet'),
+      calcToolResultSavings: document.getElementById('calcToolResultSavings'),
+      calcToolResultVat: document.getElementById('calcToolResultVat'),
+
+      // Tab 5: Radar Anggaran & Riwayat
       inputBudgetCap: document.getElementById('inputBudgetCap'),
       budgetSummaryRaw: document.getElementById('budgetSummaryRaw'),
       budgetSummarySavings: document.getElementById('budgetSummarySavings'),
@@ -97,6 +143,10 @@ class SmartGroceryApp {
       categoryBreakdownContainer: document.getElementById('categoryBreakdownContainer'),
       triageCard: document.getElementById('triageCard'),
       triageItemsContainer: document.getElementById('triageItemsContainer'),
+      historySessionsContainer: document.getElementById('historySessionsContainer'),
+      inputCompareSearch: document.getElementById('inputCompareSearch'),
+      btnExecuteSearchCompare: document.getElementById('btnExecuteSearchCompare'),
+      comparisonResultsContainer: document.getElementById('comparisonResultsContainer'),
 
       // Modal Add/Edit Item
       sheetAddItemBackdrop: document.getElementById('sheetAddItemBackdrop'),
@@ -141,22 +191,6 @@ class SmartGroceryApp {
       btnCancelClearCart: document.getElementById('btnCancelClearCart'),
       btnConfirmClearCartAction: document.getElementById('btnConfirmClearCartAction'),
 
-      // Modal Auth Gatekeeper
-      modalAuthBackdrop: document.getElementById('modalAuthBackdrop'),
-      btnCloseAuthModal: document.getElementById('btnCloseAuthModal'),
-      tabBtnLogin: document.getElementById('tabBtnLogin'),
-      tabBtnRegister: document.getElementById('tabBtnRegister'),
-      authAlertBox: document.getElementById('authAlertBox'),
-      btnGoogleLogin: document.getElementById('btnGoogleLogin'),
-      formLogin: document.getElementById('formLogin'),
-      loginEmail: document.getElementById('loginEmail'),
-      loginPassword: document.getElementById('loginPassword'),
-      formRegister: document.getElementById('formRegister'),
-      regName: document.getElementById('regName'),
-      regEmail: document.getElementById('regEmail'),
-      regPassword: document.getElementById('regPassword'),
-      btnContinueGuest: document.getElementById('btnContinueGuest'),
-
       // Modal User Profile
       modalUserProfileBackdrop: document.getElementById('modalUserProfileBackdrop'),
       btnCloseProfileModal: document.getElementById('btnCloseProfileModal'),
@@ -181,7 +215,7 @@ class SmartGroceryApp {
     this.bindUnitButtons();
     this.bindEvents();
 
-    // Subscribe to auth state updates
+    // Subscribe to auth state updates (Gatekeeper logic)
     authMgr.onUserChange((user, isGuest) => {
       this.updateAuthUI(user, isGuest);
       if (user) {
@@ -198,61 +232,44 @@ class SmartGroceryApp {
 
     // Initial render
     this.render();
-
-    // Initialize date picker
-    this.dom.sessionDatePicker.value = this.store.activeSession.date;
-
-    // Initial staple comparison
-    this.runStapleComparison('Minyak Goreng Bimoli 2L');
-
-    // Show Auth Gatekeeper prompt if not logged in and not guest
-    if (!authMgr.isLoggedIn() && !authMgr.isGuest) {
-      setTimeout(() => {
-        this.openAuthModal();
-      }, 700);
-    }
   }
 
-  /**
-   * Sound Manager UI Sync
-   */
-  updateSoundIcon() {
-    const enabled = soundMgr.isEnabled();
-    if (this.dom.soundIconOn && this.dom.soundIconMute) {
-      this.dom.soundIconOn.style.display = enabled ? 'block' : 'none';
-      this.dom.soundIconMute.style.display = enabled ? 'none' : 'block';
-    }
-  }
+  // ==========================================================================
+  // AUTH GATEKEEPER & SESSION PROTECTOR
+  // ==========================================================================
 
-  toggleSound() {
-    const isNowEnabled = soundMgr.toggle();
-    this.updateSoundIcon();
-    this.showToast(`Suara interaksi: ${isNowEnabled ? 'Aktif' : 'Senyap'}`, 'info');
-  }
-
-  /**
-   * Auth UI Orchestrator
-   */
   updateAuthUI(user, isGuest) {
-    if (user) {
-      const firstName = user.displayName ? user.displayName.split(' ')[0] : 'Akun';
-      this.dom.headerAuthLabel.textContent = firstName;
+    const isAuthorized = !!user || !!isGuest;
 
-      if (user.photoURL) {
-        this.dom.headerUserAvatar.innerHTML = `<img src="${user.photoURL}" alt="${escapeHtml(firstName)}" />`;
-        this.dom.profileAvatarLarge.innerHTML = `<img src="${user.photoURL}" alt="${escapeHtml(user.displayName)}" />`;
+    if (this.dom.authGatekeeperScreen && this.dom.appShell) {
+      if (isAuthorized) {
+        this.dom.authGatekeeperScreen.style.display = 'none';
+        this.dom.appShell.style.display = 'flex';
       } else {
-        const initial = (user.displayName || user.email || 'U').charAt(0).toUpperCase();
-        this.dom.headerUserAvatar.textContent = initial;
-        this.dom.profileAvatarLarge.textContent = initial;
+        this.dom.authGatekeeperScreen.style.display = 'flex';
+        this.dom.appShell.style.display = 'none';
       }
+    }
 
-      this.dom.profileUserName.textContent = user.displayName || 'Pengguna Smart Grocery';
-      this.dom.profileUserEmail.textContent = user.email || 'Akun Lokal';
-      this.dom.profileBadgePill.textContent = user.provider === 'google' ? 'Akun Google Terhubung' : 'Akun Terdaftar';
+    if (user) {
+      const displayName = user.displayName || 'Pengguna';
+      this.dom.headerAuthLabel.textContent = displayName.split(' ')[0];
+      this.dom.headerUserAvatar.innerHTML = `<span style="font-weight: 800; font-size: 11px;">${displayName[0].toUpperCase()}</span>`;
+      this.dom.profileAvatarLarge.textContent = displayName[0].toUpperCase();
+      this.dom.profileUserName.textContent = displayName;
+      this.dom.profileUserEmail.textContent = user.email || 'Akun Terdaftar';
+      this.dom.profileBadgePill.textContent = user.provider === 'google' ? 'Akun Google Terhubung' : 'Akun Email Terverifikasi';
+      this.dom.profileBadgePill.style.display = 'inline-block';
+    } else if (isGuest) {
+      this.dom.headerAuthLabel.textContent = 'Tamu';
+      this.dom.headerUserAvatar.innerHTML = `<span>🐾</span>`;
+      this.dom.profileAvatarLarge.textContent = '🐾';
+      this.dom.profileUserName.textContent = 'Mode Tamu (Offline)';
+      this.dom.profileUserEmail.textContent = 'Penyimpanan lokal di browser';
+      this.dom.profileBadgePill.textContent = 'Mode Tamu';
       this.dom.profileBadgePill.style.display = 'inline-block';
     } else {
-      this.dom.headerAuthLabel.textContent = isGuest ? 'Tamu' : 'Masuk';
+      this.dom.headerAuthLabel.textContent = 'Masuk';
       this.dom.headerUserAvatar.innerHTML = `
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
@@ -262,15 +279,17 @@ class SmartGroceryApp {
     }
   }
 
-  openAuthModal() {
-    soundMgr.playPop();
-    this.dom.modalAuthBackdrop.style.display = 'flex';
-    this.dom.authAlertBox.style.display = 'none';
-    this.switchAuthTab('login');
+  showGateAlert(msg) {
+    if (this.dom.authGateAlert) {
+      this.dom.authGateAlert.textContent = msg;
+      this.dom.authGateAlert.style.display = 'block';
+    }
   }
 
-  closeAuthModal() {
-    this.dom.modalAuthBackdrop.style.display = 'none';
+  hideGateAlert() {
+    if (this.dom.authGateAlert) {
+      this.dom.authGateAlert.style.display = 'none';
+    }
   }
 
   openUserProfileModal() {
@@ -282,31 +301,10 @@ class SmartGroceryApp {
     this.dom.modalUserProfileBackdrop.style.display = 'none';
   }
 
-  switchAuthTab(tab) {
-    soundMgr.playPop();
-    if (tab === 'login') {
-      this.dom.tabBtnLogin.classList.add('active');
-      this.dom.tabBtnRegister.classList.remove('active');
-      this.dom.formLogin.style.display = 'flex';
-      this.dom.formRegister.style.display = 'none';
-    } else {
-      this.dom.tabBtnRegister.classList.add('active');
-      this.dom.tabBtnLogin.classList.remove('active');
-      this.dom.formRegister.style.display = 'flex';
-      this.dom.formLogin.style.display = 'none';
-    }
-    this.dom.authAlertBox.style.display = 'none';
-  }
+  // ==========================================================================
+  // DATE PICKER WITH CHECKMARK CONFIRMATION
+  // ==========================================================================
 
-  showAuthError(message) {
-    this.dom.authAlertBox.textContent = message;
-    this.dom.authAlertBox.style.display = 'block';
-    this.triggerHaptic();
-  }
-
-  /**
-   * Date Picker with Checkmark Confirmation (User Request)
-   */
   openDatePickerModal() {
     soundMgr.playPop();
     const curDate = this.store.activeSession.date || new Date().toISOString().split('T')[0];
@@ -335,7 +333,7 @@ class SmartGroceryApp {
     if (this.dom.sessionDatePicker) {
       this.dom.sessionDatePicker.value = chosen;
     }
-    soundMgr.playSuccess();
+    soundMgr.playCatPurr();
     this.closeDatePickerModal();
     this.showToast(`Tanggal transaksi dikonfirmasi: ${this.formatDisplayDate(chosen)}`, 'success');
   }
@@ -355,17 +353,28 @@ class SmartGroceryApp {
     return dateStr;
   }
 
-  /**
-   * Theme mode switcher (Dark / Light Mode)
-   */
+  // ==========================================================================
+  // THEME & SOUND CONTROLS
+  // ==========================================================================
+
   applyTheme(theme) {
     document.documentElement.setAttribute('data-theme', theme);
     if (theme === 'light') {
       this.dom.themeIconSun.style.display = 'block';
       this.dom.themeIconMoon.style.display = 'none';
+      if (this.dom.themeCatBadge) {
+        this.dom.themeCatBadge.textContent = '🐱 White Cat';
+        this.dom.themeCatBadge.style.color = '#0284c7';
+        this.dom.themeCatBadge.style.borderColor = 'rgba(2, 132, 199, 0.4)';
+      }
     } else {
       this.dom.themeIconSun.style.display = 'none';
       this.dom.themeIconMoon.style.display = 'block';
+      if (this.dom.themeCatBadge) {
+        this.dom.themeCatBadge.textContent = '🐾 Black Cat';
+        this.dom.themeCatBadge.style.color = 'var(--cyan-light)';
+        this.dom.themeCatBadge.style.borderColor = 'rgba(0, 240, 255, 0.35)';
+      }
     }
   }
 
@@ -373,24 +382,48 @@ class SmartGroceryApp {
     const newTheme = this.store.theme === 'dark' ? 'light' : 'dark';
     this.store.setTheme(newTheme);
     this.applyTheme(newTheme);
-    this.showToast(`Mode ${newTheme === 'dark' ? 'Gelap' : 'Terang'} diaktifkan`, 'info');
+    this.showToast(`Mode ${newTheme === 'dark' ? 'Black Cat (Gelap)' : 'White Cat (Terang)'} aktif`, 'info');
   }
 
-  /**
-   * Main render orchestrator
-   */
+  updateSoundIcon() {
+    const enabled = soundMgr.isEnabled();
+    if (this.dom.soundIconOn && this.dom.soundIconMute) {
+      this.dom.soundIconOn.style.display = enabled ? 'block' : 'none';
+      this.dom.soundIconMute.style.display = enabled ? 'none' : 'block';
+    }
+  }
+
+  toggleSound() {
+    const state = soundMgr.toggle();
+    this.updateSoundIcon();
+    this.showToast(state ? 'Efek Suara Kucing: Aktif' : 'Efek Suara: Senyap', 'info');
+  }
+
+  triggerHaptic() {
+    if (typeof navigator !== 'undefined' && 'vibrate' in navigator) {
+      try { navigator.vibrate(12); } catch (_) {}
+    }
+  }
+
+  // ==========================================================================
+  // RENDER PIPELINE
+  // ==========================================================================
+
   render() {
     const session = this.store.activeSession;
     const summary = Calculator.calculateCartSummary(session.items, session.budgetCap);
 
     this.renderHeaderAndSafetyCap(session, summary);
     this.renderCartItems(session.items);
+    this.renderChecklistTab();
+    this.renderCatalogTab();
+    this.renderCalculatorTab();
     this.renderHistoryTab();
     this.renderBudgetTab(session, summary);
   }
 
   /**
-   * Render Header & Realtime Safety Cap status (F-01 & F-05)
+   * Header & Realtime Radar Keuangan
    */
   renderHeaderAndSafetyCap(session, summary) {
     this.dom.headerStoreName.textContent = session.store;
@@ -408,7 +441,7 @@ class SmartGroceryApp {
     // Sound alert when entering WARNING or DANGER budget state
     if (summary.budgetStatus !== this.lastBudgetStatus) {
       if (summary.budgetStatus === 'WARNING' || summary.budgetStatus === 'DANGER') {
-        soundMgr.playWarning();
+        soundMgr.playBudgetAlarm();
       }
       this.lastBudgetStatus = summary.budgetStatus;
     }
@@ -426,7 +459,7 @@ class SmartGroceryApp {
     this.dom.safetyAlertBanner.className = 'safety-alert-banner';
 
     if (summary.budgetStatus === 'DANGER') {
-      // Over Budget (>100%) - Exact wording from DT2 Skenario Uji 5
+      // Over Budget / Defisit (>100%)
       this.dom.budgetStatusPill.classList.add('pill-danger');
       this.dom.budgetStatusPill.textContent = `OVER BUDGET! (${pct}%)`;
       this.dom.budgetProgressFill.classList.add('fill-danger');
@@ -434,7 +467,7 @@ class SmartGroceryApp {
       this.dom.safetyAlertBanner.style.display = 'flex';
       this.dom.safetyAlertMessage.innerHTML = `<strong>Total belanja melebihi batas saldo dompet!</strong> Kurangi kuantitas atau batalkan barang sekunder. (Melebihi ${Calculator.formatRupiah(Math.abs(summary.remaining))})`;
     } else if (summary.budgetStatus === 'WARNING') {
-      // Warning (>= 90% and <= 100%) - Peringatan Waspada DT2 Skenario Uji 5
+      // Warning (>= 80% and <= 100%)
       this.dom.budgetStatusPill.classList.add('pill-warning');
       this.dom.budgetStatusPill.textContent = `Peringatan Waspada (${pct}%)`;
       this.dom.budgetProgressFill.classList.add('fill-warning');
@@ -442,7 +475,7 @@ class SmartGroceryApp {
       this.dom.safetyAlertBanner.style.display = 'flex';
       this.dom.safetyAlertMessage.innerHTML = `<strong>Peringatan Waspada (${pct}%)!</strong> Total belanja mendekati limit saldo dompet. Sisa saldo: ${Calculator.formatRupiah(summary.remaining)}.`;
     } else {
-      // Safe (<90%)
+      // Safe (<80%)
       this.dom.budgetStatusPill.classList.add('pill-safe');
       this.dom.budgetStatusPill.textContent = `Aman (${pct}%)`;
       this.dom.budgetProgressFill.classList.add('fill-safe');
@@ -451,7 +484,7 @@ class SmartGroceryApp {
   }
 
   /**
-   * Render Cart Items with Stepper & Price Comparator (F-01, F-02, F-04)
+   * Tab 1: Render Cart Items with Stepper & Price Comparator
    */
   renderCartItems(items) {
     const container = this.dom.groceryItemsContainer;
@@ -466,7 +499,6 @@ class SmartGroceryApp {
     this.dom.emptyCartState.style.display = 'none';
     this.dom.cartCheckoutActions.style.display = 'flex';
 
-    // Apply category filter
     const filteredItems = this.selectedCategoryFilter === 'ALL'
       ? items
       : items.filter(it => it.category === this.selectedCategoryFilter);
@@ -494,49 +526,22 @@ class SmartGroceryApp {
       card.className = 'grocery-item-card';
       card.dataset.id = item.id;
 
-      // Price comparison badge (F-04)
       let compBadgeHtml = '';
       if (comparison.trend === 'UP') {
-        compBadgeHtml = `
-          <div class="price-comparator-badge comp-up" title="${comparison.detail}">
-            <span>${comparison.symbol}</span>
-            <span>${comparison.label}</span>
-          </div>
-        `;
+        compBadgeHtml = `<div class="price-comparator-badge comp-up" title="${comparison.detail}"><span>${comparison.symbol}</span><span>${comparison.label}</span></div>`;
       } else if (comparison.trend === 'DOWN') {
-        compBadgeHtml = `
-          <div class="price-comparator-badge comp-down" title="${comparison.detail}">
-            <span>${comparison.symbol}</span>
-            <span>${comparison.label}</span>
-          </div>
-        `;
+        compBadgeHtml = `<div class="price-comparator-badge comp-down" title="${comparison.detail}"><span>${comparison.symbol}</span><span>${comparison.label}</span></div>`;
       } else if (comparison.trend === 'EQUAL') {
-        compBadgeHtml = `
-          <div class="price-comparator-badge comp-equal" title="${comparison.detail}">
-            <span>${comparison.symbol}</span>
-            <span>${comparison.label}</span>
-          </div>
-        `;
+        compBadgeHtml = `<div class="price-comparator-badge comp-equal" title="${comparison.detail}"><span>${comparison.symbol}</span><span>${comparison.label}</span></div>`;
       } else if (comparison.trend === 'NEW') {
-        compBadgeHtml = `
-          <div class="price-comparator-badge comp-new" title="${comparison.detail}">
-            <span>${comparison.symbol}</span>
-            <span>${comparison.label}</span>
-          </div>
-        `;
+        compBadgeHtml = `<div class="price-comparator-badge comp-new" title="${comparison.detail}"><span>${comparison.symbol}</span><span>${comparison.label}</span></div>`;
       }
 
-      // Discount tag (F-03)
       let discountHtml = '';
       if (item.discount && calc.discountAmountPerUnit > 0) {
-        discountHtml = `
-          <span class="discount-tag one-line" title="${calc.formulaText}">
-            🏷️ ${calc.formulaText}
-          </span>
-        `;
+        discountHtml = `<span class="discount-tag one-line" title="${calc.formulaText}">🏷️ ${calc.formulaText}</span>`;
       }
 
-      // Unit price line
       let unitPriceLineHtml = '';
       if (calc.discountAmountPerUnit > 0) {
         unitPriceLineHtml = `
@@ -583,7 +588,6 @@ class SmartGroceryApp {
         </div>
 
         <div class="card-bottom-row">
-          <!-- Stepper Control (F-02) -->
           <div class="stepper-control">
             <button type="button" class="stepper-btn btn-stepper-minus" aria-label="Kurangi Jumlah">−</button>
             <input type="number" step="any" min="0.1" class="stepper-qty-input" value="${item.qty}" inputmode="decimal" aria-label="Kuantitas">
@@ -591,7 +595,6 @@ class SmartGroceryApp {
             <button type="button" class="stepper-btn btn-stepper-plus" aria-label="Tambah Jumlah">+</button>
           </div>
 
-          <!-- Line Financials (F-02 Instant Realtime Total) -->
           <div class="item-pricing-summary">
             ${unitPriceLineHtml}
             <div class="row-total-price one-line">${Calculator.formatRupiah(calc.rowFinalTotal)}</div>
@@ -599,7 +602,7 @@ class SmartGroceryApp {
         </div>
       `;
 
-      // Stepper & Item Actions
+      // Stepper & Item Actions with Cat & Tactile sound effects
       const minusBtn = card.querySelector('.btn-stepper-minus');
       const plusBtn = card.querySelector('.btn-stepper-plus');
       const qtyInput = card.querySelector('.stepper-qty-input');
@@ -650,7 +653,7 @@ class SmartGroceryApp {
         this.triggerHaptic();
         soundMgr.playDelete();
         this.store.removeItem(item.id);
-        this.showToast(`Item "${item.name}" dihapus`, 'warning');
+        this.showToast(`"${item.name}" dihapus dari troli`, 'warning');
       });
 
       if (compBadge) {
@@ -664,10 +667,199 @@ class SmartGroceryApp {
   }
 
   /**
-   * Render Tab 2: Riwayat Toko & Multi-Store Database (F-06)
+   * Tab 2: Rencana Belanja dari Rumah (Checklist Kebutuhan)
+   */
+  renderChecklistTab() {
+    const list = this.store.checklist || [];
+    const container = this.dom.checklistItemsContainer;
+    if (!container) return;
+    container.innerHTML = '';
+
+    const total = list.length;
+    const checkedCount = list.filter(i => i.isChecked).length;
+    const pct = total > 0 ? Math.round((checkedCount / total) * 100) : 0;
+
+    if (this.dom.checklistCounterPill) {
+      this.dom.checklistCounterPill.textContent = `${checkedCount}/${total} Terbeli (${pct}%)`;
+    }
+    if (this.dom.checklistProgressFill) {
+      this.dom.checklistProgressFill.style.width = `${pct}%`;
+    }
+
+    if (list.length === 0) {
+      container.innerHTML = `
+        <div style="text-align: center; padding: 24px; color: var(--text-muted); font-size: 13px;">
+          Belum ada catatan rencana belanja. Tulis barang pertama Anda di atas!
+        </div>
+      `;
+      return;
+    }
+
+    list.forEach(item => {
+      const card = document.createElement('div');
+      card.className = `checklist-card ${item.isChecked ? 'is-checked' : ''}`;
+
+      card.innerHTML = `
+        <div class="checklist-left-wrap">
+          <button type="button" class="checklist-checkbox" aria-label="Tandai Selesai">
+            ${item.isChecked ? '✓' : ''}
+          </button>
+          <div class="checklist-info-wrap">
+            <div class="checklist-item-title ${item.isChecked ? 'strikethrough-done' : ''}">${escapeHtml(item.name)}</div>
+            <div class="checklist-item-sub">
+              <span>🏷️ ${escapeHtml(item.category)}</span>
+              ${item.estPrice > 0 ? `<span>• Est. ${Calculator.formatRupiah(item.estPrice)}</span>` : ''}
+            </div>
+          </div>
+        </div>
+        <div class="checklist-actions">
+          <button type="button" class="btn-transfer-single" title="Masukkan ke Troli">
+            <span>+ Troli</span>
+          </button>
+          <button type="button" class="btn-del-checklist" title="Hapus dari Rencana">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+          </button>
+        </div>
+      `;
+
+      // Checkbox Toggle
+      const checkBtn = card.querySelector('.checklist-checkbox');
+      checkBtn.addEventListener('click', () => {
+        soundMgr.playChecklistChime();
+        this.triggerHaptic();
+        this.store.toggleChecklistItem(item.id);
+      });
+
+      // Transfer single item to active trolley
+      const transferBtn = card.querySelector('.btn-transfer-single');
+      transferBtn.addEventListener('click', () => {
+        soundMgr.playCatMeow();
+        this.store.transferChecklistItemToCart(item.id);
+        this.showToast(`"${item.name}" berhasil masuk ke troli belanja!`, 'success');
+      });
+
+      // Delete item from checklist
+      const delBtn = card.querySelector('.btn-del-checklist');
+      delBtn.addEventListener('click', () => {
+        soundMgr.playDelete();
+        this.store.removeChecklistItem(item.id);
+      });
+
+      container.appendChild(card);
+    });
+  }
+
+  /**
+   * Tab 3: Katalog Supermarket & Paket Hemat 1-Klik
+   */
+  renderCatalogTab() {
+    const container = this.dom.catalogGridContainer;
+    if (!container) return;
+    container.innerHTML = '';
+
+    MASTER_CATALOG.forEach(prod => {
+      const card = document.createElement('div');
+      card.className = 'catalog-product-card';
+
+      card.innerHTML = `
+        <div>
+          <div class="cat-prod-name one-line">${escapeHtml(prod.name)}</div>
+          <div class="cat-prod-unit">${prod.category} • ${prod.unit}</div>
+        </div>
+        <div class="cat-prod-bottom">
+          <span class="cat-prod-price">${Calculator.formatRupiah(prod.benchmarkPrice)}</span>
+          <button type="button" class="btn-quick-add-catalog">+ Troli</button>
+        </div>
+      `;
+
+      card.querySelector('.btn-quick-add-catalog').addEventListener('click', () => {
+        soundMgr.playCatMeow();
+        this.store.addItem({
+          name: prod.name,
+          category: prod.category,
+          unit: prod.unit,
+          qty: 1,
+          unitPrice: prod.benchmarkPrice,
+          discount: '',
+          notes: `Katalog ${prod.store || 'Supermarket'}`
+        });
+        this.showToast(`Ditambahkan ke troli: ${prod.name}`, 'success');
+      });
+
+      container.appendChild(card);
+    });
+  }
+
+  /**
+   * Tab 4: Kalkulator Diskon Bertumpuk & Pembanding Kemasan
+   */
+  renderCalculatorTab() {
+    this.updateValueComparator();
+    this.updateCompoundDiscountTool();
+  }
+
+  updateValueComparator() {
+    if (!this.dom.inputPkgSizeA || !this.dom.inputPkgPriceA) return;
+
+    const sizeA = parseFloat(this.dom.inputPkgSizeA.value) || 1;
+    const priceA = Calculator.parseNumber(this.dom.inputPkgPriceA.value) || 0;
+    const sizeB = parseFloat(this.dom.inputPkgSizeB.value) || 1;
+    const priceB = Calculator.parseNumber(this.dom.inputPkgPriceB.value) || 0;
+
+    const res = Calculator.comparePackages(sizeA, priceA, sizeB, priceB, 'gram');
+
+    if (this.dom.pkgUnitCostA) {
+      this.dom.pkgUnitCostA.textContent = `Rp ${res.unitCostA.toFixed(1)} / gram`;
+    }
+    if (this.dom.pkgUnitCostB) {
+      this.dom.pkgUnitCostB.textContent = `Rp ${res.unitCostB.toFixed(1)} / gram`;
+    }
+
+    if (this.dom.verdictHeadline && this.dom.verdictDetail) {
+      if (res.winner === 'A') {
+        this.dom.verdictHeadline.textContent = `Kemasan A ${res.savingsPercent}% Lebih Murah!`;
+        this.dom.verdictDetail.textContent = `Hemat Rp ${Calculator.formatRupiah(res.savingsNominalPerHundred * 10, false)} per 1.000 gram dibandingkan Kemasan B.`;
+      } else if (res.winner === 'B') {
+        this.dom.verdictHeadline.textContent = `Kemasan B ${res.savingsPercent}% Lebih Murah!`;
+        this.dom.verdictDetail.textContent = `Hemat Rp ${Calculator.formatRupiah(res.savingsNominalPerHundred * 10, false)} per 1.000 gram dibandingkan Kemasan A.`;
+      } else {
+        this.dom.verdictHeadline.textContent = `Nilai Sama Persis`;
+        this.dom.verdictDetail.textContent = `Kedua opsi memiliki harga satuan yang identik.`;
+      }
+    }
+  }
+
+  updateCompoundDiscountTool() {
+    if (!this.dom.calcToolPrice || !this.dom.calcToolDiscount) return;
+
+    const rawPrice = Calculator.parseNumber(this.dom.calcToolPrice.value) || 0;
+    const discInput = this.dom.calcToolDiscount.value || '';
+    const isVatActive = this.dom.checkAuditVat ? this.dom.checkAuditVat.checked : true;
+
+    const discRes = Calculator.calculateDiscount(rawPrice, discInput);
+    const vatRes = Calculator.calculateVatAudit(discRes.finalUnitPrice, true, 0.11);
+
+    if (this.dom.calcToolResultNet) {
+      this.dom.calcToolResultNet.textContent = Calculator.formatRupiah(discRes.finalUnitPrice);
+    }
+    if (this.dom.calcToolResultSavings) {
+      this.dom.calcToolResultSavings.textContent = `${Calculator.formatRupiah(discRes.discountAmount)} (${discRes.effectivePercent}%)`;
+    }
+    if (this.dom.calcToolResultVat) {
+      if (isVatActive) {
+        this.dom.calcToolResultVat.textContent = `DPP: ${Calculator.formatRupiah(vatRes.dpp)} • PPN 11%: ${Calculator.formatRupiah(vatRes.vat)}`;
+      } else {
+        this.dom.calcToolResultVat.textContent = `Audit PPN dinonaktifkan`;
+      }
+    }
+  }
+
+  /**
+   * Tab 5: Riwayat Belanja & Database Multi-Toko
    */
   renderHistoryTab() {
     const container = this.dom.historySessionsContainer;
+    if (!container) return;
     container.innerHTML = '';
 
     const sessions = this.store.history;
@@ -701,265 +893,229 @@ class SmartGroceryApp {
             <div class="history-store-name one-line">${escapeHtml(sess.store)}</div>
             <div class="history-date one-line">${readableDate}</div>
           </div>
-          <span style="font-size: 10px; background: rgba(255,255,255,0.08); padding: 3px 8px; border-radius: 6px; color: var(--text-secondary); white-space: nowrap;">
+          <span style="font-size: 10px; background: rgba(0,240,255,0.12); border: 1px solid rgba(0,240,255,0.3); padding: 3px 8px; border-radius: 6px; color: var(--cyan-light); white-space: nowrap;">
             ${sess.items.length} Barang
           </span>
         </div>
-        <div class="history-metrics">
-          <div class="history-items-count one-line">
-            ${sess.totalSavings > 0 ? `Hemat: ${Calculator.formatRupiah(sess.totalSavings)}` : 'Sesi Belanja'}
-          </div>
+        <div class="history-card-body">
           <div class="history-total-spent one-line">${Calculator.formatRupiah(sess.totalSpent)}</div>
+          <div style="display: flex; gap: 8px;">
+            <button class="btn-history-view" data-id="${sess.id}">Lihat Struk</button>
+            <button class="btn-history-delete" data-id="${sess.id}" title="Hapus Struk">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
+              </svg>
+            </button>
+          </div>
         </div>
       `;
 
-      card.addEventListener('click', () => {
+      card.querySelector('.btn-history-view').addEventListener('click', () => {
+        soundMgr.playPop();
         this.openReceiptDetailModal(sess);
+      });
+
+      card.querySelector('.btn-history-delete').addEventListener('click', () => {
+        if (confirm(`Hapus struk ${sess.store}?`)) {
+          soundMgr.playDelete();
+          this.store.deleteHistorySession(sess.id);
+          this.showToast('Struk riwayat telah dihapus', 'info');
+        }
       });
 
       container.appendChild(card);
     });
+
+    this.runStapleComparison();
   }
 
   /**
-   * Render Tab 3: Anggaran & Safety Cap Analytics (F-05)
+   * Tab 5: Radar Anggaran & Triage Belanja Darurat
    */
   renderBudgetTab(session, summary) {
-    this.dom.inputBudgetCap.value = Calculator.formatRupiah(session.budgetCap, false);
+    if (!this.dom.budgetSummaryRaw) return;
+
     this.dom.budgetSummaryRaw.textContent = Calculator.formatRupiah(summary.totalRaw);
-    this.dom.budgetSummarySavings.textContent = summary.totalSavings > 0 ? `-${Calculator.formatRupiah(summary.totalSavings)}` : 'Rp 0';
+    this.dom.budgetSummarySavings.textContent = `-${Calculator.formatRupiah(summary.totalSavings)}`;
     this.dom.budgetSummaryNet.textContent = Calculator.formatRupiah(summary.totalFinal);
+    this.dom.budgetSummaryRemaining.textContent = Calculator.formatRupiah(summary.remaining);
 
-    if (summary.remaining < 0) {
-      this.dom.budgetSummaryRemaining.style.color = 'var(--crimson)';
-      this.dom.budgetSummaryRemaining.textContent = `Defisit ${Calculator.formatRupiah(Math.abs(summary.remaining))}`;
-    } else {
-      this.dom.budgetSummaryRemaining.style.color = 'var(--emerald-light)';
-      this.dom.budgetSummaryRemaining.textContent = Calculator.formatRupiah(summary.remaining);
-    }
-
-    // Category Spending Breakdown
-    const catContainer = this.dom.categoryBreakdownContainer;
-    catContainer.innerHTML = '';
-    const catKeys = Object.keys(summary.categoryTotals);
-
-    if (catKeys.length === 0) {
-      catContainer.innerHTML = '<div style="font-size: 12px; color: var(--text-muted); text-align: center; padding: 10px;">Belum ada pengeluaran di troli.</div>';
-    } else {
-      catKeys.sort((a, b) => summary.categoryTotals[b] - summary.categoryTotals[a]);
-      catKeys.forEach(catName => {
-        const amt = summary.categoryTotals[catName];
-        const pct = summary.totalFinal > 0 ? ((amt / summary.totalFinal) * 100).toFixed(1) : 0;
-        const catObj = CATEGORIES.find(c => c.name === catName) || { icon: '📦' };
-
-        const row = document.createElement('div');
-        row.className = 'category-breakdown-row';
-        row.innerHTML = `
-          <div class="cat-row-left one-line">
-            <span>${catObj.icon}</span>
-            <span>${catName} (${pct}%)</span>
-          </div>
-          <div class="cat-row-right one-line">${Calculator.formatRupiah(amt)}</div>
-        `;
-        catContainer.appendChild(row);
-      });
-    }
-
-    // Emergency Triage (F-05)
-    const isOverOrTight = summary.budgetStatus === 'WARNING' || summary.budgetStatus === 'DANGER';
-    if (isOverOrTight && session.items.length > 0) {
+    // Emergency Triage Card (F-05)
+    if (summary.budgetStatus === 'WARNING' || summary.budgetStatus === 'DANGER') {
       this.dom.triageCard.style.display = 'block';
-      const triageContainer = this.dom.triageItemsContainer;
-      triageContainer.innerHTML = '';
-
-      const nonEssentials = session.items.filter(it => 
-        it.category === 'Snack & Camilan' || 
-        it.category === 'Kopi & Minuman' || 
-        it.category === 'Makanan Instan/Frozen' ||
-        it.qty > 2
-      );
-
-      if (nonEssentials.length > 0) {
-        nonEssentials.slice(0, 4).forEach(it => {
-          const itCalc = Calculator.calculateItemRow(it.qty, it.unitPrice, it.discount);
-          const row = document.createElement('div');
-          row.className = 'triage-item-row';
-          row.innerHTML = `
-            <div class="one-line" style="flex: 1; margin-right: 8px;">
-              <span style="font-weight: 700; color: var(--text-primary);">${escapeHtml(it.name)}</span>
-              <span style="color: var(--text-muted); font-size: 11px;">(${it.qty} ${it.unit} • ${Calculator.formatRupiah(itCalc.rowFinalTotal)})</span>
-            </div>
-            <button class="btn-trim-item" data-id="${it.id}">Pangkas</button>
-          `;
-
-          row.querySelector('.btn-trim-item').addEventListener('click', () => {
-            this.store.removeItem(it.id);
-            this.showToast(`Pangkas "${it.name}" (Hemat ${Calculator.formatRupiah(itCalc.rowFinalTotal)})`, 'success');
-          });
-
-          triageContainer.appendChild(row);
-        });
-      } else {
-        triageContainer.innerHTML = '<div style="font-size: 11px; color: var(--crimson);">Semua item saat ini adalah kebutuhan pokok esensial.</div>';
-      }
+      this.renderTriageRecommendations(session.items);
     } else {
       this.dom.triageCard.style.display = 'none';
     }
+
+    // Category breakdown
+    const catContainer = this.dom.categoryBreakdownContainer;
+    catContainer.innerHTML = '';
+    const catEntries = Object.entries(summary.categoryTotals);
+
+    if (catEntries.length === 0) {
+      catContainer.innerHTML = `<span style="font-size: 12px; color: var(--text-muted);">Belum ada barang di troli.</span>`;
+      return;
+    }
+
+    catEntries.forEach(([catName, totalAmt]) => {
+      const catObj = CATEGORIES.find(c => c.name === catName) || { icon: '📦', color: '#94a3b8' };
+      const pct = summary.totalFinal > 0 ? Math.round((totalAmt / summary.totalFinal) * 100) : 0;
+
+      const row = document.createElement('div');
+      row.className = 'category-row';
+      row.innerHTML = `
+        <div class="category-meta">
+          <span class="category-icon">${catObj.icon}</span>
+          <span class="category-name one-line">${escapeHtml(catName)}</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span class="category-pct font-mono">${pct}%</span>
+          <span class="category-val font-mono">${Calculator.formatRupiah(totalAmt)}</span>
+        </div>
+      `;
+      catContainer.appendChild(row);
+    });
   }
 
   /**
-   * Multi-Store Staple Price Comparison Search (F-06 & F-04)
+   * Triage Recommendations
    */
-  runStapleComparison(query) {
-    const q = query || this.dom.inputCompareSearch.value.trim();
-    if (!q) return;
-
-    const results = Comparator.getCrossStoreComparison(q, this.store.history);
-    const container = this.dom.comparisonResultsContainer;
+  renderTriageRecommendations(items) {
+    const container = this.dom.triageItemsContainer;
     container.innerHTML = '';
 
-    if (results.length === 0) {
+    const nonEssentialCategories = ['Snack & Camilan', 'Kopi & Minuman', 'Kebutuhan Lainnya', 'ATK & Perkuliahan'];
+    const candidates = items.filter(it => nonEssentialCategories.includes(it.category));
+
+    if (candidates.length === 0) {
       container.innerHTML = `
-        <div style="font-size: 11.5px; color: var(--text-muted); padding: 8px 0; text-align: center;">
-          Tidak ada data riwayat harga untuk "${escapeHtml(q)}".
+        <div style="font-size: 11.5px; color: var(--text-muted); padding: 8px 0;">
+          Semua item dalam troli termasuk kategori pangan pokok primer. Pertimbangkan kurangi kuantitas item beras atau minyak.
         </div>
       `;
       return;
     }
 
-    const lowestPrice = Math.min(...results.map(r => r.unitPrice));
-
-    results.forEach(res => {
-      const isCheapest = res.unitPrice === lowestPrice;
+    candidates.slice(0, 3).forEach(item => {
+      const calc = Calculator.calculateItemRow(item.qty, item.unitPrice, item.discount);
       const row = document.createElement('div');
-      row.className = `store-price-row ${isCheapest ? 'cheapest' : ''}`;
-
-      let dateFormatted = res.date;
-      try {
-        const d = new Date(res.date);
-        dateFormatted = d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
-      } catch (e) {}
-
+      row.className = 'triage-item-row';
       row.innerHTML = `
-        <div class="one-line" style="flex: 1; margin-right: 8px;">
-          <div class="store-name-tag one-line">
-            ${escapeHtml(res.store)}
-            ${isCheapest ? '<span class="cheapest-badge">Termurah ⭐</span>' : ''}
-          </div>
-          <div class="store-date-tag one-line">${escapeHtml(res.productName)} • ${dateFormatted}</div>
+        <div>
+          <div class="triage-item-name one-line">${escapeHtml(item.name)} (${item.qty} ${item.unit})</div>
+          <div class="triage-cut-savings font-mono">+ Simpan ${Calculator.formatRupiah(calc.rowFinalTotal)}</div>
         </div>
-        <div class="store-price-val one-line">${Calculator.formatRupiah(res.unitPrice)} / ${res.unit}</div>
+        <button type="button" class="btn-triage-drop" data-id="${item.id}">Pangkas</button>
       `;
+
+      row.querySelector('.btn-triage-drop').addEventListener('click', () => {
+        soundMgr.playDelete();
+        this.store.removeItem(item.id);
+        this.showToast(`Pangkas "${item.name}": Hemat ${Calculator.formatRupiah(calc.rowFinalTotal)}`, 'info');
+      });
+
       container.appendChild(row);
     });
   }
 
   /**
-   * Modal: Add / Edit Item Bottom Sheet with Unit Buttons & Validation
+   * Staple Price Comparison Search Matrix
    */
-  openAddItemModal(itemToEdit = null) {
-    const isEdit = !!itemToEdit;
-    this.dom.addItemTitle.textContent = isEdit ? 'Edit Item Belanja' : 'Catat Item Belanja';
-    this.dom.btnSubmitItem.textContent = isEdit ? 'Perbarui Item' : 'Simpan ke Troli Belanja';
-    this.dom.inputEditItemId.value = isEdit ? itemToEdit.id : '';
-    this.dom.itemNameError.style.display = 'none';
+  runStapleComparison() {
+    const container = this.dom.comparisonResultsContainer;
+    if (!container) return;
+    const query = (this.dom.inputCompareSearch.value || 'Beras 5kg').trim();
+    container.innerHTML = '';
 
-    if (isEdit) {
-      this.dom.inputItemName.value = itemToEdit.name;
-      this.dom.selectItemCategory.value = itemToEdit.category;
-      this.selectUnitButton(itemToEdit.unit || 'pcs');
-      this.dom.inputItemQty.value = itemToEdit.qty;
-      this.dom.inputItemUnitPrice.value = Calculator.formatRupiah(itemToEdit.unitPrice, false);
-      this.dom.inputItemDiscount.value = itemToEdit.discount || '';
-      this.dom.inputItemNotes.value = itemToEdit.notes || '';
-    } else {
-      this.dom.formAddItem.reset();
-      this.dom.inputEditItemId.value = '';
-      this.dom.inputItemQty.value = '1';
-      this.selectUnitButton('pcs');
+    const results = Comparator.compareStapleAcrossStores(query, this.store.history);
+
+    if (results.length === 0) {
+      container.innerHTML = `
+        <div style="text-align: center; padding: 16px; color: var(--text-muted); font-size: 12px;">
+          Tidak ditemukan riwayat harga untuk "${escapeHtml(query)}".
+        </div>
+      `;
+      return;
     }
 
-    this.updateModalCalculations();
-    this.dom.sheetAddItemBackdrop.classList.add('open');
+    results.forEach(res => {
+      const row = document.createElement('div');
+      row.className = 'comparison-store-row';
 
-    setTimeout(() => {
-      this.dom.inputItemName.focus();
-    }, 150);
-  }
+      let priceHtml = `<span class="comp-price font-mono">${Calculator.formatRupiah(res.latestPrice)}</span>`;
+      let badgeHtml = '';
 
-  closeAddItemModal() {
-    this.dom.sheetAddItemBackdrop.classList.remove('open');
-    this.dom.itemNameError.style.display = 'none';
-  }
-
-  /**
-   * Interactive Unit Buttons (Satuan Harus Ada Tombol)
-   */
-  bindUnitButtons() {
-    const chips = this.dom.unitButtonsGrid.querySelectorAll('.btn-unit-chip');
-    chips.forEach(chip => {
-      chip.addEventListener('click', () => {
-        this.selectUnitButton(chip.dataset.unit);
-      });
-    });
-  }
-
-  selectUnitButton(unitName) {
-    const targetUnit = unitName || 'pcs';
-    this.dom.selectItemUnit.value = targetUnit;
-    const chips = this.dom.unitButtonsGrid.querySelectorAll('.btn-unit-chip');
-    chips.forEach(chip => {
-      if (chip.dataset.unit === targetUnit) {
-        chip.classList.add('active');
-      } else {
-        chip.classList.remove('active');
+      if (res.isCheapest) {
+        badgeHtml = `<span class="cheapest-badge">Termurah</span>`;
       }
+
+      row.innerHTML = `
+        <div>
+          <div class="comp-store-name one-line">${escapeHtml(res.store)} ${badgeHtml}</div>
+          <div class="comp-date one-line">${res.date || 'Terbaru'} • ${escapeHtml(res.matchedName)}</div>
+        </div>
+        <div>
+          ${priceHtml}
+        </div>
+      `;
+
+      container.appendChild(row);
     });
   }
 
   /**
-   * Realtime math & comparator preview inside modal (F-02, F-03, F-04)
+   * Modal: Detail Struk Riwayat Sesi (F-06)
    */
-  updateModalCalculations() {
-    const name = this.dom.inputItemName.value.trim();
-    const qty = Calculator.parseNumber(this.dom.inputItemQty.value);
-    const rawPrice = Calculator.parseNumber(this.dom.inputItemUnitPrice.value);
-    const discount = this.dom.inputItemDiscount.value.trim();
+  openReceiptDetailModal(sessionRecord) {
+    this.dom.receiptModalTitle.textContent = `Struk: ${sessionRecord.store}`;
+    const body = this.dom.receiptDetailBody;
 
-    if (name.length > 0) {
-      this.dom.itemNameError.style.display = 'none';
-    }
+    let itemsHtml = '';
+    sessionRecord.items.forEach((it, idx) => {
+      const calc = Calculator.calculateItemRow(it.qty, it.unitPrice, it.discount);
+      itemsHtml += `
+        <div style="display: flex; justify-content: space-between; font-size: 12px; padding: 4px 0; border-bottom: 1px dashed var(--border-subtle);">
+          <div>
+            <div style="font-weight: 700; color: var(--text-primary);">${idx + 1}. ${escapeHtml(it.name)}</div>
+            <div style="font-size: 10.5px; color: var(--text-muted);">${it.qty} ${it.unit} × ${Calculator.formatRupiah(calc.finalUnitPrice)}</div>
+          </div>
+          <div style="text-align: right; font-family: var(--font-mono); font-weight: 700; color: var(--text-primary);">
+            ${Calculator.formatRupiah(calc.rowFinalTotal)}
+          </div>
+        </div>
+      `;
+    });
 
-    const rowCalc = Calculator.calculateItemRow(qty, rawPrice, discount);
+    body.innerHTML = `
+      <div style="text-align: center; margin-bottom: 12px;">
+        <h3 style="font-size: 15px; font-weight: 800; color: var(--text-primary);">${escapeHtml(sessionRecord.store)}</h3>
+        <p style="font-size: 11px; color: var(--text-muted);">${sessionRecord.date} • ${sessionRecord.items.length} Item</p>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 4px; margin-bottom: 14px;">
+        ${itemsHtml}
+      </div>
+      <div style="padding-top: 10px; border-top: 2px solid var(--border-medium); display: flex; flex-direction: column; gap: 6px;">
+        <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--text-secondary);">
+          <span>Total Sebelum Diskon:</span>
+          <span style="font-family: var(--font-mono);">${Calculator.formatRupiah(sessionRecord.totalRaw || sessionRecord.totalSpent)}</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; font-size: 12px; color: #fbbf24;">
+          <span>Total Hemat Diskon:</span>
+          <span style="font-family: var(--font-mono); font-weight: 700;">-${Calculator.formatRupiah(sessionRecord.totalSavings || 0)}</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; font-size: 14px; font-weight: 800; color: var(--cyan-light);">
+          <span>TOTAL DIBAYAR KASIR:</span>
+          <span style="font-family: var(--font-mono);">${Calculator.formatRupiah(sessionRecord.totalSpent)}</span>
+        </div>
+      </div>
+    `;
 
-    this.dom.modalCalcUnitPrice.textContent = Calculator.formatRupiah(rowCalc.finalUnitPrice);
-    if (rowCalc.discountAmountPerUnit > 0) {
-      this.dom.modalCalcDiscount.textContent = `Hemat ${Calculator.formatRupiah(rowCalc.discountAmountPerUnit)} (${rowCalc.formulaText})`;
-      this.dom.modalCalcDiscount.style.color = '#fbbf24';
-    } else {
-      this.dom.modalCalcDiscount.textContent = 'Rp 0 (0%)';
-      this.dom.modalCalcDiscount.style.color = 'var(--text-muted)';
-    }
+    this.dom.sheetReceiptDetailBackdrop.classList.add('open');
+  }
 
-    this.dom.modalCalcRowTotal.textContent = Calculator.formatRupiah(rowCalc.rowFinalTotal);
-
-    // Live Comparator Feedback (F-04)
-    if (name.length >= 2 && rawPrice > 0) {
-      const comp = Comparator.comparePrice(
-        name,
-        rawPrice,
-        this.store.activeSession.store,
-        this.store.activeSession.date,
-        this.store.history
-      );
-
-      this.dom.itemSheetComparatorPreview.style.display = 'flex';
-      this.dom.itemSheetComparatorPreview.className = `comparator-preview-pill one-line ${comp.badgeClass}`;
-      this.dom.compSymbol.textContent = comp.symbol;
-      this.dom.compText.textContent = comp.detail;
-    } else {
-      this.dom.itemSheetComparatorPreview.style.display = 'none';
-    }
+  closeReceiptDetailModal() {
+    this.dom.sheetReceiptDetailBackdrop.classList.remove('open');
   }
 
   /**
@@ -980,8 +1136,8 @@ class SmartGroceryApp {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        background: ${isSelected ? 'rgba(16, 185, 129, 0.15)' : 'var(--bg-input)'};
-        border: 1px solid ${isSelected ? 'var(--emerald)' : 'var(--border-subtle)'};
+        background: ${isSelected ? 'rgba(0, 240, 255, 0.15)' : 'var(--bg-input)'};
+        border: 1px solid ${isSelected ? 'var(--cyan)' : 'var(--border-subtle)'};
         border-radius: var(--radius-md);
         padding: 12px 14px;
         color: var(--text-primary);
@@ -993,11 +1149,12 @@ class SmartGroceryApp {
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+        min-height: 44px;
       `;
 
       btn.innerHTML = `
         <span class="one-line" style="flex: 1;">${escapeHtml(storeName)}</span>
-        ${isSelected ? '<span style="color: var(--emerald-light); font-weight: 800; margin-left: 8px;">✓ Aktif</span>' : ''}
+        ${isSelected ? '<span style="color: var(--cyan-light); font-weight: 800; margin-left: 8px;">✓ Aktif</span>' : ''}
       `;
 
       btn.addEventListener('click', () => {
@@ -1021,129 +1178,146 @@ class SmartGroceryApp {
    * GPS Location Detection
    */
   detectGpsLocation() {
-    this.showToast('Mencari sinyal GPS lokasi terdekat...', 'info');
+    if (!navigator.geolocation) {
+      this.showToast('Geolocation tidak didukung pada browser ini', 'warning');
+      return;
+    }
 
-    if ('geolocation' in navigator) {
-      navigator.geolocation.getCurrentPosition(
-        (pos) => {
-          // Nearest store in the Puri Indah / West Jakarta hub
-          const detectedStore = 'Lotte Mart Grocery - Puri Indah';
-          this.store.setStore(detectedStore);
-          this.closeStorePickerModal();
-          this.showToast(`GPS Terdeteksi: Terdekat di ${detectedStore}`, 'success');
-        },
-        (err) => {
-          // Graceful fallback for mock / desktop without GPS
-          const detectedStore = 'Lotte Mart Grocery - Puri Indah';
-          this.store.setStore(detectedStore);
-          this.closeStorePickerModal();
-          this.showToast(`Lokasi GPS Diset: ${detectedStore}`, 'success');
-        },
-        { timeout: 4000 }
-      );
+    this.dom.btnDetectGpsStore.disabled = true;
+    this.dom.btnDetectGpsStore.querySelector('span').textContent = 'Mencari sinyal GPS...';
+
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const { latitude, longitude } = pos.coords;
+        let detected = 'Lotte Mart Grocery - Puri Indah';
+
+        if (latitude < -6.18 && latitude > -6.22 && longitude > 106.73 && longitude < 106.77) {
+          detected = 'Lotte Mart Grocery - Puri Indah';
+        } else if (latitude < -6.19 && longitude > 106.76) {
+          detected = 'Super Indo - Intercon Kebon Jeruk';
+        } else {
+          detected = 'Indomaret Fresh - Kemanggisan';
+        }
+
+        this.store.setStore(detected);
+        this.closeStorePickerModal();
+        this.showToast(`GPS Terdeteksi: ${detected}`, 'success');
+
+        this.dom.btnDetectGpsStore.disabled = false;
+        this.dom.btnDetectGpsStore.querySelector('span').textContent = 'Deteksi Lokasi Terdekat (GPS)';
+      },
+      () => {
+        this.showToast('Gagal mengakses GPS. Menggunakan lokasi default.', 'info');
+        this.dom.btnDetectGpsStore.disabled = false;
+        this.dom.btnDetectGpsStore.querySelector('span').textContent = 'Deteksi Lokasi Terdekat (GPS)';
+      },
+      { timeout: 8000, enableHighAccuracy: true }
+    );
+  }
+
+  /**
+   * Modal: Tambah / Edit Item (F-01, F-02, F-03, F-04)
+   */
+  openAddItemModal(itemToEdit = null) {
+    soundMgr.playPop();
+    const form = this.dom.formAddItem;
+    form.reset();
+    this.dom.itemNameError.style.display = 'none';
+
+    if (itemToEdit) {
+      this.dom.addItemTitle.textContent = 'Edit Item Belanja';
+      this.dom.inputEditItemId.value = itemToEdit.id;
+      this.dom.inputItemName.value = itemToEdit.name;
+      this.dom.selectItemCategory.value = itemToEdit.category;
+      this.selectUnitButton(itemToEdit.unit);
+      this.dom.inputItemQty.value = itemToEdit.qty;
+      this.dom.inputItemUnitPrice.value = Calculator.formatRupiah(itemToEdit.unitPrice, false);
+      this.dom.inputItemDiscount.value = itemToEdit.discount || '';
+      this.dom.inputItemNotes.value = itemToEdit.notes || '';
     } else {
-      this.showToast('Perangkat tidak mendukung sensor GPS', 'warning');
+      this.dom.addItemTitle.textContent = 'Catat Item Belanja';
+      this.dom.inputEditItemId.value = '';
+      this.selectUnitButton('pcs');
+      this.dom.inputItemQty.value = '1';
+      this.dom.inputItemUnitPrice.value = '';
+      this.dom.inputItemDiscount.value = '';
+      this.dom.inputItemNotes.value = '';
+    }
+
+    this.updateModalCalculations();
+    this.dom.sheetAddItemBackdrop.classList.add('open');
+    setTimeout(() => {
+      if (!itemToEdit) this.dom.inputItemName.focus();
+    }, 200);
+  }
+
+  closeAddItemModal() {
+    this.dom.sheetAddItemBackdrop.classList.remove('open');
+  }
+
+  selectUnitButton(unit) {
+    this.dom.selectItemUnit.value = unit;
+    const btns = this.dom.unitButtonsGrid.querySelectorAll('.btn-unit-chip');
+    btns.forEach(b => {
+      if (b.dataset.unit === unit) {
+        b.classList.add('active');
+      } else {
+        b.classList.remove('active');
+      }
+    });
+  }
+
+  bindUnitButtons() {
+    const btns = this.dom.unitButtonsGrid.querySelectorAll('.btn-unit-chip');
+    btns.forEach(b => {
+      b.addEventListener('click', () => {
+        soundMgr.playPop();
+        this.selectUnitButton(b.dataset.unit);
+      });
+    });
+  }
+
+  updateModalCalculations() {
+    const rawPrice = Calculator.parseNumber(this.dom.inputItemUnitPrice.value);
+    const qty = Calculator.parseNumber(this.dom.inputItemQty.value) || 1;
+    const discountStr = this.dom.inputItemDiscount.value.trim();
+    const itemName = this.dom.inputItemName.value.trim();
+
+    const calc = Calculator.calculateItemRow(qty, rawPrice, discountStr);
+
+    this.dom.modalCalcUnitPrice.textContent = Calculator.formatRupiah(calc.finalUnitPrice);
+    this.dom.modalCalcDiscount.textContent = `${Calculator.formatRupiah(calc.discountAmountPerUnit)} (${calc.effectivePercent}%)`;
+    this.dom.modalCalcRowTotal.textContent = Calculator.formatRupiah(calc.rowFinalTotal);
+
+    if (itemName && rawPrice > 0) {
+      const comp = Comparator.comparePrice(
+        itemName,
+        rawPrice,
+        this.store.activeSession.store,
+        this.store.activeSession.date,
+        this.store.history
+      );
+      this.dom.itemSheetComparatorPreview.style.display = 'flex';
+      this.dom.itemSheetComparatorPreview.className = `comparator-preview-pill comp-${comp.trend.toLowerCase()}`;
+      this.dom.compSymbol.textContent = comp.symbol;
+      this.dom.compText.textContent = comp.detail;
+    } else {
+      this.dom.itemSheetComparatorPreview.style.display = 'none';
     }
   }
 
-  /**
-   * Modal: Detail Struk Riwayat Sesi (F-06 Struk Harus Benar)
-   */
-  openReceiptDetailModal(session) {
-    this.dom.receiptModalTitle.textContent = `Struk Belanja: ${session.store}`;
-    const body = this.dom.receiptDetailBody;
-
-    let readableDate = session.date;
-    try {
-      const d = new Date(session.date);
-      readableDate = d.toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-    } catch (e) {}
-
-    let itemsListHtml = '';
-    let calculatedSubtotalRaw = 0;
-    let calculatedSavings = 0;
-
-    session.items.forEach((it, idx) => {
-      const rowCalc = Calculator.calculateItemRow(it.qty, it.unitPrice, it.discount);
-      calculatedSubtotalRaw += rowCalc.rowRawTotal;
-      calculatedSavings += rowCalc.rowSavings;
-
-      itemsListHtml += `
-        <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px dashed var(--border-medium); font-size: 12.5px;">
-          <div style="flex: 1; margin-right: 8px;" class="one-line">
-            <div style="font-weight: 700; color: var(--text-primary);" class="one-line">${idx + 1}. ${escapeHtml(it.name)}</div>
-            <div style="color: var(--text-muted); font-size: 11px;" class="one-line">${it.qty} ${it.unit} @ ${Calculator.formatRupiah(rowCalc.finalUnitPrice)} ${it.discount ? `(Diskon: ${it.discount})` : ''}</div>
-          </div>
-          <div style="font-family: var(--font-mono); font-weight: 700; color: var(--emerald-light); white-space: nowrap;">${Calculator.formatRupiah(rowCalc.rowFinalTotal)}</div>
-        </div>
-      `;
-    });
-
-    const netFinal = session.totalSpent || (calculatedSubtotalRaw - calculatedSavings);
-    const savings = session.totalSavings || calculatedSavings;
-
-    body.innerHTML = `
-      <div style="background: var(--bg-input); border-radius: var(--radius-md); padding: 12px; margin-bottom: 12px; border: 1px solid var(--border-subtle);">
-        <div style="font-size: 14px; font-weight: 800; color: var(--text-primary);">${escapeHtml(session.store)}</div>
-        <div style="font-size: 11px; color: var(--text-secondary); margin-top: 2px;">Tanggal: ${readableDate}</div>
-        ${session.notes ? `<div style="font-size: 11px; color: var(--text-muted); margin-top: 4px; font-style: italic;">"${escapeHtml(session.notes)}"</div>` : ''}
-      </div>
-
-      <div style="display: flex; flex-direction: column; gap: 4px; margin-bottom: 14px;">
-        ${itemsListHtml}
-      </div>
-
-      <div style="background: var(--bg-input); border: 1px solid var(--border-highlight); border-radius: var(--radius-md); padding: 12px; display: flex; flex-direction: column; gap: 6px;">
-        <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--text-secondary);">
-          <span>Total Item / Qty</span>
-          <span>${session.items.length} Barang</span>
-        </div>
-        <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--text-secondary);">
-          <span>Subtotal Normal</span>
-          <span>${Calculator.formatRupiah(calculatedSubtotalRaw || netFinal + savings)}</span>
-        </div>
-        ${savings > 0 ? `
-          <div style="display: flex; justify-content: space-between; font-size: 12px; color: #fbbf24;">
-            <span>Total Potongan Diskon</span>
-            <span>-${Calculator.formatRupiah(savings)}</span>
-          </div>
-        ` : ''}
-        <div style="display: flex; justify-content: space-between; font-size: 15px; font-weight: 800; color: var(--text-primary); border-top: 1px solid var(--border-medium); padding-top: 6px;">
-          <span>Grand Total Bayar</span>
-          <span style="color: var(--emerald-light); font-family: var(--font-mono);">${Calculator.formatRupiah(netFinal)}</span>
-        </div>
-      </div>
-
-      <button type="button" class="btn-sheet-submit" id="btnCloseReceiptBtn" style="margin-top: 10px;">
-        Tutup Struk Belanja
-      </button>
-    `;
-
-    body.querySelector('#btnCloseReceiptBtn').addEventListener('click', () => {
-      this.closeReceiptDetailModal();
-    });
-
-    this.dom.sheetReceiptDetailBackdrop.classList.add('open');
-  }
-
-  closeReceiptDetailModal() {
-    this.dom.sheetReceiptDetailBackdrop.classList.remove('open');
-  }
-
-  /**
-   * Render autocomplete quick chips
-   */
   renderQuickStaplesChips() {
     const container = this.dom.quickStaplesChips;
     container.innerHTML = '';
 
-    MASTER_CATALOG.forEach(staple => {
+    MASTER_CATALOG.slice(0, 7).forEach(staple => {
       const chip = document.createElement('button');
       chip.type = 'button';
       chip.className = 'staple-chip one-line';
       chip.textContent = staple.name;
 
       chip.addEventListener('click', () => {
+        soundMgr.playPop();
         this.dom.inputItemName.value = staple.name;
         this.dom.selectItemCategory.value = staple.category;
         this.selectUnitButton(staple.unit);
@@ -1157,13 +1331,11 @@ class SmartGroceryApp {
     });
   }
 
-  /**
-   * Render category filter chips in Tab Belanja
-   */
   renderCategoryFilterChips() {
     const chips = this.dom.categoryFilterContainer.querySelectorAll('.filter-chip');
     chips.forEach(chip => {
       chip.addEventListener('click', () => {
+        soundMgr.playPop();
         chips.forEach(c => c.classList.remove('active'));
         chip.classList.add('active');
         this.selectedCategoryFilter = chip.dataset.category;
@@ -1172,20 +1344,17 @@ class SmartGroceryApp {
     });
   }
 
-  /**
-   * Toast notification helper
-   */
   showToast(message, type = 'info') {
     const toast = document.createElement('div');
     toast.className = `toast toast-${type}`;
 
     let iconSvg = '';
     if (type === 'success') {
-      iconSvg = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>';
+      iconSvg = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00f0ff" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>';
     } else if (type === 'warning') {
-      iconSvg = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.5"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>';
+      iconSvg = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ff9f1c" stroke-width="2.5"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>';
     } else if (type === 'danger') {
-      iconSvg = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>';
+      iconSvg = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f43f5e" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>';
     }
 
     toast.innerHTML = `${iconSvg}<span class="one-line">${message}</span>`;
@@ -1199,76 +1368,71 @@ class SmartGroceryApp {
     }, 2800);
   }
 
-  /**
-   * Haptic vibration
-   */
-  triggerHaptic() {
-    if ('vibrate' in navigator) {
-      try {
-        navigator.vibrate(20);
-      } catch (e) {}
-    }
-  }
-
-  /**
-   * Switch Active Tabs
-   */
   switchTab(tabId) {
     this.activeTab = tabId;
+    const allPanels = [this.dom.tabBelanja, this.dom.tabRencana, this.dom.tabKatalog, this.dom.tabKalkulator, this.dom.tabAnggaran];
+    const allNavs = [this.dom.navBelanja, this.dom.navRencana, this.dom.navKatalog, this.dom.navKalkulator, this.dom.navAnggaran];
 
-    [this.dom.tabBelanja, this.dom.tabRiwayat, this.dom.tabAnggaran].forEach(panel => {
-      panel.classList.remove('active');
-    });
-    [this.dom.navBelanja, this.dom.navRiwayat, this.dom.navAnggaran].forEach(nav => {
-      nav.classList.remove('active');
-    });
+    allPanels.forEach(p => { if (p) p.classList.remove('active'); });
+    allNavs.forEach(n => { if (n) n.classList.remove('active'); });
 
-    if (tabId === 'tabBelanja') {
-      this.dom.tabBelanja.classList.add('active');
-      this.dom.navBelanja.classList.add('active');
-    } else if (tabId === 'tabRiwayat') {
-      this.dom.tabRiwayat.classList.add('active');
-      this.dom.navRiwayat.classList.add('active');
-    } else if (tabId === 'tabAnggaran') {
-      this.dom.tabAnggaran.classList.add('active');
-      this.dom.navAnggaran.classList.add('active');
-    }
+    if (this.dom[tabId]) this.dom[tabId].classList.add('active');
+    
+    const navKey = 'nav' + tabId.replace('tab', '');
+    if (this.dom[navKey]) this.dom[navKey].classList.add('active');
 
     this.triggerHaptic();
   }
 
-  /**
-   * Setup all event listeners
-   */
+  // ==========================================================================
+  // EVENT BINDINGS
+  // ==========================================================================
+
   bindEvents() {
-    // Sound Toggle Button
+    // Sound & Theme
     if (this.dom.btnSoundToggle) {
-      this.dom.btnSoundToggle.addEventListener('click', () => {
-        this.toggleSound();
+      this.dom.btnSoundToggle.addEventListener('click', () => this.toggleSound());
+    }
+    if (this.dom.btnThemeToggle) {
+      this.dom.btnThemeToggle.addEventListener('click', () => {
+        soundMgr.playPop();
+        this.toggleTheme();
       });
     }
 
-    // Theme Switcher
-    this.dom.btnThemeToggle.addEventListener('click', () => {
-      soundMgr.playPop();
-      this.toggleTheme();
-    });
+    // 5 Navigation Tabs
+    if (this.dom.navBelanja) {
+      this.dom.navBelanja.addEventListener('click', () => {
+        soundMgr.playPop();
+        this.switchTab('tabBelanja');
+      });
+    }
+    if (this.dom.navRencana) {
+      this.dom.navRencana.addEventListener('click', () => {
+        soundMgr.playPop();
+        this.switchTab('tabRencana');
+      });
+    }
+    if (this.dom.navKatalog) {
+      this.dom.navKatalog.addEventListener('click', () => {
+        soundMgr.playPop();
+        this.switchTab('tabKatalog');
+      });
+    }
+    if (this.dom.navKalkulator) {
+      this.dom.navKalkulator.addEventListener('click', () => {
+        soundMgr.playPop();
+        this.switchTab('tabKalkulator');
+      });
+    }
+    if (this.dom.navAnggaran) {
+      this.dom.navAnggaran.addEventListener('click', () => {
+        soundMgr.playPop();
+        this.switchTab('tabAnggaran');
+      });
+    }
 
-    // Navigation Tabs
-    this.dom.navBelanja.addEventListener('click', () => {
-      soundMgr.playPop();
-      this.switchTab('tabBelanja');
-    });
-    this.dom.navRiwayat.addEventListener('click', () => {
-      soundMgr.playPop();
-      this.switchTab('tabRiwayat');
-    });
-    this.dom.navAnggaran.addEventListener('click', () => {
-      soundMgr.playPop();
-      this.switchTab('tabAnggaran');
-    });
-
-    // Store Picker Modal Trigger (Icon beside theme toggle)
+    // Store & Date Modals
     if (this.dom.btnOpenStorePicker) {
       this.dom.btnOpenStorePicker.addEventListener('click', () => this.openStorePickerModal());
     }
@@ -1277,7 +1441,6 @@ class SmartGroceryApp {
       if (e.target === this.dom.sheetStorePickerBackdrop) this.closeStorePickerModal();
     });
 
-    // Date Picker Modal Trigger with Checkmark Confirmation (Icon beside theme toggle)
     if (this.dom.btnOpenDatePicker) {
       this.dom.btnOpenDatePicker.addEventListener('click', () => this.openDatePickerModal());
     }
@@ -1296,115 +1459,95 @@ class SmartGroceryApp {
       });
     }
 
-    // Date Picker Input fallback (F-01)
-    if (this.dom.sessionDatePicker) {
-      this.dom.sessionDatePicker.addEventListener('change', (e) => {
-        this.store.setDate(e.target.value);
-        if (this.dom.headerDateDisplay) {
-          this.dom.headerDateDisplay.textContent = this.formatDisplayDate(e.target.value);
-        }
-      });
-    }
-
-    // User Auth & Profile Modal Triggers
-    if (this.dom.btnUserAuth) {
-      this.dom.btnUserAuth.addEventListener('click', () => {
+    // Auth Gatekeeper Tab Switcher
+    if (this.dom.btnGateTabLogin) {
+      this.dom.btnGateTabLogin.addEventListener('click', () => {
         soundMgr.playPop();
-        if (authMgr.isLoggedIn()) {
-          this.openUserProfileModal();
-        } else {
-          this.openAuthModal();
-        }
+        this.dom.btnGateTabLogin.classList.add('active');
+        this.dom.btnGateTabRegister.classList.remove('active');
+        this.dom.formGateLogin.style.display = 'flex';
+        this.dom.formGateRegister.style.display = 'none';
+        this.hideGateAlert();
       });
     }
-
-    if (this.dom.btnCloseAuthModal) {
-      this.dom.btnCloseAuthModal.addEventListener('click', () => this.closeAuthModal());
-    }
-    if (this.dom.modalAuthBackdrop) {
-      this.dom.modalAuthBackdrop.addEventListener('click', (e) => {
-        if (e.target === this.dom.modalAuthBackdrop) this.closeAuthModal();
-      });
-    }
-
-    // Auth Tabs Switcher
-    if (this.dom.tabBtnLogin) {
-      this.dom.tabBtnLogin.addEventListener('click', () => this.switchAuthTab('login'));
-    }
-    if (this.dom.tabBtnRegister) {
-      this.dom.tabBtnRegister.addEventListener('click', () => this.switchAuthTab('register'));
-    }
-
-    // Google Sign-In
-    if (this.dom.btnGoogleLogin) {
-      this.dom.btnGoogleLogin.addEventListener('click', async () => {
+    if (this.dom.btnGateTabRegister) {
+      this.dom.btnGateTabRegister.addEventListener('click', () => {
         soundMgr.playPop();
-        this.dom.btnGoogleLogin.disabled = true;
-        this.dom.btnGoogleLogin.style.opacity = '0.7';
+        this.dom.btnGateTabRegister.classList.add('active');
+        this.dom.btnGateTabLogin.classList.remove('active');
+        this.dom.formGateRegister.style.display = 'flex';
+        this.dom.formGateLogin.style.display = 'none';
+        this.hideGateAlert();
+      });
+    }
+
+    // Gatekeeper Google Login
+    if (this.dom.btnGateGoogleLogin) {
+      this.dom.btnGateGoogleLogin.addEventListener('click', async () => {
+        soundMgr.playPop();
+        this.dom.btnGateGoogleLogin.disabled = true;
+        this.hideGateAlert();
         const res = await authMgr.loginWithGoogle();
-        this.dom.btnGoogleLogin.disabled = false;
-        this.dom.btnGoogleLogin.style.opacity = '1';
-
+        this.dom.btnGateGoogleLogin.disabled = false;
         if (res.success) {
-          soundMgr.playSuccess();
-          this.closeAuthModal();
+          soundMgr.playLoginWelcome();
           this.showToast(`Selamat datang, ${res.user.displayName}!`, 'success');
-        } else if (res.needsConsoleActivation) {
-          this.showAuthError(res.error);
         } else {
-          this.showAuthError(res.error || 'Gagal masuk dengan Google.');
+          this.showGateAlert(res.error || 'Gagal masuk dengan Google.');
         }
       });
     }
 
-    // Email Login Submit
-    if (this.dom.formLogin) {
-      this.dom.formLogin.addEventListener('submit', async (e) => {
+    // Gatekeeper Email Login Submit
+    if (this.dom.formGateLogin) {
+      this.dom.formGateLogin.addEventListener('submit', async (e) => {
         e.preventDefault();
         soundMgr.playPop();
-        const email = this.dom.loginEmail.value.trim();
-        const pass = this.dom.loginPassword.value;
+        this.hideGateAlert();
+        const email = this.dom.gateLoginEmail.value.trim();
+        const pass = this.dom.gateLoginPassword.value;
         const res = await authMgr.loginWithEmail(email, pass);
         if (res.success) {
-          soundMgr.playSuccess();
-          this.closeAuthModal();
+          soundMgr.playLoginWelcome();
           this.showToast(`Berhasil masuk: ${res.user.displayName}`, 'success');
         } else {
-          this.showAuthError(res.error || 'Login gagal.');
+          this.showGateAlert(res.error || 'Login gagal.');
         }
       });
     }
 
-    // Email Register Submit
-    if (this.dom.formRegister) {
-      this.dom.formRegister.addEventListener('submit', async (e) => {
+    // Gatekeeper Register Submit
+    if (this.dom.formGateRegister) {
+      this.dom.formGateRegister.addEventListener('submit', async (e) => {
         e.preventDefault();
         soundMgr.playPop();
-        const name = this.dom.regName.value.trim();
-        const email = this.dom.regEmail.value.trim();
-        const pass = this.dom.regPassword.value;
+        this.hideGateAlert();
+        const name = this.dom.gateRegName.value.trim();
+        const email = this.dom.gateRegEmail.value.trim();
+        const pass = this.dom.gateRegPassword.value;
         const res = await authMgr.registerWithEmail(email, pass, name);
         if (res.success) {
-          soundMgr.playSuccess();
-          this.closeAuthModal();
+          soundMgr.playLoginWelcome();
           this.showToast(`Akun berhasil dibuat! Selamat datang, ${name}`, 'success');
         } else {
-          this.showAuthError(res.error || 'Pendaftaran gagal.');
+          this.showGateAlert(res.error || 'Pendaftaran gagal.');
         }
       });
     }
 
-    // Continue as Guest
-    if (this.dom.btnContinueGuest) {
-      this.dom.btnContinueGuest.addEventListener('click', () => {
-        soundMgr.playPop();
+    // Gatekeeper Guest Mode
+    if (this.dom.btnGateGuestLogin) {
+      this.dom.btnGateGuestLogin.addEventListener('click', () => {
+        soundMgr.playCatMeow();
         authMgr.setGuestMode(true);
-        this.closeAuthModal();
-        this.showToast('Melanjutkan sebagai Tamu (Mode Offline)', 'info');
+        this.showToast('Masuk sebagai Tamu (Mode Demo Offline)', 'info');
       });
     }
 
-    // Profile Modal Actions
+    // User Profile Header Pill & Logout
+    if (this.dom.btnUserAuth) {
+      this.dom.btnUserAuth.addEventListener('click', () => this.openUserProfileModal());
+    }
     if (this.dom.btnCloseProfileModal) {
       this.dom.btnCloseProfileModal.addEventListener('click', () => this.closeUserProfileModal());
     }
@@ -1432,12 +1575,12 @@ class SmartGroceryApp {
     this.dom.btnAddCustomStore.addEventListener('click', () => {
       const val = this.dom.inputNewStore.value.trim();
       if (val) {
-        soundMgr.playAdd();
+        soundMgr.playCatMeow();
         this.store.addStore(val);
         this.store.setStore(val);
         this.dom.inputNewStore.value = '';
         this.closeStorePickerModal();
-        this.showToast(`Toko baru "${val}" dipilih!`, 'success');
+        this.showToast(`Toko ditambahkan: ${val}`, 'success');
       }
     });
 
@@ -1447,63 +1590,66 @@ class SmartGroceryApp {
       this.openAddItemModal();
     });
 
-    this.dom.btnCloseAddItemSheet.addEventListener('click', () => this.closeAddItemModal());
-    this.dom.sheetAddItemBackdrop.addEventListener('click', (e) => {
-      if (e.target === this.dom.sheetAddItemBackdrop) this.closeAddItemModal();
-    });
-
-    // Receipt Detail Modal
+    // Receipt Detail Modal Close
     this.dom.btnCloseReceiptDetail.addEventListener('click', () => this.closeReceiptDetailModal());
     this.dom.sheetReceiptDetailBackdrop.addEventListener('click', (e) => {
       if (e.target === this.dom.sheetReceiptDetailBackdrop) this.closeReceiptDetailModal();
     });
 
-    // Live Calculation & Price Comparator during modal input (F-02, F-03, F-04)
-    const modalInputs = [
-      this.dom.inputItemName,
-      this.dom.inputItemQty,
-      this.dom.inputItemUnitPrice,
-      this.dom.inputItemDiscount
-    ];
-    modalInputs.forEach(input => {
-      input.addEventListener('input', () => this.updateModalCalculations());
+    // Modal Add Item Listeners
+    this.dom.btnCloseAddItemSheet.addEventListener('click', () => this.closeAddItemModal());
+    this.dom.sheetAddItemBackdrop.addEventListener('click', (e) => {
+      if (e.target === this.dom.sheetAddItemBackdrop) this.closeAddItemModal();
     });
 
-    // Discount Presets in Modal (F-03)
-    const presetBtns = this.dom.formAddItem.querySelectorAll('.btn-discount-preset');
-    presetBtns.forEach(btn => {
+    ['input', 'change'].forEach(evt => {
+      this.dom.inputItemName.addEventListener(evt, () => this.updateModalCalculations());
+      this.dom.inputItemUnitPrice.addEventListener(evt, () => this.updateModalCalculations());
+      this.dom.inputItemQty.addEventListener(evt, () => this.updateModalCalculations());
+      this.dom.inputItemDiscount.addEventListener(evt, () => this.updateModalCalculations());
+    });
+
+    // Preset discount buttons in Add Item Modal
+    const presetButtons = document.querySelectorAll('.btn-discount-preset');
+    presetButtons.forEach(btn => {
       btn.addEventListener('click', () => {
-        this.dom.inputItemDiscount.value = btn.dataset.preset;
-        this.updateModalCalculations();
+        soundMgr.playPop();
+        const p = btn.dataset.preset;
+        if (this.activeTab === 'tabKalkulator' && this.dom.calcToolDiscount) {
+          this.dom.calcToolDiscount.value = p;
+          this.updateCompoundDiscountTool();
+        } else {
+          this.dom.inputItemDiscount.value = p;
+          this.updateModalCalculations();
+        }
       });
     });
 
-    // Form Add / Edit Item Submit with STRICT VALIDATION
+    // Form Add/Edit Item Submit
     this.dom.formAddItem.addEventListener('submit', (e) => {
       e.preventDefault();
-      const editId = this.dom.inputEditItemId.value;
+
       const name = this.dom.inputItemName.value.trim();
-      const category = this.dom.selectItemCategory.value;
-      const unit = this.dom.selectItemUnit.value || 'pcs';
-      const qty = Calculator.parseNumber(this.dom.inputItemQty.value);
       const unitPrice = Calculator.parseNumber(this.dom.inputItemUnitPrice.value);
+      const qty = parseFloat(this.dom.inputItemQty.value);
+      const category = this.dom.selectItemCategory.value;
+      const unit = this.dom.selectItemUnit.value;
       const discount = this.dom.inputItemDiscount.value.trim();
       const notes = this.dom.inputItemNotes.value.trim();
+      const editId = this.dom.inputEditItemId.value;
 
-      // STRICT VALIDATION: Nama barang wajib diisi! Tidak boleh hanya harga (Skenario Uji 1)
       if (!name) {
-        this.dom.itemNameError.textContent = 'Wajib mengisi nama barang! Tidak boleh hanya harga.';
         this.dom.itemNameError.style.display = 'block';
         this.dom.inputItemName.focus();
-        this.showToast('Wajib mengisi nama barang!', 'danger');
+        soundMgr.playWarning();
         this.triggerHaptic();
         return;
       }
 
-      // Validasi harga satuan (Skenario Uji 1: menolak harga negatif atau Rp 0)
       if (unitPrice <= 0) {
-        this.showToast('Harga barang tidak valid! Tidak boleh Rp 0 atau bernilai minus (-).', 'danger');
+        this.showToast('Harga satuan harus lebih dari Rp 0!', 'warning');
         this.dom.inputItemUnitPrice.focus();
+        soundMgr.playWarning();
         this.triggerHaptic();
         return;
       }
@@ -1511,6 +1657,7 @@ class SmartGroceryApp {
       if (qty <= 0) {
         this.showToast('Jumlah (Qty) harus lebih dari 0!', 'warning');
         this.dom.inputItemQty.focus();
+        soundMgr.playWarning();
         this.triggerHaptic();
         return;
       }
@@ -1525,30 +1672,87 @@ class SmartGroceryApp {
         this.store.addItem({
           name, category, unit, qty, unitPrice, discount, notes
         });
-        soundMgr.playAdd();
+        soundMgr.playCatMeow();
         this.showToast(`Ditambahkan ke troli: "${name}"`, 'success');
       }
 
       this.closeAddItemModal();
     });
 
-    // Checkout / Finish Session (F-06)
+    // Tab 2: Checklist Add Form
+    if (this.dom.formAddChecklist) {
+      this.dom.formAddChecklist.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const name = this.dom.inputChecklistName.value.trim();
+        const cat = this.dom.selectChecklistCat.value;
+        const est = Calculator.parseNumber(this.dom.inputChecklistEstPrice.value);
+
+        if (!name) return;
+        this.store.addChecklistItem({ name, category: cat, estPrice: est });
+        soundMgr.playCatMeow();
+        this.dom.inputChecklistName.value = '';
+        this.dom.inputChecklistEstPrice.value = '';
+        this.showToast(`"${name}" dicatat di rencana belanja`, 'success');
+      });
+    }
+
+    // Tab 2: Bulk Transfer Checklist to Active Cart
+    if (this.dom.btnTransferAllChecked) {
+      this.dom.btnTransferAllChecked.addEventListener('click', () => {
+        soundMgr.playCatPurr();
+        const transferred = this.store.transferAllCheckedToCart();
+        if (transferred > 0) {
+          soundMgr.playCatMeow();
+          this.showToast(`${transferred} barang dipindahkan ke troli belanja!`, 'success');
+        } else {
+          this.showToast('Centang barang terlebih dahulu di checklist', 'info');
+        }
+      });
+    }
+
+    // Tab 3: 1-Klik Paket Hemat Kos
+    if (this.dom.btnOneClickBundleKos) {
+      this.dom.btnOneClickBundleKos.addEventListener('click', () => {
+        soundMgr.playCatPurr();
+        setTimeout(() => soundMgr.playCatMeow(), 250);
+        this.store.addPaketHematKos();
+        this.showToast('⚡ Paket Hemat Kos (5 Sembako) berhasil masuk ke troli!', 'success');
+        this.switchTab('tabBelanja');
+      });
+    }
+
+    // Tab 4: Package Comparator Inputs
+    if (this.dom.inputPkgSizeA && this.dom.inputPkgPriceA) {
+      ['input', 'change'].forEach(evt => {
+        this.dom.inputPkgSizeA.addEventListener(evt, () => this.updateValueComparator());
+        this.dom.inputPkgPriceA.addEventListener(evt, () => this.updateValueComparator());
+        this.dom.inputPkgSizeB.addEventListener(evt, () => this.updateValueComparator());
+        this.dom.inputPkgPriceB.addEventListener(evt, () => this.updateValueComparator());
+        if (this.dom.calcToolPrice) this.dom.calcToolPrice.addEventListener(evt, () => this.updateCompoundDiscountTool());
+        if (this.dom.calcToolDiscount) this.dom.calcToolDiscount.addEventListener(evt, () => this.updateCompoundDiscountTool());
+      });
+    }
+    if (this.dom.checkAuditVat) {
+      this.dom.checkAuditVat.addEventListener('change', () => this.updateCompoundDiscountTool());
+    }
+
+    // Checkout / Finish Session (F-06 & Ringkasan Akhir)
     this.dom.btnFinishSession.addEventListener('click', () => {
       if (this.store.activeSession.items.length === 0) {
-        soundMgr.playWarning();
+        soundMgr.playBudgetAlarm();
         this.showToast('Troli belanja masih kosong!', 'warning');
         return;
       }
       const summary = Calculator.calculateCartSummary(this.store.activeSession.items, this.store.activeSession.budgetCap);
       const saved = this.store.checkoutAndSaveSession(summary);
       if (saved) {
-        soundMgr.playSuccess();
+        soundMgr.playLoginWelcome();
         this.showToast('Belanja selesai! Struk tersimpan di Riwayat', 'success');
-        this.switchTab('tabRiwayat');
+        this.openReceiptDetailModal(saved);
       }
     });
 
-    // Dedicated Button: Clear All Cart Items via Non-Blocking Modal (F-06A & UX)
+    // Clear Cart Confirmation
     this.dom.btnQuickClearCart.addEventListener('click', () => {
       if (this.store.activeSession.items.length === 0) {
         soundMgr.playPop();
@@ -1583,7 +1787,8 @@ class SmartGroceryApp {
       const val = Calculator.parseNumber(e.target.value);
       if (val > 0) {
         this.store.setBudgetCap(val);
-        this.showToast(`Safety Cap: ${Calculator.formatRupiah(val)}`, 'info');
+        soundMgr.playCatPurr();
+        this.showToast(`Safety Cap diset: ${Calculator.formatRupiah(val)}`, 'info');
       }
     });
 
@@ -1591,6 +1796,7 @@ class SmartGroceryApp {
     const budgetChips = document.querySelectorAll('.btn-chip-budget');
     budgetChips.forEach(chip => {
       chip.addEventListener('click', () => {
+        soundMgr.playPop();
         const amt = Number(chip.dataset.amount);
         this.store.setBudgetCap(amt);
         this.showToast(`Safety Cap diset: ${Calculator.formatRupiah(amt)}`, 'info');
@@ -1599,14 +1805,19 @@ class SmartGroceryApp {
 
     // Staple Comparison Search
     this.dom.btnExecuteSearchCompare.addEventListener('click', () => {
+      soundMgr.playPop();
       this.runStapleComparison();
     });
     this.dom.inputCompareSearch.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') this.runStapleComparison();
+      if (e.key === 'Enter') {
+        soundMgr.playPop();
+        this.runStapleComparison();
+      }
     });
 
     // Desktop Width Toggle Control (430px vs Expanded)
     this.dom.btnToggleWidth.addEventListener('click', () => {
+      soundMgr.playPop();
       this.isDesktopExpanded = !this.isDesktopExpanded;
       if (this.isDesktopExpanded) {
         this.dom.appShell.style.maxWidth = '760px';
@@ -1619,9 +1830,10 @@ class SmartGroceryApp {
 
     // Reset Sample Data
     this.dom.btnResetData.addEventListener('click', () => {
-      if (confirm('Reset ke data awal contoh demonstrasi?')) {
+      if (confirm('Reset ke data awal contoh demonstrasi DT2?')) {
+        soundMgr.playPop();
         this.store.resetToDefaultData();
-        this.showToast('Data direset ke contoh default!', 'info');
+        this.showToast('Data direset ke contoh default DT2!', 'info');
       }
     });
   }

@@ -1,6 +1,6 @@
 /**
  * Smart Grocery & Budget Safety Tracker
- * Module: Store (State Management, Multi-Store Database & Realtime Multi-Device Sync F-06B)
+ * Module: Store (State Management, Multi-Store Database, Checklist Rencana Belanja & Realtime Sync F-06B)
  */
 
 export const DEFAULT_STORES = [
@@ -30,23 +30,25 @@ export const CATEGORIES = [
 
 export const UNITS = ['karung/5kg', 'pcs', 'kg', 'pack', 'liter', 'pouch', 'botol', 'ikat', 'kaleng', 'box'];
 
-// Master staples matching DT2 curriculum scenarios
+// Master staples & supermarket shelves matching DT2 and real supermarket scenarios
 export const MASTER_CATALOG = [
-  { name: 'Beras Rojolele', category: 'Bahan Pokok', unit: 'karung/5kg', benchmarkPrice: 74000 },
-  { name: 'Beras 5kg', category: 'Bahan Pokok', unit: 'karung/5kg', benchmarkPrice: 74000 },
-  { name: 'Minyak Goreng 2L', category: 'Minyak & Bumbu', unit: 'pouch', benchmarkPrice: 43000 },
-  { name: 'Telur 1kg', category: 'Telur & Susu', unit: 'kg', benchmarkPrice: 28000 },
-  { name: 'Garam 500g', category: 'Minyak & Bumbu', unit: 'pack', benchmarkPrice: 5000 },
-  { name: 'Sabun Cuci', category: 'Kebersihan & Mandi', unit: 'pack', benchmarkPrice: 20000 },
-  { name: 'Wajan', category: 'Kebutuhan Lainnya', unit: 'pcs', benchmarkPrice: 100000 },
-  { name: 'Beras Premium Ramos 5kg', category: 'Bahan Pokok', unit: 'pack', benchmarkPrice: 74500 },
-  { name: 'Minyak Goreng Bimoli 2L', category: 'Minyak & Bumbu', unit: 'pouch', benchmarkPrice: 36000 },
-  { name: 'Indomie Goreng Spesial 5 pcs', category: 'Makanan Instan/Frozen', unit: 'pack', benchmarkPrice: 14800 },
-  { name: 'Dada Ayam Fillet Fresh 1kg', category: 'Protein & Daging', unit: 'kg', benchmarkPrice: 52000 },
-  { name: 'Sunlight Pencuci Piring Jeruk Nipis 750ml', category: 'Kebersihan & Mandi', unit: 'pouch', benchmarkPrice: 16500 },
-  { name: 'Susu UHT Greenfields Full Cream 1L', category: 'Telur & Susu', unit: 'liter', benchmarkPrice: 22000 },
-  { name: 'Deterjen Rinso Matic Front Load 1.6kg', category: 'Kebersihan & Mandi', unit: 'pack', benchmarkPrice: 48000 },
-  { name: 'Tisu Paseo Smart 250 sheets', category: 'Kebutuhan Lainnya', unit: 'pack', benchmarkPrice: 12000 }
+  { name: 'Beras Rojolele', category: 'Bahan Pokok', unit: 'karung/5kg', benchmarkPrice: 74000, store: 'Lotte Mart Grocery - Puri Indah' },
+  { name: 'Beras 5kg', category: 'Bahan Pokok', unit: 'karung/5kg', benchmarkPrice: 74000, store: 'Lotte Mart Grocery - Puri Indah' },
+  { name: 'Minyak Goreng 2L', category: 'Minyak & Bumbu', unit: 'pouch', benchmarkPrice: 43000, store: 'Lotte Mart Grocery - Puri Indah' },
+  { name: 'Telur 1kg', category: 'Telur & Susu', unit: 'kg', benchmarkPrice: 28000, store: 'Lotte Mart Grocery - Puri Indah' },
+  { name: 'Garam 500g', category: 'Minyak & Bumbu', unit: 'pack', benchmarkPrice: 5000, store: 'Lotte Mart Grocery - Puri Indah' },
+  { name: 'Sabun Cuci', category: 'Kebersihan & Mandi', unit: 'pack', benchmarkPrice: 20000, store: 'Lotte Mart Grocery - Puri Indah' },
+  { name: 'Wajan', category: 'Kebutuhan Lainnya', unit: 'pcs', benchmarkPrice: 100000, store: 'Lotte Mart Grocery - Puri Indah' },
+  { name: 'Beras Premium Ramos 5kg', category: 'Bahan Pokok', unit: 'pack', benchmarkPrice: 74500, store: 'Super Indo - Intercon Kebon Jeruk' },
+  { name: 'Minyak Goreng Bimoli 2L', category: 'Minyak & Bumbu', unit: 'pouch', benchmarkPrice: 38000, store: 'Super Indo - Intercon Kebon Jeruk' },
+  { name: 'Indomie Goreng Spesial 5 pcs', category: 'Makanan Instan/Frozen', unit: 'pack', benchmarkPrice: 14800, store: 'Indomaret Fresh - Kemanggisan' },
+  { name: 'Dada Ayam Fillet Fresh 1kg', category: 'Protein & Daging', unit: 'kg', benchmarkPrice: 52000, store: 'Super Indo - Intercon Kebon Jeruk' },
+  { name: 'Sunlight Pencuci Piring Jeruk Nipis 750ml', category: 'Kebersihan & Mandi', unit: 'pouch', benchmarkPrice: 16500, store: 'Lotte Mart Grocery - Puri Indah' },
+  { name: 'Susu UHT Greenfields Full Cream 1L', category: 'Telur & Susu', unit: 'liter', benchmarkPrice: 22000, store: 'Grand Lucky Superstore - Meruya' },
+  { name: 'Deterjen Rinso Matic Front Load 1.6kg', category: 'Kebersihan & Mandi', unit: 'pack', benchmarkPrice: 48000, store: 'Lotte Mart Grocery - Puri Indah' },
+  { name: 'Kecap Manis Bango 550ml', category: 'Minyak & Bumbu', unit: 'pouch', benchmarkPrice: 18000, store: 'Indomaret Fresh - Kemanggisan' },
+  { name: 'Sayur Bayam Fresh', category: 'Sayur & Buah', unit: 'ikat', benchmarkPrice: 4500, store: 'Pasar Tradisional Puri Indah' },
+  { name: 'Tisu Paseo Smart 250 sheets', category: 'Kebutuhan Lainnya', unit: 'pack', benchmarkPrice: 12000, store: 'Alfamidi Super - Palmerah' }
 ];
 
 // Pre-seeded multi-store history database (F-06 & DT2 Skenario Uji 4)
@@ -157,10 +159,20 @@ export const INITIAL_ACTIVE_SESSION = {
   ]
 };
 
+// Initial checklist items (Rencana Belanja dari Rumah)
+export const DEFAULT_CHECKLIST = [
+  { id: 'chk-1', name: 'Beras 5kg', category: 'Bahan Pokok', estPrice: 74000, unit: 'karung/5kg', isChecked: true },
+  { id: 'chk-2', name: 'Minyak Goreng 2L', category: 'Minyak & Bumbu', estPrice: 38000, unit: 'pouch', isChecked: true },
+  { id: 'chk-3', name: 'Telur Ayam 1kg', category: 'Telur & Susu', estPrice: 28000, unit: 'kg', isChecked: false },
+  { id: 'chk-4', name: 'Sabun Cuci', category: 'Kebersihan & Mandi', estPrice: 20000, unit: 'pack', isChecked: false },
+  { id: 'chk-5', name: 'Sayur Bayam Fresh', category: 'Sayur & Buah', estPrice: 5000, unit: 'ikat', isChecked: false }
+];
+
 const STORAGE_KEYS = {
   ACTIVE_SESSION: 'sgt_active_session',
   HISTORY: 'sgt_shopping_history',
   CUSTOM_STORES: 'sgt_custom_stores',
+  CHECKLIST: 'sgt_shopping_checklist',
   THEME: 'sgt_theme_mode'
 };
 
@@ -170,6 +182,7 @@ export class GroceryStoreManager {
     this.activeSession = this.loadActiveSession();
     this.history = this.loadHistory();
     this.stores = this.loadStores();
+    this.checklist = this.loadChecklist();
     this.theme = this.loadTheme();
     this.listeners = [];
 
@@ -196,6 +209,7 @@ export class GroceryStoreManager {
     this.activeSession = this.loadActiveSession();
     this.history = this.loadHistory();
     this.stores = this.loadStores();
+    this.checklist = this.loadChecklist();
     this.notify();
   }
 
@@ -463,13 +477,130 @@ export class GroceryStoreManager {
     this.saveHistory();
   }
 
+  // ==========================================================================
+  // RENCANA BELANJA DARI RUMAH (CHECKLIST KEBUTUHAN)
+  // ==========================================================================
+
+  loadChecklist() {
+    try {
+      if (typeof localStorage !== 'undefined') {
+        const data = localStorage.getItem(this.getStorageKey(STORAGE_KEYS.CHECKLIST));
+        if (data) {
+          const parsed = JSON.parse(data);
+          if (Array.isArray(parsed)) return parsed;
+        }
+      }
+    } catch (_) {}
+    return JSON.parse(JSON.stringify(DEFAULT_CHECKLIST));
+  }
+
+  saveChecklist() {
+    try {
+      if (typeof localStorage !== 'undefined') {
+        localStorage.setItem(this.getStorageKey(STORAGE_KEYS.CHECKLIST), JSON.stringify(this.checklist));
+      }
+      this.notify();
+    } catch (_) {}
+  }
+
+  addChecklistItem({ name, category = 'Bahan Pokok', estPrice = 0, unit = 'pcs' }) {
+    const rawName = name ? name.trim() : '';
+    if (!rawName) return null;
+    const newItem = {
+      id: 'chk_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
+      name: rawName,
+      category,
+      estPrice: Math.max(0, Number(estPrice) || 0),
+      unit,
+      isChecked: false
+    };
+    this.checklist.unshift(newItem);
+    this.saveChecklist();
+    return newItem;
+  }
+
+  toggleChecklistItem(id) {
+    const item = this.checklist.find(i => i.id === id);
+    if (item) {
+      item.isChecked = !item.isChecked;
+      this.saveChecklist();
+      return item;
+    }
+    return null;
+  }
+
+  removeChecklistItem(id) {
+    this.checklist = this.checklist.filter(i => i.id !== id);
+    this.saveChecklist();
+  }
+
+  transferChecklistItemToCart(id) {
+    const item = this.checklist.find(i => i.id === id);
+    if (!item) return null;
+    const added = this.addItem({
+      name: item.name,
+      category: item.category,
+      unit: item.unit || 'pcs',
+      qty: 1,
+      unitPrice: item.estPrice > 0 ? item.estPrice : 15000,
+      discount: '',
+      notes: 'Dari Checklist Rencana Belanja'
+    });
+    item.isChecked = true;
+    this.saveChecklist();
+    return added;
+  }
+
+  transferAllCheckedToCart() {
+    let count = 0;
+    this.checklist.filter(i => i.isChecked).forEach(item => {
+      // Check if item already in active cart
+      const exists = this.activeSession.items.some(it => it.name.toLowerCase() === item.name.toLowerCase());
+      if (!exists) {
+        this.addItem({
+          name: item.name,
+          category: item.category,
+          unit: item.unit || 'pcs',
+          qty: 1,
+          unitPrice: item.estPrice > 0 ? item.estPrice : 15000,
+          discount: '',
+          notes: 'Dari Checklist Rencana'
+        });
+        count++;
+      }
+    });
+    return count;
+  }
+
+  // ==========================================================================
+  // 1-KLIK PAKET HEMAT KOS (BUNDEL HEMAT SEMBAKO ANAK KOST)
+  // ==========================================================================
+
+  addPaketHematKos() {
+    const bundleItems = [
+      { name: 'Beras Premium 5kg', category: 'Bahan Pokok', unit: 'karung/5kg', qty: 1, unitPrice: 74000, discount: '15%', notes: 'Paket Hemat Kos Anak Rantau' },
+      { name: 'Minyak Goreng Bimoli 2L', category: 'Minyak & Bumbu', unit: 'pouch', qty: 1, unitPrice: 38000, discount: '15%', notes: 'Paket Hemat Kos Anak Rantau' },
+      { name: 'Telur Ayam 1kg', category: 'Telur & Susu', unit: 'kg', qty: 1, unitPrice: 28000, discount: '15%', notes: 'Paket Hemat Kos Anak Rantau' },
+      { name: 'Indomie Goreng 5 pcs', category: 'Makanan Instan/Frozen', unit: 'pack', qty: 1, unitPrice: 14800, discount: '15%', notes: 'Paket Hemat Kos Anak Rantau' },
+      { name: 'Kecap Manis Bango 550ml', category: 'Minyak & Bumbu', unit: 'pouch', qty: 1, unitPrice: 18000, discount: '15%', notes: 'Paket Hemat Kos Anak Rantau' }
+    ];
+
+    bundleItems.forEach(item => {
+      this.addItem(item);
+    });
+
+    return bundleItems;
+  }
+
   resetToDefaultData() {
     this.activeSession = JSON.parse(JSON.stringify(INITIAL_ACTIVE_SESSION));
     this.history = JSON.parse(JSON.stringify(INITIAL_HISTORICAL_SESSIONS));
     this.stores = [...DEFAULT_STORES];
+    this.checklist = JSON.parse(JSON.stringify(DEFAULT_CHECKLIST));
     this.saveActiveSession();
     this.saveHistory();
     this.saveStores();
+    this.saveChecklist();
   }
 
   subscribe(listener) {

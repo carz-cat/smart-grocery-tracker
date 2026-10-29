@@ -1,5 +1,5 @@
 // Smart Grocery Tracker Service Worker
-const CACHE_NAME = 'sgt-cache-v3';
+const CACHE_NAME = 'sgt-cache-v4';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',

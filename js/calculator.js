@@ -1,6 +1,6 @@
 /**
  * Smart Grocery & Budget Safety Tracker
- * Module: Calculator (Diskon Bertingkat & Perhitungan Kuantitas Otomatis)
+ * Module: Calculator (Diskon Bertingkat, Perhitungan Kuantitas, Audit PPN & Pembanding Kemasan)
  */
 
 export const Calculator = {
@@ -176,6 +176,10 @@ export const Calculator = {
 
   /**
    * Calculate full cart summary & Budget Safety Cap status (F-05)
+   * Status indicators:
+   * - SAFE (Aman): <80% usage
+   * - WARNING (Waspada): >=80% and <=100% usage
+   * - DANGER (Defisit / Over Budget): >100% usage
    * @param {Array} items 
    * @param {number} walletBudgetCap 
    * @returns {object}
@@ -202,22 +206,22 @@ export const Calculator = {
     const remaining = budgetCap - totalFinal;
     const budgetUsagePercent = budgetCap > 0 ? (totalFinal / budgetCap) * 100 : 0;
 
-    let budgetStatus = 'SAFE'; // SAFE (<90%), WARNING (>=90% and <=100%), DANGER (>100%)
+    let budgetStatus = 'SAFE'; // SAFE (<80%), WARNING (>=80% and <=100%), DANGER (>100%)
     let statusText = 'Anggaran Aman';
     let statusBanner = '';
 
     if (budgetUsagePercent > 100) {
       budgetStatus = 'DANGER';
       const overAmount = Math.abs(remaining);
-      statusText = 'OVER BUDGET!';
-      statusBanner = `PERINGATAN KERAS! Total belanja melampaui limit dompet sebesar ${this.formatRupiah(overAmount)}. Kurangi item non-esensial!`;
-    } else if (budgetUsagePercent >= 90) {
+      statusText = 'DEFISIT (OVER BUDGET!)';
+      statusBanner = `PERINGATAN DEFISIT! Total belanja melebihi batas saldo dompet sebesar ${this.formatRupiah(overAmount)}. Kurangi barang non-esensial!`;
+    } else if (budgetUsagePercent >= 80) {
       budgetStatus = 'WARNING';
-      statusText = 'Waspada Limit!';
-      statusBanner = `Perhatian! Total belanja sudah mencapai ${budgetUsagePercent.toFixed(1)}% dari batas dompet. Sisa aman: ${this.formatRupiah(remaining)}.`;
+      statusText = `Waspada (${Math.round(budgetUsagePercent)}%)`;
+      statusBanner = `Peringatan Waspada (${Math.round(budgetUsagePercent)}%)! Total belanja mendekati limit saldo dompet. Sisa saldo: ${this.formatRupiah(remaining)}.`;
     } else {
       budgetStatus = 'SAFE';
-      statusText = 'Terkendali';
+      statusText = `Aman (${Math.round(budgetUsagePercent)}%)`;
       statusBanner = `Bagus! Pengeluaran masih dalam batas aman. Sisa saldo dompet: ${this.formatRupiah(remaining)}.`;
     }
 
@@ -235,5 +239,87 @@ export const Calculator = {
       statusBanner,
       categoryTotals
     };
+  },
+
+  /**
+   * Pembanding Kemasan (Value Comparator: Opsi Kemasan A vs Kemasan B)
+   * Membandingkan harga per satuan unit (gram / ml / pcs)
+   * @param {number} sizeA - Ukuran/isi kemasan A (misal: 400)
+   * @param {number} priceA - Harga kemasan A (misal: 25000)
+   * @param {number} sizeB - Ukuran/isi kemasan B (misal: 900)
+   * @param {number} priceB - Harga kemasan B (misal: 45000)
+   * @param {string} unit - Satuan (gram, ml, pcs)
+   * @returns {object}
+   */
+  comparePackages(sizeA, priceA, sizeB, priceB, unit = 'gram') {
+    const sA = Math.max(0.001, this.parseNumber(sizeA));
+    const pA = Math.max(0, this.parseNumber(priceA));
+    const sB = Math.max(0.001, this.parseNumber(sizeB));
+    const pB = Math.max(0, this.parseNumber(priceB));
+
+    const unitCostA = pA / sA; // Rp per unit
+    const unitCostB = pB / sB; // Rp per unit
+
+    let winner = 'EQUAL';
+    let savingsPercent = 0;
+    let savingsNominalPerHundred = 0;
+    let recommendation = 'Kedua kemasan memiliki harga satuan yang sama.';
+
+    if (unitCostA < unitCostB) {
+      winner = 'A';
+      savingsPercent = ((unitCostB - unitCostA) / unitCostB) * 100;
+      savingsNominalPerHundred = (unitCostB - unitCostA) * 100;
+      recommendation = `Opsi Kemasan A lebih hemat ${savingsPercent.toFixed(1)}% per ${unit}!`;
+    } else if (unitCostB < unitCostA) {
+      winner = 'B';
+      savingsPercent = ((unitCostA - unitCostB) / unitCostA) * 100;
+      savingsNominalPerHundred = (unitCostA - unitCostB) * 100;
+      recommendation = `Opsi Kemasan B lebih hemat ${savingsPercent.toFixed(1)}% per ${unit}!`;
+    }
+
+    return {
+      sizeA: sA,
+      priceA: pA,
+      unitCostA,
+      sizeB: sB,
+      priceB: pB,
+      unitCostB,
+      unit,
+      winner,
+      savingsPercent: Math.round(savingsPercent * 10) / 10,
+      savingsNominalPerHundred: Math.round(savingsNominalPerHundred),
+      recommendation
+    };
+  },
+
+  /**
+   * Audit PPN 11% (Pajak Pertambahan Nilai)
+   * @param {number} amount
+   * @param {boolean} isGrossPrice - Apakah amount sudah termasuk PPN atau belum
+   * @param {number} vatRate - Tarif PPN (default 11% / 0.11)
+   */
+  calculateVatAudit(amount, isGrossPrice = true, vatRate = 0.11) {
+    const val = Math.max(0, this.parseNumber(amount));
+    if (isGrossPrice) {
+      // Harga sudah termasuk PPN 11%
+      const dpp = val / (1 + vatRate);
+      const vat = val - dpp;
+      return {
+        dpp: Math.round(dpp),
+        vat: Math.round(vat),
+        total: Math.round(val),
+        ratePercent: vatRate * 100
+      };
+    } else {
+      // Harga belum termasuk PPN
+      const vat = val * vatRate;
+      const total = val + vat;
+      return {
+        dpp: Math.round(val),
+        vat: Math.round(vat),
+        total: Math.round(total),
+        ratePercent: vatRate * 100
+      };
+    }
   }
 };

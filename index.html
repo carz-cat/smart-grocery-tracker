@@ -3,17 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <meta name="theme-color" content="#070b14">
-  <meta name="description" content="Smart Grocery & Budget Safety Tracker - PWA Mobile Pendamping Belanja Bulanan & Pengendali Anggaran Siswa Rantau">
+  <meta name="theme-color" content="#060b18">
+  <meta name="description" content="Keranjang Pintar - Smart Grocery & Budget Tracker dengan Estetika Midnight Ocean Blue & Black Cat">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="SmartGrocery">
+  <meta name="apple-mobile-web-app-title" content="KeranjangPintar">
   <link rel="manifest" href="./manifest.webmanifest">
   <link rel="icon" type="image/svg+xml" href="./icons/icon.svg">
   <link rel="apple-touch-icon" href="./icons/icon.svg">
-  <title>Smart Grocery &amp; Budget Safety Tracker | PWA Mobile</title>
+  <title>Keranjang Pintar | Smart Grocery &amp; Budget Tracker</title>
   
-  <!-- Premium Modern Web Typography -->
+  <!-- Premium Modern Typography: Plus Jakarta Sans, Outfit, JetBrains Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600;700&family=Outfit:wght@500;600;700;800&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet">
@@ -21,11 +21,11 @@
   <link rel="stylesheet" href="./css/styles.css">
 </head>
 <body>
-  <!-- Desktop Canvas Container for Center 375px/430px Mobile UI -->
+  <!-- Desktop Canvas Container -->
   <div class="desktop-canvas">
     <div class="desktop-ambient-glow"></div>
 
-    <!-- Desktop Controls Overlay -->
+    <!-- Desktop Controls Overlay (Optional Screen Width Toggle & Reset) -->
     <div class="desktop-controls-overlay">
       <button id="btnToggleWidth" class="btn-desktop-pill" title="Ubah format tampilan">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -43,7 +43,132 @@
       </button>
     </div>
 
-    <!-- Smartphone Mobile Shell (Max 430px, 375px viewport optimized) -->
+    <!-- ==========================================================================
+         HALAMAN LOGIN & AUTENTIKASI KHUSUS (GATEKEEPER VIEW)
+         Midnight Ocean Blue & Black Cat Aesthetic
+         Terkunci sebelum pengguna login atau memilih mode tamu
+         ========================================================================== -->
+    <div class="auth-gatekeeper-screen" id="authGatekeeperScreen" style="display: none;">
+      <div class="auth-gate-card">
+        <!-- Cute Black Cat & Cart Brand Mascot -->
+        <div class="cat-brand-header">
+          <div class="cat-mascot-badge">
+            <svg class="cat-ears-svg" width="64" height="64" viewBox="0 0 64 64" fill="none">
+              <!-- Cute Black Cat Head with Ears -->
+              <path d="M16 28 L22 10 L32 20 L42 10 L48 28 C52 35 50 48 32 48 C14 48 12 35 16 28 Z" fill="#080e1e" stroke="#00f0ff" stroke-width="2"/>
+              <!-- Glowing Cat Eyes (Radiant Cyan / Amber Eyes) -->
+              <ellipse cx="25" cy="30" rx="3.5" ry="5" fill="#00f0ff"/>
+              <ellipse cx="39" cy="30" rx="3.5" ry="5" fill="#00f0ff"/>
+              <circle cx="26" cy="29" r="1.5" fill="#ffffff"/>
+              <circle cx="40" cy="29" r="1.5" fill="#ffffff"/>
+              <!-- Cute Nose & Mouth -->
+              <polygon points="32,36 30,34 34,34" fill="#f43f5e"/>
+              <path d="M30 38 Q32 41 34 38" stroke="#cbd5e1" stroke-width="1.5" fill="none"/>
+              <!-- Whiskers -->
+              <line x1="14" y1="33" x2="22" y2="34" stroke="#38bdf8" stroke-width="1.2" opacity="0.8"/>
+              <line x1="13" y1="37" x2="22" y2="37" stroke="#38bdf8" stroke-width="1.2" opacity="0.8"/>
+              <line x1="50" y1="33" x2="42" y2="34" stroke="#38bdf8" stroke-width="1.2" opacity="0.8"/>
+              <line x1="51" y1="37" x2="42" y2="37" stroke="#38bdf8" stroke-width="1.2" opacity="0.8"/>
+              <!-- Mini Shopping Cart Icon at Bottom -->
+              <circle cx="27" cy="56" r="2.5" fill="#ff9f1c"/>
+              <circle cx="37" cy="56" r="2.5" fill="#ff9f1c"/>
+              <path d="M19 44 H23 L26 53 H40 L43 46 H25" stroke="#ff9f1c" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <h1 class="cat-app-title">Keranjang Pintar</h1>
+          <p class="cat-app-tagline">Midnight Ocean Blue &amp; Black Cat Edition</p>
+          <div class="cat-pill-badge">🐾 Amankan Saldo &amp; Catat Belanja Hemat</div>
+        </div>
+
+        <!-- Auth Tabs: Masuk vs Daftar -->
+        <div class="auth-gate-tabs">
+          <button type="button" class="auth-gate-tab-btn active" id="btnGateTabLogin">Masuk</button>
+          <button type="button" class="auth-gate-tab-btn" id="btnGateTabRegister">Daftar Akun</button>
+        </div>
+
+        <!-- Alert Notification Box -->
+        <div class="auth-gate-alert" id="authGateAlert" style="display: none;"></div>
+
+        <!-- One-Click Google Login Button -->
+        <button type="button" class="btn-gate-google" id="btnGateGoogleLogin">
+          <svg class="google-icon" width="20" height="20" viewBox="0 0 24 24">
+            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+          </svg>
+          <span>Masuk Cepat dengan Google</span>
+        </button>
+
+        <div class="auth-gate-divider">
+          <span class="whisker-line"></span>
+          <span class="divider-text">atau email sandi</span>
+          <span class="whisker-line"></span>
+        </div>
+
+        <!-- Form 1: Login Form -->
+        <form class="auth-gate-form" id="formGateLogin">
+          <div class="gate-input-group">
+            <label for="gateLoginEmail">Email Pengguna</label>
+            <div class="input-icon-wrap">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+              <input type="email" id="gateLoginEmail" placeholder="nama@email.com" autocomplete="email" required>
+            </div>
+          </div>
+          <div class="gate-input-group">
+            <label for="gateLoginPassword">Kata Sandi</label>
+            <div class="input-icon-wrap">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              <input type="password" id="gateLoginPassword" placeholder="Minimal 6 karakter" autocomplete="current-password" required>
+            </div>
+          </div>
+          <button type="submit" class="btn-gate-submit" id="btnGateSubmitLogin">
+            <span>Masuk ke Akun</span>
+            <span class="cat-paw-emoji">🐾</span>
+          </button>
+        </form>
+
+        <!-- Form 2: Register Form -->
+        <form class="auth-gate-form" id="formGateRegister" style="display: none;">
+          <div class="gate-input-group">
+            <label for="gateRegName">Nama Panggilan</label>
+            <div class="input-icon-wrap">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              <input type="text" id="gateRegName" placeholder="Contoh: Rian Pratama" autocomplete="name" required>
+            </div>
+          </div>
+          <div class="gate-input-group">
+            <label for="gateRegEmail">Email Pengguna</label>
+            <div class="input-icon-wrap">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+              <input type="email" id="gateRegEmail" placeholder="nama@email.com" autocomplete="email" required>
+            </div>
+          </div>
+          <div class="gate-input-group">
+            <label for="gateRegPassword">Kata Sandi Baru</label>
+            <div class="input-icon-wrap">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              <input type="password" id="gateRegPassword" placeholder="Minimal 6 karakter" autocomplete="new-password" required>
+            </div>
+          </div>
+          <button type="submit" class="btn-gate-submit" id="btnGateSubmitRegister">
+            <span>Daftar Akun Baru</span>
+            <span class="cat-paw-emoji">✨</span>
+          </button>
+        </form>
+
+        <!-- Fast Guest / Offline Access Button -->
+        <div class="gate-guest-wrapper">
+          <button type="button" class="btn-gate-guest" id="btnGateGuestLogin">
+            <span>⚡ Mode Tamu (Coba Langsung Tanpa Login)</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==========================================================================
+         HALAMAN UTAMA APLIKASI (DASHBOARD & KERANJANG PINTAR SHELL)
+         ========================================================================== -->
     <main class="mobile-app-shell" id="appShell">
       <!-- Simulated Notch / Dynamic Island Bar -->
       <div class="notch-bar">
@@ -60,15 +185,18 @@
       <header class="app-header">
         <div class="header-top-row">
           <div class="brand-badge">
-            <div class="brand-icon">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <div class="brand-icon cat-ears-avatar">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                 <circle cx="8" cy="21" r="1"/>
                 <circle cx="19" cy="21" r="1"/>
                 <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/>
               </svg>
             </div>
             <div class="brand-text">
-              <h1>Smart Grocery</h1>
+              <div class="brand-title-wrap">
+                <h1>Smart Grocery</h1>
+                <span class="theme-cat-tag" id="themeCatBadge">🐾 Black Cat</span>
+              </div>
               <div class="header-session-quick-info">
                 <span id="headerStoreName" class="one-line">Lotte Mart Grocery - Puri Indah</span>
                 <span class="dot-separator">•</span>
@@ -79,8 +207,8 @@
 
           <!-- Header Actions: Sound, Theme, Lokasi Toko, Tanggal & User Auth -->
           <div class="header-actions">
-            <!-- Mini Sound Effects Toggle -->
-            <button class="theme-toggle-btn" id="btnSoundToggle" title="Suara Interaksi (Aktif / Senyap)" aria-label="Toggle Sound">
+            <!-- Mini Sound Effects Toggle (Suara Meong / Senyap) -->
+            <button class="theme-toggle-btn cat-sound-btn" id="btnSoundToggle" title="Efek Suara Kucing (Aktif / Senyap)" aria-label="Toggle Sound">
               <!-- Sound On Icon -->
               <svg id="soundIconOn" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
@@ -95,8 +223,8 @@
               </svg>
             </button>
 
-            <!-- Theme Toggle Button -->
-            <button class="theme-toggle-btn" id="btnThemeToggle" title="Ganti Tema (Dark / Light)" aria-label="Toggle Theme">
+            <!-- Theme Toggle Button (Black Cat Midnight Ocean vs White Cat Luminous) -->
+            <button class="theme-toggle-btn" id="btnThemeToggle" title="Ganti Tema (Black Cat / White Cat)" aria-label="Toggle Theme">
               <svg id="themeIconSun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
                 <circle cx="12" cy="12" r="5"/>
                 <line x1="12" y1="1" x2="12" y2="3"/>
@@ -135,7 +263,7 @@
             <input type="date" id="sessionDatePicker" style="display: none;" aria-label="Tanggal Sesi Belanja">
 
             <!-- User Auth Pill / Avatar Button -->
-            <button class="header-auth-pill" id="btnUserAuth" title="Akun Pengguna">
+            <button class="header-auth-pill" id="btnUserAuth" title="Profil &amp; Akun Pengguna">
               <div class="auth-avatar-mini" id="headerUserAvatar">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
@@ -164,8 +292,8 @@
         </div>
       </header>
 
-      <!-- Safety Cap / Budget Controller Bar (F-05) -->
-      <section class="safety-cap-container" aria-label="Status Anggaran Belanja">
+      <!-- Safety Cap / Radar Keuangan Bar (F-05) -->
+      <section class="safety-cap-container" aria-label="Status Radar Anggaran Belanja">
         <div class="budget-metric-row">
           <div class="budget-metric-title">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -181,17 +309,17 @@
           </div>
         </div>
 
-        <!-- Dynamic Visual Gauge Track -->
+        <!-- Dynamic Visual Gauge Track: Aman (<80%), Waspada (80%-100%), Defisit (>100%) -->
         <div class="budget-progress-track">
           <div class="budget-progress-fill fill-safe" id="budgetProgressFill" style="width: 57.1%;"></div>
         </div>
 
-        <!-- Warning / Over Budget Alert Banner (F-05) -->
+        <!-- Warning / Defisit Alert Banner (F-05) -->
         <div class="safety-alert-banner banner-safe" id="safetyAlertBanner">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;">
             <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/>
-            <line x1="12" x2="12" y1="9" y2="13"/>
-            <line x1="12" x2="12.01" y1="17" y2="17"/>
+            <line x1="12" y1="9" x2="12" y2="13"/>
+            <line x1="12" y1="17" x2="12.01" y2="17"/>
           </svg>
           <span id="safetyAlertMessage">Status Anggaran Aman</span>
         </div>
@@ -199,7 +327,9 @@
 
       <!-- Main Scrollable Content Area -->
       <div class="app-main-content">
-        <!-- TAB 1: BELANJA (TROLI AKTIF) -->
+        <!-- ====================================================================
+             TAB 1: BELANJA (TROLI AKTIF & RINGKASAN AKHIR)
+             ==================================================================== -->
         <section class="tab-panel active" id="tabBelanja" aria-label="Troli Belanja">
           <div class="cart-action-bar">
             <div class="cart-title-group">
@@ -246,9 +376,9 @@
             <p>Keranjang belanja masih kosong, silakan scan atau tambahkan kebutuhan pokok pertamamu.</p>
           </div>
 
-          <!-- Checkout & Finish Action Bar (F-06) -->
+          <!-- Checkout & Finish Action Bar (F-06 & Ringkasan Akhir) -->
           <div class="cart-checkout-actions" id="cartCheckoutActions">
-            <button class="btn-finish-shopping" id="btnFinishSession">
+            <button class="btn-finish-shopping cat-glow-btn" id="btnFinishSession">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M20 6 9 17l-5-5"/>
               </svg>
@@ -257,52 +387,219 @@
           </div>
         </section>
 
-        <!-- TAB 2: RIWAYAT TOKO & MULTI-STORE DATABASE (F-06) -->
-        <section class="tab-panel" id="tabRiwayat" aria-label="Riwayat Toko">
-          <div class="history-header">
-            <div>
-              <h2 class="one-line">Riwayat Belanja &amp; Database Multi-Toko</h2>
-              <p class="one-line" style="font-size: 11px; color: var(--text-muted);">Database pembanding harga resmi antar supermarket</p>
+        <!-- ====================================================================
+             TAB 2: RENCANA BELANJA DARI RUMAH (CHECKLIST KEBUTUHAN)
+             ==================================================================== -->
+        <section class="tab-panel" id="tabRencana" aria-label="Rencana Belanja">
+          <div class="checklist-header-card">
+            <div class="checklist-title-row">
+              <div>
+                <h2 class="one-line">Rencana Belanja dari Rumah</h2>
+                <p class="checklist-subtitle">Catat kebutuhan sebelum ke supermarket agar tidak impulsif</p>
+              </div>
+              <div class="checklist-counter-pill" id="checklistCounterPill">
+                2/5 Terbeli
+              </div>
             </div>
+
+            <!-- Animated Progress Bar -->
+            <div class="checklist-progress-bar">
+              <div class="checklist-progress-fill" id="checklistProgressFill" style="width: 40%;"></div>
+            </div>
+
+            <!-- Quick Add to Checklist Form -->
+            <form class="checklist-add-form" id="formAddChecklist">
+              <input type="text" id="inputChecklistName" class="checklist-input" placeholder="Tulis barang baru (misal: Sabun Cuci, Kopi...)" required autocomplete="off">
+              <div class="checklist-input-subrow">
+                <select id="selectChecklistCat" class="checklist-cat-select">
+                  <option value="Bahan Pokok">🌾 Bahan Pokok</option>
+                  <option value="Minyak & Bumbu">🧂 Minyak &amp; Bumbu</option>
+                  <option value="Telur & Susu">🥛 Telur &amp; Susu</option>
+                  <option value="Protein & Daging">🍗 Protein &amp; Daging</option>
+                  <option value="Sayur & Buah">🥦 Sayur &amp; Buah</option>
+                  <option value="Kebersihan & Mandi">🧼 Kebersihan &amp; Mandi</option>
+                  <option value="Kebutuhan Lainnya">📦 Kebutuhan Lainnya</option>
+                </select>
+                <input type="text" id="inputChecklistEstPrice" class="checklist-price-input" placeholder="Estimasi (Rp)" inputmode="numeric">
+                <button type="submit" class="btn-add-checklist-item" id="btnAddChecklistItem">+ Tambah</button>
+              </div>
+            </form>
           </div>
 
-          <!-- Multi-Store Price Comparison Matrix Tool (F-06 & F-04) -->
-          <div class="multi-store-card">
-            <div class="multi-store-title">
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#06b6d4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="18" x2="18" y1="20" y2="10"/>
-                <line x1="12" x2="12" y1="20" y2="4"/>
-                <line x1="6" x2="6" y1="20" y2="14"/>
+          <!-- Bulk Transfer Action Button -->
+          <div class="checklist-bulk-actions">
+            <button type="button" class="btn-transfer-all-checked" id="btnTransferAllChecked">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/>
+                <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/>
               </svg>
-              <span class="one-line">Cek Harga Bahan Pokok Antar Toko</span>
-            </div>
-            <p class="multi-store-desc">Cek harga komparasi di Lotte Mart, Super Indo, &amp; Indomaret Fresh.</p>
-            <div class="search-comparison-box">
-              <input type="text" class="search-comparison-input" id="inputCompareSearch" placeholder="Contoh: Minyak Goreng, Beras, Telur..." value="Beras 5kg">
-              <button class="btn-icon-soft" id="btnExecuteSearchCompare" title="Cari">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <circle cx="11" cy="11" r="8"/>
-                  <path d="m21 21-4.3-4.3"/>
-                </svg>
-              </button>
-            </div>
-            <div class="comparison-results-box" id="comparisonResultsContainer">
-              <!-- Dynamically populated -->
-            </div>
+              <span>Pindahkan Semua yang Dicentang ke Troli Belanja</span>
+            </button>
           </div>
 
-          <!-- Saved Sessions Timeline -->
-          <h3 class="one-line" style="font-size: 14px; font-weight: 700; color: var(--text-primary); margin-bottom: 8px;">Daftar Sesi Belanja Lampau</h3>
-          <div class="history-sessions-list" id="historySessionsContainer">
-            <!-- Dynamically populated -->
+          <!-- Checklist Items Container -->
+          <div class="checklist-items-list" id="checklistItemsContainer">
+            <!-- Dynamically populated via app.js -->
           </div>
         </section>
 
-        <!-- TAB 3: ANGGARAN & SAFETY CAP PLANNER (F-05) -->
+        <!-- ====================================================================
+             TAB 3: KATALOG SUPERMARKET & PAKET HEMAT 1-KLIK
+             ==================================================================== -->
+        <section class="tab-panel" id="tabKatalog" aria-label="Katalog & Paket Hemat">
+          <!-- Featured: 1-Klik Paket Hemat Kos Hero Card -->
+          <div class="hero-bundle-card">
+            <div class="bundle-badge-row">
+              <span class="bundle-fire-badge">🔥 Rekomendasi Anak Kos</span>
+              <span class="bundle-discount-pill">Hemat 15%</span>
+            </div>
+            <h3 class="bundle-title">1-Klik Paket Hemat Sembako Kos</h3>
+            <p class="bundle-desc">1 Paket lengkap kebutuhan pokok anak rantau: Beras 5kg, Minyak Bimoli 2L, Telur 1kg, Indomie 5pcs, dan Kecap Manis 550ml.</p>
+            
+            <div class="bundle-pricing-row">
+              <div class="bundle-price-details">
+                <span class="bundle-normal-price strikethrough">Rp 172.800</span>
+                <span class="bundle-promo-price">Rp 146.880</span>
+              </div>
+              <button type="button" class="btn-1click-bundle cat-glow-btn" id="btnOneClickBundleKos">
+                <span>⚡ 1-Klik ke Troli</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Catalog Shelf Filter -->
+          <div class="catalog-shelf-header">
+            <h3 class="one-line">Katalog Produk Supermarket</h3>
+            <p class="one-line" style="font-size: 11px; color: var(--text-muted);">Pilih barang untuk langsung dimasukkan ke keranjang belanja</p>
+          </div>
+
+          <div class="catalog-grid-list" id="catalogGridContainer">
+            <!-- Dynamically populated via app.js -->
+          </div>
+        </section>
+
+        <!-- ====================================================================
+             TAB 4: KALKULATOR DISKON BERTUMPUK & PEMBANDING KEMASAN
+             ==================================================================== -->
+        <section class="tab-panel" id="tabKalkulator" aria-label="Kalkulator & Komparasi">
+          <!-- Card 1: Pembanding Kemasan (Value Comparator Kemasan A vs Kemasan B) -->
+          <div class="calc-tool-card">
+            <div class="calc-tool-header">
+              <div class="calc-tool-icon">⚖️</div>
+              <div>
+                <h3 class="calc-tool-title">Pembanding Kemasan (Value Comparator)</h3>
+                <p class="calc-tool-desc">Bandingkan 2 ukuran kemasan untuk mengetahui mana yang paling murah per gram/ml.</p>
+              </div>
+            </div>
+
+            <div class="package-comparator-grid">
+              <!-- Opsi Kemasan A -->
+              <div class="pkg-box pkg-box-a">
+                <div class="pkg-header">Opsi Kemasan A</div>
+                <div class="pkg-input-group">
+                  <label for="inputPkgSizeA">Isi / Berat</label>
+                  <div class="input-unit-inline">
+                    <input type="number" id="inputPkgSizeA" value="400" min="1" inputmode="decimal">
+                    <span id="pkgUnitDisplayA">gram</span>
+                  </div>
+                </div>
+                <div class="pkg-input-group">
+                  <label for="inputPkgPriceA">Harga (Rp)</label>
+                  <input type="text" id="inputPkgPriceA" value="25.000" inputmode="numeric">
+                </div>
+                <div class="pkg-unit-cost" id="pkgUnitCostA">Rp 62.5 / gram</div>
+              </div>
+
+              <!-- Opsi Kemasan B -->
+              <div class="pkg-box pkg-box-b">
+                <div class="pkg-header">Opsi Kemasan B</div>
+                <div class="pkg-input-group">
+                  <label for="inputPkgSizeB">Isi / Berat</label>
+                  <div class="input-unit-inline">
+                    <input type="number" id="inputPkgSizeB" value="900" min="1" inputmode="decimal">
+                    <span id="pkgUnitDisplayB">gram</span>
+                  </div>
+                </div>
+                <div class="pkg-input-group">
+                  <label for="inputPkgPriceB">Harga (Rp)</label>
+                  <input type="text" id="inputPkgPriceB" value="45.000" inputmode="numeric">
+                </div>
+                <div class="pkg-unit-cost" id="pkgUnitCostB">Rp 50.0 / gram</div>
+              </div>
+            </div>
+
+            <!-- Value Comparison Verdict Result -->
+            <div class="comparator-verdict-box" id="comparatorVerdictBox">
+              <div class="verdict-trophy">🏆</div>
+              <div class="verdict-text-wrap">
+                <div class="verdict-headline" id="verdictHeadline">Kemasan B 20.0% Lebih Murah!</div>
+                <div class="verdict-detail" id="verdictDetail">Hemat Rp 12.500 per 1.000 gram dibandingkan Kemasan A.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2: Kalkulator Diskon Bertumpuk & Audit PPN 11% -->
+          <div class="calc-tool-card" style="margin-top: 14px;">
+            <div class="calc-tool-header">
+              <div class="calc-tool-icon">🏷️</div>
+              <div>
+                <h3 class="calc-tool-title">Kalkulator Diskon Ganda &amp; Audit PPN 11%</h3>
+                <p class="calc-tool-desc">Hitung diskon bertumpuk (contoh: 50% + 20%) dan rincian pajak PPN bersih.</p>
+              </div>
+            </div>
+
+            <div class="form-grid-2">
+              <div class="form-field">
+                <label class="form-label one-line" for="calcToolPrice">Harga Asli (Rp)</label>
+                <input type="text" id="calcToolPrice" class="input-text" value="100.000" inputmode="numeric">
+              </div>
+              <div class="form-field">
+                <label class="form-label one-line" for="calcToolDiscount">Rumus Diskon</label>
+                <input type="text" id="calcToolDiscount" class="input-text" value="50% + 20%">
+              </div>
+            </div>
+
+            <!-- Quick Discount Presets -->
+            <div class="discount-presets-grid" style="margin-top: 8px;">
+              <button type="button" class="btn-discount-preset" data-preset="50% + 20%">50% + 20% (Wajan)</button>
+              <button type="button" class="btn-discount-preset" data-preset="15% + 5%">15% + 5%</button>
+              <button type="button" class="btn-discount-preset" data-preset="25%">25% (Sabun)</button>
+              <button type="button" class="btn-discount-preset" data-preset="70% + 10%">70% + 10%</button>
+            </div>
+
+            <!-- VAT Audit Checkbox -->
+            <div class="vat-checkbox-row" style="margin-top: 12px;">
+              <label class="vat-label-wrap">
+                <input type="checkbox" id="checkAuditVat" checked>
+                <span>Sertakan Audit Pajak PPN 11%</span>
+              </label>
+            </div>
+
+            <!-- Breakdown Summary Card -->
+            <div class="sheet-live-calc-card" style="margin-top: 10px;">
+              <div class="calc-row">
+                <span>Harga Setelah Diskon (Nett)</span>
+                <span id="calcToolResultNet" style="font-family: var(--font-mono); font-weight: 700; color: var(--emerald-light);">Rp 40.000</span>
+              </div>
+              <div class="calc-row">
+                <span>Total Potongan Hemat</span>
+                <span id="calcToolResultSavings" style="font-family: var(--font-mono); color: #fbbf24;">Rp 60.000 (60%)</span>
+              </div>
+              <div class="calc-row" id="vatAuditRow">
+                <span>Dasar Pengenaan Pajak (DPP) / PPN 11%</span>
+                <span id="calcToolResultVat" style="font-family: var(--font-mono); font-size: 11px;">DPP: Rp 36.036 • PPN: Rp 3.964</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ====================================================================
+             TAB 5: RADAR ANGGARAN & RIWAYAT TOKO (F-05 & F-06)
+             ==================================================================== -->
         <section class="tab-panel" id="tabAnggaran" aria-label="Pengendali Anggaran">
           <div class="budget-view-card">
             <h3 class="one-line">Pengaturan Batas Dompet (Safety Cap)</h3>
-            <p>Pagu batas belanja bulanan kamu. Peringatan waspada di 90% dan banner merah di &gt;100%.</p>
+            <p>Pagu batas belanja bulanan kamu. Peringatan waspada di 80% dan banner merah di &gt;100% (Defisit).</p>
 
             <div class="budget-input-group">
               <label for="inputBudgetCap">Batas Maksimal Dompet</label>
@@ -353,16 +650,41 @@
               </svg>
               <span class="one-line">Triage Belanja Darurat</span>
             </div>
-            <p class="triage-desc">Dompet menipis atau over budget! Pangkas item sekunder ini agar anggaran kembali aman:</p>
+            <p class="triage-desc">Dompet menipis atau defisit! Pangkas item sekunder ini agar anggaran kembali aman:</p>
             <div class="triage-items-list" id="triageItemsContainer">
               <!-- Dynamically populated -->
             </div>
           </div>
 
-          <!-- Category Spending Breakdown -->
-          <div class="budget-view-card">
-            <h3 class="one-line">Alokasi Pengeluaran per Kategori</h3>
-            <div class="category-breakdown-list" id="categoryBreakdownContainer">
+          <!-- Multi-Store Price Comparison Matrix Tool (F-06 & F-04) -->
+          <div class="multi-store-card" style="margin-top: 14px;">
+            <div class="multi-store-title">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#00f0ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" x2="18" y1="20" y2="10"/>
+                <line x1="12" x2="12" y1="20" y2="4"/>
+                <line x1="6" x2="6" y1="20" y2="14"/>
+              </svg>
+              <span class="one-line">Cek Harga Bahan Pokok Antar Supermarket</span>
+            </div>
+            <p class="multi-store-desc">Cek harga komparasi di Lotte Mart, Super Indo, &amp; Indomaret Fresh.</p>
+            <div class="search-comparison-box">
+              <input type="text" class="search-comparison-input" id="inputCompareSearch" placeholder="Contoh: Minyak Goreng, Beras, Telur..." value="Beras 5kg">
+              <button class="btn-icon-soft" id="btnExecuteSearchCompare" title="Cari">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="11" cy="11" r="8"/>
+                  <path d="m21 21-4.3-4.3"/>
+                </svg>
+              </button>
+            </div>
+            <div class="comparison-results-box" id="comparisonResultsContainer">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+
+          <!-- Saved Sessions Timeline -->
+          <div class="history-section-wrap" style="margin-top: 14px;">
+            <h3 class="one-line" style="font-size: 14px; font-weight: 700; color: var(--text-primary); margin-bottom: 8px;">Daftar Sesi Belanja Lampau (Riwayat Toko)</h3>
+            <div class="history-sessions-list" id="historySessionsContainer">
               <!-- Dynamically populated -->
             </div>
           </div>
@@ -370,75 +692,97 @@
       </div>
 
       <!-- SINGLE FLOATING ACTION BUTTON (FLOAT DI KANAN BAWAH) -->
-      <button class="floating-add-btn" id="btnFloatingAdd" title="Tambah Barang Baru" aria-label="Tambah Barang">
+      <button class="floating-add-btn cat-fab-glow" id="btnFloatingAdd" title="Tambah Barang Baru" aria-label="Tambah Barang">
         <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
           <line x1="12" y1="5" x2="12" y2="19"/>
           <line x1="5" y1="12" x2="19" y2="12"/>
         </svg>
       </button>
 
-      <!-- Floating Bottom Navigation Bar (Ergonomis Lucide Icons) -->
+      <!-- Floating Bottom Navigation Bar (5 Ergonomis Lucide Tabs) -->
       <nav class="bottom-nav-bar" aria-label="Navigasi Menu Utama">
         <button class="nav-item active" id="navBelanja" data-tab="tabBelanja">
           <div class="nav-icon-container">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <circle cx="8" cy="21" r="1"/>
               <circle cx="19" cy="21" r="1"/>
               <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/>
             </svg>
             <span class="nav-badge-count" id="navCartBadge">5</span>
           </div>
-          <span class="nav-label one-line">Belanja</span>
+          <span class="nav-label one-line">Troli</span>
         </button>
 
-        <button class="nav-item" id="navRiwayat" data-tab="tabRiwayat">
+        <button class="nav-item" id="navRencana" data-tab="tabRencana">
           <div class="nav-icon-container">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M3 3v5h5"/>
-              <path d="M3.05 13A9 9 0 1 0 6 5.3L3 8"/>
-              <path d="M12 7v5l4 2"/>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 11l3 3L22 4"/>
+              <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
             </svg>
           </div>
-          <span class="nav-label one-line">Riwayat Toko</span>
+          <span class="nav-label one-line">Rencana</span>
+        </button>
+
+        <button class="nav-item" id="navKatalog" data-tab="tabKatalog">
+          <div class="nav-icon-container">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7"/>
+              <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
+              <path d="M15 22v-4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4"/>
+              <path d="M2 7h20"/>
+            </svg>
+          </div>
+          <span class="nav-label one-line">Katalog</span>
+        </button>
+
+        <button class="nav-item" id="navKalkulator" data-tab="tabKalkulator">
+          <div class="nav-icon-container">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="6" x2="6" y1="4" y2="20"/>
+              <line x1="18" x2="18" y1="4" y2="20"/>
+              <line x1="6" x2="18" y1="12" y2="12"/>
+              <circle cx="6" cy="4" r="2"/>
+              <circle cx="18" cy="4" r="2"/>
+              <circle cx="6" cy="20" r="2"/>
+              <circle cx="18" cy="20" r="2"/>
+            </svg>
+          </div>
+          <span class="nav-label one-line">Hitung</span>
         </button>
 
         <button class="nav-item" id="navAnggaran" data-tab="tabAnggaran">
           <div class="nav-icon-container">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/>
               <path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/>
             </svg>
           </div>
-          <span class="nav-label one-line">Anggaran</span>
+          <span class="nav-label one-line">Radar</span>
         </button>
       </nav>
 
-      <!-- Toast Notification Container -->
+      <!-- Toast Notification Container (UX Non-Blocking) -->
       <div class="toast-container" id="toastContainer"></div>
 
       <!-- Confirmation Modal for Clear Cart (Skenario Uji 8 Non-blocking) -->
       <div class="modal-backdrop" id="modalConfirmClearCartBackdrop">
-        <div class="bottom-sheet" style="max-height: 260px;" role="dialog" aria-modal="true">
-          <div class="sheet-drag-handle"></div>
-          <div class="sheet-header">
-            <h2 class="sheet-title one-line" style="color: var(--crimson);">Kosongkan Seluruh Troli?</h2>
-            <button class="sheet-close-btn" id="btnCancelClearCart" aria-label="Batal">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <line x1="18" y1="6" x2="6" y2="18"/>
-                <line x1="6" y1="6" x2="18" y2="18"/>
-              </svg>
-            </button>
+        <div class="confirm-dialog-card" role="alertdialog" aria-modal="true" aria-labelledby="confirmClearTitle" aria-describedby="confirmClearDesc">
+          <div class="confirm-icon-danger">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 6h18"/>
+              <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
+              <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
+              <line x1="10" y1="11" x2="10" y2="17"/>
+              <line x1="14" y1="11" x2="14" y2="17"/>
+            </svg>
           </div>
-          <div class="sheet-body" style="gap: 12px;">
-            <p style="font-size: 12.5px; color: var(--text-secondary); line-height: 1.5;">Apakah Anda yakin ingin menghapus seluruh barang yang berada di keranjang troli belanja sesi ini?</p>
-            <div style="display: flex; gap: 8px;">
-              <button type="button" class="btn-clear-cart" id="btnConfirmClearCartAction" style="flex: 1; padding: 12px; background: rgba(239, 68, 68, 0.15); border-color: var(--crimson); font-weight: 800;">
-                Ya, Kosongkan Troli
-              </button>
-              <button type="button" class="btn-sheet-submit" id="btnDismissClearCart" style="flex: 1; padding: 12px; background: var(--bg-input); color: var(--text-primary); box-shadow: none;">
-                Batal
-              </button>
-            </div>
+          <h3 class="confirm-title" id="confirmClearTitle">Kosongkan Seluruh Troli?</h3>
+          <p class="confirm-desc" id="confirmClearDesc">
+            Semua barang yang sedang berada di keranjang belanja akan dihapus sekaligus. Tindakan ini tidak dapat dibatalkan.
+          </p>
+          <div class="confirm-actions-row">
+            <button type="button" class="btn-confirm-cancel" id="btnCancelClearCart">Batal</button>
+            <button type="button" class="btn-confirm-delete" id="btnConfirmClearCartAction">Ya, Hapus Semua</button>
           </div>
         </div>
       </div>
@@ -570,7 +914,7 @@
               </div>
             </div>
 
-            <button type="submit" class="btn-sheet-submit" id="btnSubmitItem">
+            <button type="submit" class="btn-sheet-submit cat-glow-btn" id="btnSubmitItem">
               Simpan ke Troli Belanja
             </button>
           </form>
@@ -637,127 +981,24 @@
         </div>
       </div>
 
-      <!-- Modal 4: Konfirmasi Aman Kosongkan Seluruh Troli (UX & F-06A Non-Blocking) -->
-      <div class="modal-backdrop" id="modalConfirmClearCartBackdrop">
-        <div class="confirm-dialog-card" role="alertdialog" aria-modal="true" aria-labelledby="confirmClearTitle" aria-describedby="confirmClearDesc">
-          <div class="confirm-icon-danger">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M3 6h18"/>
-              <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
-              <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
-              <line x1="10" y1="11" x2="10" y2="17"/>
-              <line x1="14" y1="11" x2="14" y2="17"/>
-            </svg>
-          </div>
-          <h3 class="confirm-title" id="confirmClearTitle">Kosongkan Seluruh Troli?</h3>
-          <p class="confirm-desc" id="confirmClearDesc">
-            Semua barang yang sedang berada di keranjang belanja akan dihapus sekaligus. Tindakan ini tidak dapat dibatalkan.
-          </p>
-          <div class="confirm-actions-row">
-            <button type="button" class="btn-confirm-cancel" id="btnCancelClearCart">Batal</button>
-            <button type="button" class="btn-confirm-delete" id="btnConfirmClearCartAction">Ya, Hapus Semua</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Modal 5: Auth Screen & Gatekeeper (Google Login, Email Login & Sign Up) -->
-      <div class="modal-backdrop" id="modalAuthBackdrop" style="display: none;">
-        <div class="confirm-dialog-card auth-dialog-card" role="dialog" aria-modal="true" aria-labelledby="authModalTitle">
-          <button class="sheet-close-btn auth-close-x" id="btnCloseAuthModal" aria-label="Tutup">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <line x1="18" y1="6" x2="6" y2="18"/>
-              <line x1="6" y1="6" x2="18" y2="18"/>
-            </svg>
-          </button>
-          
-          <div class="auth-header">
-            <div class="auth-brand-logo">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="8" cy="21" r="1"/>
-                <circle cx="19" cy="21" r="1"/>
-                <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/>
-              </svg>
-            </div>
-            <h3 class="auth-title" id="authModalTitle">Akun Smart Grocery</h3>
-            <p class="auth-subtitle">Simpan troli belanja dan riwayat struk multi-toko langsung ke akun Anda</p>
-          </div>
-
-          <!-- Auth Switcher: Masuk vs Daftar -->
-          <div class="auth-tabs-row">
-            <button type="button" class="auth-tab-btn active" id="tabBtnLogin">Masuk</button>
-            <button type="button" class="auth-tab-btn" id="tabBtnRegister">Daftar Akun</button>
-          </div>
-
-          <!-- Error / Info Alert -->
-          <div class="auth-alert-box" id="authAlertBox" style="display: none;"></div>
-
-          <!-- Google One-Click Login -->
-          <button class="btn-google-login" id="btnGoogleLogin" type="button">
-            <svg class="google-icon" width="18" height="18" viewBox="0 0 24 24">
-              <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-              <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-              <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
-              <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
-            </svg>
-            <span>Masuk dengan Akun Google</span>
-          </button>
-
-          <div class="auth-divider">
-            <span>atau dengan email</span>
-          </div>
-
-          <!-- Form 1: Login Form -->
-          <form id="formLogin" class="auth-form-body">
-            <div class="auth-field">
-              <label for="loginEmail">Email</label>
-              <input type="email" id="loginEmail" placeholder="nama@email.com" autocomplete="email" required>
-            </div>
-            <div class="auth-field">
-              <label for="loginPassword">Kata Sandi</label>
-              <input type="password" id="loginPassword" placeholder="Minimal 6 karakter" autocomplete="current-password" required>
-            </div>
-            <button type="submit" class="btn-auth-submit" id="btnSubmitLogin">Masuk ke Akun</button>
-          </form>
-
-          <!-- Form 2: Register Form -->
-          <form id="formRegister" class="auth-form-body" style="display: none;">
-            <div class="auth-field">
-              <label for="regName">Nama Lengkap</label>
-              <input type="text" id="regName" placeholder="Contoh: Rian Pratama" autocomplete="name" required>
-            </div>
-            <div class="auth-field">
-              <label for="regEmail">Email</label>
-              <input type="email" id="regEmail" placeholder="nama@email.com" autocomplete="email" required>
-            </div>
-            <div class="auth-field">
-              <label for="regPassword">Kata Sandi</label>
-              <input type="password" id="regPassword" placeholder="Minimal 6 karakter" autocomplete="new-password" required>
-            </div>
-            <button type="submit" class="btn-auth-submit" id="btnSubmitRegister">Daftar Akun Baru</button>
-          </form>
-
-          <div class="auth-guest-row">
-            <button type="button" class="btn-guest-link" id="btnContinueGuest">
-              Lanjutkan sebagai Tamu (Mode Offline)
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Modal 6: User Profile & Account Management -->
+      <!-- Modal 5: User Profile & Account Management -->
       <div class="modal-backdrop" id="modalUserProfileBackdrop" style="display: none;">
         <div class="confirm-dialog-card profile-dialog-card" role="dialog" aria-modal="true" aria-labelledby="profileModalTitle">
           <div class="profile-header">
-            <div class="profile-avatar-large" id="profileAvatarLarge">U</div>
-            <h3 class="profile-user-name" id="profileUserName">Nama Pengguna</h3>
+            <div class="profile-avatar-large cat-avatar-glow" id="profileAvatarLarge">🐾</div>
+            <h3 class="profile-user-name" id="profileUserName">Pengguna Smart Grocery</h3>
             <p class="profile-user-email" id="profileUserEmail">email@domain.com</p>
             <span class="profile-badge-pill" id="profileBadgePill">Akun Google Terhubung</span>
           </div>
 
           <div class="profile-info-box">
             <div class="profile-info-row">
+              <span class="info-label">Tema Estetika</span>
+              <span class="info-val accent">Midnight Ocean &amp; Black Cat</span>
+            </div>
+            <div class="profile-info-row">
               <span class="info-label">Penyimpanan Akun</span>
-              <span class="info-val accent">Tersinkronisasi Otomatis</span>
+              <span class="info-val accent">Firebase &amp; Lokal Realtime</span>
             </div>
             <div class="profile-info-row">
               <span class="info-label">ID Proyek Firebase</span>
