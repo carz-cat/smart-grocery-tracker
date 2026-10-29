@@ -235,13 +235,30 @@ export const Comparator = {
    * Get cross-store price comparison for any staple item (F-06 Multi-Store comparison)
    * @param {string} productName 
    * @param {Array} historySessions 
-   * @returns {Array} List of { store, date, price, formattedPrice }
+   * @param {object} currentSession
+   * @returns {Array} List of { store, date, price, formattedPrice, isCheapest, deltaVsCheapest }
    */
-  getCrossStoreComparison(productName, historySessions = []) {
+  getCrossStoreComparison(productName, historySessions = [], currentSession = null) {
     const norm = this.normalizeName(productName);
     const storeMap = new Map();
 
-    // Check history sessions
+    // 1. Check current active session
+    if (currentSession && Array.isArray(currentSession.items)) {
+      const activeItem = currentSession.items.find(it => this.getSimilarity(it.name, norm) >= 0.75);
+      if (activeItem) {
+        storeMap.set(currentSession.store, {
+          store: currentSession.store,
+          date: currentSession.date || 'Sesi Berjalan',
+          unitPrice: activeItem.unitPrice,
+          unit: activeItem.unit,
+          discount: activeItem.discount,
+          productName: activeItem.name,
+          isCurrentStore: true
+        });
+      }
+    }
+
+    // 2. Check history sessions
     for (const session of historySessions) {
       for (const item of session.items) {
         if (this.getSimilarity(item.name, norm) >= 0.75) {
@@ -253,14 +270,42 @@ export const Comparator = {
               unitPrice: item.unitPrice,
               unit: item.unit,
               discount: item.discount,
-              productName: item.name
+              productName: item.name,
+              isCurrentStore: currentSession && currentSession.store === session.store
             });
           }
         }
       }
     }
 
+    // 3. Fallback benchmark catalog if fewer than 2 stores
+    if (storeMap.size < 2) {
+      const catalogMatches = MASTER_CATALOG.filter(cat => this.getSimilarity(cat.name, norm) >= 0.75);
+      catalogMatches.forEach(cat => {
+        const storeName = cat.store || 'Pasar Tradisional / Grosir';
+        if (!storeMap.has(storeName)) {
+          storeMap.set(storeName, {
+            store: storeName,
+            date: 'Acuan Pasar',
+            unitPrice: cat.benchmarkPrice,
+            unit: cat.unit,
+            discount: '',
+            productName: cat.name,
+            isCurrentStore: false
+          });
+        }
+      });
+    }
+
     const results = Array.from(storeMap.values()).sort((a, b) => a.unitPrice - b.unitPrice);
+    if (results.length > 0) {
+      const lowestPrice = results[0].unitPrice;
+      results.forEach((r, idx) => {
+        r.isCheapest = idx === 0;
+        r.deltaVsCheapest = r.unitPrice - lowestPrice;
+        r.formattedPrice = Calculator.formatRupiah(r.unitPrice);
+      });
+    }
     return results;
   }
 };

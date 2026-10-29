@@ -203,7 +203,7 @@ class SoundManager {
       // Friendly speech announcement if supported by browser
       if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
         try {
-          const utter = new SpeechSynthesisUtterance('Selamat, Anda telah masuk ke Keranjang Pintar!');
+          const utter = new SpeechSynthesisUtterance('Selamat, Anda telah masuk ke Tala!');
           utter.lang = 'id-ID';
           utter.rate = 1.05;
           utter.pitch = 1.25;
@@ -214,7 +214,81 @@ class SoundManager {
   }
 
   /**
-   * 5. Budget Deficit / Warning Alarm (Cat Caution alert when exceeding budget)
+   * 5. Celebratory Firecracker Pops (Efek suara petasan ringan pendek saat selesai belanja & simpan struk)
+   */
+  playFirecrackerCelebration() {
+    if (!this.enabled) return;
+    this.initAudio();
+    if (!this.audioCtx) return;
+
+    try {
+      const now = this.audioCtx.currentTime;
+      // Sequence of rapid crackles / mini-pops
+      const popTimes = [0, 0.06, 0.11, 0.16, 0.22, 0.28];
+      const frequencies = [950, 1280, 840, 1420, 1100, 1600];
+
+      popTimes.forEach((delay, i) => {
+        const t = now + delay;
+        const osc = this.audioCtx.createOscillator();
+        const gain = this.audioCtx.createGain();
+
+        osc.type = i % 2 === 0 ? 'triangle' : 'square';
+        osc.frequency.setValueAtTime(frequencies[i], t);
+        osc.frequency.exponentialRampToValueAtTime(140, t + 0.045);
+
+        gain.gain.setValueAtTime(0.20, t);
+        gain.gain.exponentialRampToValueAtTime(0.001, t + 0.045);
+
+        osc.connect(gain);
+        gain.connect(this.audioCtx.destination);
+
+        osc.start(t);
+        osc.stop(t + 0.045);
+      });
+    } catch (_) {}
+  }
+
+  /**
+   * 6. Two-Tone Warning Siren ("ni-nu ni-nu" alert saat kondisi over budget)
+   */
+  playSirenAlarm() {
+    if (!this.enabled) return;
+    this.initAudio();
+    if (!this.audioCtx) return;
+
+    try {
+      const now = this.audioCtx.currentTime;
+      const tones = [
+        { f: 880, start: 0, dur: 0.15 },
+        { f: 659.25, start: 0.16, dur: 0.15 },
+        { f: 880, start: 0.32, dur: 0.15 },
+        { f: 659.25, start: 0.48, dur: 0.18 }
+      ];
+
+      tones.forEach(tone => {
+        const t = now + tone.start;
+        const osc = this.audioCtx.createOscillator();
+        const gain = this.audioCtx.createGain();
+
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(tone.f, t);
+
+        gain.gain.setValueAtTime(0.01, t);
+        gain.gain.linearRampToValueAtTime(0.20, t + 0.02);
+        gain.gain.setValueAtTime(0.20, t + tone.dur - 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.001, t + tone.dur);
+
+        osc.connect(gain);
+        gain.connect(this.audioCtx.destination);
+
+        osc.start(t);
+        osc.stop(t + tone.dur);
+      });
+    } catch (_) {}
+  }
+
+  /**
+   * 7. Budget Deficit / Warning Alarm (Cat Caution alert when approaching budget)
    */
   playBudgetAlarm() {
     if (!this.enabled) return;
@@ -304,7 +378,7 @@ class SoundManager {
   }
 
   playSuccess() {
-    this.playLoginWelcome();
+    this.playChime();
   }
 
   playWarning() {

@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="theme-color" content="#060b18">
-  <meta name="description" content="Keranjang Pintar - Smart Grocery & Budget Safety Tracker dengan Desain Minimalis & Estetika Midnight Ocean">
+  <meta name="description" content="Tala (Tas Belanja) - Smart Grocery & Budget Safety Tracker dengan Desain Minimalis & Estetika Midnight Ocean">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="KeranjangPintar">
+  <meta name="apple-mobile-web-app-title" content="Tala">
   <link rel="manifest" href="./manifest.webmanifest">
   <link rel="icon" type="image/svg+xml" href="./icons/icon.svg">
   <link rel="apple-touch-icon" href="./icons/icon.svg">
-  <title>Keranjang Pintar | Smart Grocery &amp; Budget Tracker</title>
+  <title>Tala | Smart Grocery &amp; Budget Tracker</title>
   
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
@@ -22,7 +22,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600;700&family=Outfit:wght@500;600;700;800&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="./css/styles.css?v=2.3.0">
+  <link rel="stylesheet" href="./css/styles.css?v=2.4.0">
 </head>
 <body>
   <!-- Desktop Canvas Container -->
@@ -49,34 +49,35 @@
 
     <!-- ==========================================================================
          HALAMAN LOGIN & AUTENTIKASI KHUSUS (GATEKEEPER VIEW)
-         Midnight Ocean Blue & Black Cat Aesthetic
+         Tala - Midnight Blue & Aesthetic Theme
          Terkunci sebelum pengguna login atau memilih mode tamu
          ========================================================================== -->
     <div class="auth-gatekeeper-screen" id="authGatekeeperScreen" style="display: none;">
       <div class="auth-gate-card">
-        <!-- Brand Mascot Logo: Ikon Keranjang Belanja Putih, Background Biru Tua & Aksen Telinga Kucing -->
+        <!-- Brand Mascot Logo: Ikon Tas Belanja Putih (Tala) dengan Aksen Telinga Kucing -->
         <div class="cat-brand-header">
           <div class="cat-mascot-badge" style="background: transparent; border: none; box-shadow: none;">
-            <svg width="72" height="72" viewBox="0 0 64 64" fill="none">
+            <svg width="74" height="74" viewBox="0 0 64 64" fill="none">
               <!-- Left Cat Ear on Top -->
-              <polygon points="12,20 20,4 29,16" fill="#071124" stroke="#1e3a6a" stroke-width="2" stroke-linejoin="round"/>
+              <polygon points="12,20 20,4 29,16" fill="#061024" stroke="#1e3a6a" stroke-width="2" stroke-linejoin="round"/>
               <polygon points="15,18 20,8 26,16" fill="#00f0ff" opacity="0.85"/>
               <!-- Right Cat Ear on Top -->
-              <polygon points="52,20 44,4 35,16" fill="#071124" stroke="#1e3a6a" stroke-width="2" stroke-linejoin="round"/>
+              <polygon points="52,20 44,4 35,16" fill="#061024" stroke="#1e3a6a" stroke-width="2" stroke-linejoin="round"/>
               <polygon points="49,18 44,8 38,16" fill="#00f0ff" opacity="0.85"/>
-              <!-- Dark Blue Rounded Squircle Container -->
-              <rect x="5" y="11" width="54" height="49" rx="14" fill="#09152b" stroke="#1e3a6a" stroke-width="2"/>
+              <!-- Midnight Blue Rounded Squircle Container -->
+              <rect x="5" y="11" width="54" height="49" rx="14" fill="#0a1d40" stroke="#1e3a6a" stroke-width="2"/>
               <rect x="7" y="13" width="50" height="45" rx="12" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
-              <!-- White Shopping Cart Icon in Center -->
-              <path d="M15 22h7l5.5 20h22l4.5-14H25.5" stroke="#ffffff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
-              <line x1="30" y1="29" x2="50" y2="29" stroke="#ffffff" stroke-width="1.8" opacity="0.85" stroke-linecap="round"/>
-              <circle cx="29" cy="48" r="3.5" fill="#ffffff"/>
-              <circle cx="47" cy="48" r="3.5" fill="#ffffff"/>
+              <!-- White Shopping Bag Handle (Tas Belanja) -->
+              <path d="M26 27 V20 C26 16.5 38 16.5 38 20 V27" fill="none" stroke="#ffffff" stroke-width="3.2" stroke-linecap="round"/>
+              <!-- White Shopping Bag Body (Tas Belanja Tala) -->
+              <path d="M18 27 L22 51 L42 51 L46 27 Z" fill="#ffffff"/>
+              <!-- Cute Subtle Brand Accent -->
+              <circle cx="32" cy="38" r="2.2" fill="#0284c7"/>
             </svg>
           </div>
-          <h1 class="cat-app-title">Keranjang Pintar</h1>
-          <p class="cat-app-tagline">Smart Grocery &amp; Budget Tracker</p>
-          <div class="cat-pill-badge">Amankan Saldo &amp; Belanja Terkendali</div>
+          <h1 class="cat-app-title">Tala</h1>
+          <p class="cat-app-tagline">Tas Belanja Pintar &amp; Budget Tracker</p>
+          <div class="cat-pill-badge">Amankan Saldo &amp; Belanja Hemat Terkendali</div>
         </div>
 
         <!-- Auth Tabs: Masuk vs Daftar -->
@@ -184,26 +185,27 @@
       <header class="app-header">
         <div class="header-top-row">
           <div class="brand-badge">
-            <div class="brand-icon cat-ears-avatar" title="Keranjang Pintar">
+            <div class="brand-icon cat-ears-avatar" title="Tala - Tas Belanja Pintar">
               <svg width="24" height="24" viewBox="0 0 64 64" fill="none">
                 <!-- Left Cat Ear on Top -->
-                <polygon points="12,20 20,4 29,16" fill="#071124" stroke="#1e3a6a" stroke-width="2" stroke-linejoin="round"/>
+                <polygon points="12,20 20,4 29,16" fill="#061024" stroke="#1e3a6a" stroke-width="2" stroke-linejoin="round"/>
                 <polygon points="15,18 20,8 26,16" fill="#00f0ff" opacity="0.85"/>
                 <!-- Right Cat Ear on Top -->
-                <polygon points="52,20 44,4 35,16" fill="#071124" stroke="#1e3a6a" stroke-width="2" stroke-linejoin="round"/>
+                <polygon points="52,20 44,4 35,16" fill="#061024" stroke="#1e3a6a" stroke-width="2" stroke-linejoin="round"/>
                 <polygon points="49,18 44,8 38,16" fill="#00f0ff" opacity="0.85"/>
-                <!-- Dark Blue Rounded Squircle Container -->
-                <rect x="5" y="11" width="54" height="49" rx="14" fill="#09152b" stroke="#1e3a6a" stroke-width="2"/>
-                <!-- White Shopping Cart Icon in Center -->
-                <path d="M15 22h7l5.5 20h22l4.5-14H25.5" stroke="#ffffff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
-                <line x1="30" y1="29" x2="50" y2="29" stroke="#ffffff" stroke-width="1.8" opacity="0.85" stroke-linecap="round"/>
-                <circle cx="29" cy="48" r="3.5" fill="#ffffff"/>
-                <circle cx="47" cy="48" r="3.5" fill="#ffffff"/>
+                <!-- Midnight Blue Rounded Squircle Container -->
+                <rect x="5" y="11" width="54" height="49" rx="14" fill="#0a1d40" stroke="#1e3a6a" stroke-width="2"/>
+                <!-- White Shopping Bag Handle (Tala) -->
+                <path d="M26 27 V20 C26 16.5 38 16.5 38 20 V27" fill="none" stroke="#ffffff" stroke-width="3.2" stroke-linecap="round"/>
+                <!-- White Shopping Bag Body (Tala) -->
+                <path d="M18 27 L22 51 L42 51 L46 27 Z" fill="#ffffff"/>
+                <circle cx="32" cy="38" r="2.2" fill="#0284c7"/>
               </svg>
             </div>
             <div class="brand-text">
               <div class="brand-title-wrap">
-                <h1>Smart Grocery</h1>
+                <h1>Tala</h1>
+                <span class="brand-subtitle-tag">Tas Belanja</span>
               </div>
               <div class="header-session-quick-info">
                 <span id="headerStoreName" class="one-line clickable-store-header" title="Klik untuk ubah lokasi belanja">Lotte Mart Grocery - Puri Indah</span>
@@ -419,7 +421,7 @@
             <form class="checklist-add-form" id="formAddChecklist">
               <input type="text" id="inputChecklistName" class="checklist-input" placeholder="Tulis barang baru (misal: Sabun Cuci, Kopi...)" required autocomplete="off">
               <div class="checklist-input-subrow">
-                <select id="selectChecklistCat" class="checklist-cat-select">
+                <select id="selectChecklistCat" class="checklist-cat-select" aria-label="Kategori Barang">
                   <option value="Bahan Pokok">🌾 Bahan Pokok</option>
                   <option value="Minyak & Bumbu">🧂 Minyak &amp; Bumbu</option>
                   <option value="Telur & Susu">🥛 Telur &amp; Susu</option>
@@ -429,8 +431,14 @@
                   <option value="Kebutuhan Lainnya">📦 Kebutuhan Lainnya</option>
                 </select>
                 <input type="text" id="inputChecklistEstPrice" class="checklist-price-input" placeholder="Estimasi (Rp)" inputmode="numeric">
-                <button type="submit" class="btn-add-checklist-item" id="btnAddChecklistItem">+ Tambah</button>
               </div>
+              <button type="submit" class="btn-add-checklist-item" id="btnAddChecklistItem">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="12" y1="5" x2="12" y2="19"/>
+                  <line x1="5" y1="12" x2="19" y2="12"/>
+                </svg>
+                <span>Tambah ke Rencana</span>
+              </button>
             </form>
           </div>
 
@@ -551,17 +559,44 @@
             <!-- Breakdown Summary Card -->
             <div class="sheet-live-calc-card" style="margin-top: 10px;">
               <div class="calc-row">
-                <span>Harga Setelah Diskon (Nett)</span>
-                <span id="calcToolResultNet" style="font-family: var(--font-mono); font-weight: 700; color: var(--emerald-light);">Rp 40.000</span>
+                <span>Harga Diskon (Nett)</span>
+                <span id="calcToolResultNet" style="font-family: var(--font-mono); font-weight: 700; color: var(--cyan-light);">Rp 40.000</span>
               </div>
               <div class="calc-row">
-                <span>Total Potongan Hemat</span>
+                <span>Total Hemat</span>
                 <span id="calcToolResultSavings" style="font-family: var(--font-mono); color: #fbbf24;">Rp 60.000 (60%)</span>
               </div>
               <div class="calc-row" id="vatAuditRow">
-                <span>Dasar Pengenaan Pajak (DPP) / PPN 11%</span>
+                <span>Audit PPN 11% (DPP / Pajak)</span>
                 <span id="calcToolResultVat" style="font-family: var(--font-mono); font-size: 11px;">DPP: Rp 36.036 • PPN: Rp 3.964</span>
               </div>
+            </div>
+          </div>
+
+          <!-- Card 3: Komparasi Harga Pokok Antar Supermarket -->
+          <div class="calc-tool-card" style="margin-top: 14px;">
+            <div class="calc-tool-header">
+              <div class="calc-tool-icon">🏪</div>
+              <div>
+                <h3 class="calc-tool-title">Perbandingan Harga Antar Supermarket</h3>
+                <p class="calc-tool-desc">Bandingkan harga bahan pokok terkini di Lotte Mart, Super Indo, Indomaret Fresh &amp; Pasar.</p>
+              </div>
+            </div>
+
+            <div class="store-compare-selector-wrap" style="margin-top: 10px;">
+              <label class="form-label one-line" for="selectCrossStoreProduct">Pilih Bahan Pokok</label>
+              <select id="selectCrossStoreProduct" class="checklist-cat-select" style="width: 100%; min-height: 44px; margin-top: 4px;">
+                <option value="Beras 5kg">🌾 Beras 5kg (Rojolele)</option>
+                <option value="Minyak Goreng 2L">🧂 Minyak Goreng 2L (Bimoli)</option>
+                <option value="Telur 1kg">🥛 Telur Ayam 1kg</option>
+                <option value="Garam 500g">🧂 Garam Dapur 500g</option>
+                <option value="Sabun Cuci">🧼 Sabun Cuci</option>
+                <option value="Wajan">🍳 Wajan</option>
+              </select>
+            </div>
+
+            <div class="cross-store-results-container" id="crossStoreResultsContainer" style="margin-top: 12px;">
+              <!-- Populated dynamically via app.js -->
             </div>
           </div>
         </section>
@@ -947,12 +982,16 @@
         <div class="confirm-dialog-card profile-dialog-card" role="dialog" aria-modal="true" aria-labelledby="profileModalTitle">
           <div class="profile-header">
             <div class="profile-avatar-large cat-avatar-glow" id="profileAvatarLarge">🐾</div>
-            <h3 class="profile-user-name" id="profileUserName">Pengguna Smart Grocery</h3>
+            <h3 class="profile-user-name" id="profileUserName">Pengguna Tala</h3>
             <p class="profile-user-email" id="profileUserEmail">email@domain.com</p>
             <span class="profile-badge-pill" id="profileBadgePill">Akun Google Terhubung</span>
           </div>
 
           <div class="profile-info-box">
+            <div class="profile-info-row">
+              <span class="info-label">Aplikasi</span>
+              <span class="info-val accent">Tala (Tas Belanja)</span>
+            </div>
             <div class="profile-info-row">
               <span class="info-label">Tema Estetika</span>
               <span class="info-val accent">Midnight Ocean Edition</span>
@@ -968,9 +1007,25 @@
           </div>
 
           <div class="profile-actions-row">
-            <button type="button" class="btn-profile-close" id="btnCloseProfileModal">Tutup</button>
-            <button type="button" class="btn-profile-logout" id="btnLogoutAction">Keluar (Logout)</button>
+            <button type="button" class="btn-profile-switch" id="btnProfileSwitchAccount" title="Masuk dengan Akun Lain">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+                <path d="M3 3v5h5"/>
+                <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/>
+                <path d="M16 21h5v-5"/>
+              </svg>
+              <span>Ganti Akun</span>
+            </button>
+            <button type="button" class="btn-profile-logout" id="btnLogoutAction" title="Keluar dari akun">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                <polyline points="16 17 21 12 16 7"/>
+                <line x1="21" y1="12" x2="9" y2="12"/>
+              </svg>
+              <span>Keluar</span>
+            </button>
           </div>
+          <button type="button" class="btn-profile-close-full" id="btnCloseProfileModal">Tutup</button>
         </div>
       </div>
 
@@ -1017,16 +1072,16 @@
   </div>
 
   <!-- Firebase SDK & Analytics (Project: grocerytracker-9ef9b) -->
-  <script type="module" src="./js/firebase-config.js?v=2.3.0"></script>
+  <script type="module" src="./js/firebase-config.js?v=2.4.0"></script>
 
   <!-- Main ES Module Application Script -->
-  <script type="module" src="./js/app.js?v=2.3.0"></script>
+  <script type="module" src="./js/app.js?v=2.4.0"></script>
 
   <!-- Service Worker Registration for PWA Standalone Mode -->
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js?v=2.3.0')
+        navigator.serviceWorker.register('./sw.js?v=2.4.0')
           .then(reg => {
             console.log('Service Worker OK:', reg.scope);
             // Check for service worker updates immediately

@@ -1,7 +1,7 @@
 {
   "name": "smart-grocery-tracker",
   "version": "1.0.0",
-  "description": "Smart Grocery & Budget Safety Tracker - Mobile PWA for Supermarket Trolley Shopping",
+  "description": "Tala - Tas Belanja Pintar & Budget Safety Tracker - Mobile PWA for Supermarket Trolley Shopping",
   "type": "module",
   "scripts": {
     "start": "node server.js",

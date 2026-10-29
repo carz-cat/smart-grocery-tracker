@@ -106,9 +106,12 @@ class AuthManager {
   }
 
   // 1. Sign in with Google
-  async loginWithGoogle() {
+  async loginWithGoogle(options = {}) {
     if (auth && googleProvider) {
       try {
+        if (options && options.prompt && typeof googleProvider.setCustomParameters === 'function') {
+          googleProvider.setCustomParameters({ prompt: options.prompt });
+        }
         const result = await signInWithPopup(auth, googleProvider);
         const u = result.user;
         this.currentUser = {

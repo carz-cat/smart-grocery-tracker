@@ -127,6 +127,8 @@ class SmartGroceryApp {
       calcToolResultNet: document.getElementById('calcToolResultNet'),
       calcToolResultSavings: document.getElementById('calcToolResultSavings'),
       calcToolResultVat: document.getElementById('calcToolResultVat'),
+      selectCrossStoreProduct: document.getElementById('selectCrossStoreProduct'),
+      crossStoreResultsContainer: document.getElementById('crossStoreResultsContainer'),
 
       // Tab 5: Radar Anggaran & Riwayat
       inputBudgetCap: document.getElementById('inputBudgetCap'),
@@ -192,6 +194,7 @@ class SmartGroceryApp {
       profileUserName: document.getElementById('profileUserName'),
       profileUserEmail: document.getElementById('profileUserEmail'),
       profileBadgePill: document.getElementById('profileBadgePill'),
+      btnProfileSwitchAccount: document.getElementById('btnProfileSwitchAccount'),
       btnLogoutAction: document.getElementById('btnLogoutAction'),
 
       // Toast
@@ -436,7 +439,9 @@ class SmartGroceryApp {
 
     // Sound alert when entering WARNING or DANGER budget state
     if (summary.budgetStatus !== this.lastBudgetStatus) {
-      if (summary.budgetStatus === 'WARNING' || summary.budgetStatus === 'DANGER') {
+      if (summary.budgetStatus === 'DANGER') {
+        soundMgr.playSirenAlarm();
+      } else if (summary.budgetStatus === 'WARNING') {
         soundMgr.playBudgetAlarm();
       }
       this.lastBudgetStatus = summary.budgetStatus;
@@ -455,27 +460,31 @@ class SmartGroceryApp {
     this.dom.safetyAlertBanner.className = 'safety-alert-banner';
 
     if (summary.budgetStatus === 'DANGER') {
-      // Over Budget / Defisit (>100%)
+      // Over Budget / Defisit (>100%) - Ambient warning red background
+      document.body.classList.add('budget-screen-danger');
       this.dom.budgetStatusPill.classList.add('pill-danger');
       this.dom.budgetStatusPill.textContent = `OVER BUDGET! (${pct}%)`;
       this.dom.budgetProgressFill.classList.add('fill-danger');
       this.dom.safetyAlertBanner.classList.add('banner-danger');
       this.dom.safetyAlertBanner.style.display = 'flex';
       this.dom.safetyAlertMessage.innerHTML = `<strong>Total belanja melebihi batas saldo dompet!</strong> Kurangi kuantitas atau batalkan barang sekunder. (Melebihi ${Calculator.formatRupiah(Math.abs(summary.remaining))})`;
-    } else if (summary.budgetStatus === 'WARNING') {
-      // Warning (>= 80% and <= 100%)
-      this.dom.budgetStatusPill.classList.add('pill-warning');
-      this.dom.budgetStatusPill.textContent = `Peringatan Waspada (${pct}%)`;
-      this.dom.budgetProgressFill.classList.add('fill-warning');
-      this.dom.safetyAlertBanner.classList.add('banner-warning');
-      this.dom.safetyAlertBanner.style.display = 'flex';
-      this.dom.safetyAlertMessage.innerHTML = `<strong>Peringatan Waspada (${pct}%)!</strong> Total belanja mendekati limit saldo dompet. Sisa saldo: ${Calculator.formatRupiah(summary.remaining)}.`;
     } else {
-      // Safe (<80%)
-      this.dom.budgetStatusPill.classList.add('pill-safe');
-      this.dom.budgetStatusPill.textContent = `Aman (${pct}%)`;
-      this.dom.budgetProgressFill.classList.add('fill-safe');
-      this.dom.safetyAlertBanner.style.display = 'none';
+      document.body.classList.remove('budget-screen-danger');
+      if (summary.budgetStatus === 'WARNING') {
+        // Warning (>= 80% and <= 100%)
+        this.dom.budgetStatusPill.classList.add('pill-warning');
+        this.dom.budgetStatusPill.textContent = `Peringatan Waspada (${pct}%)`;
+        this.dom.budgetProgressFill.classList.add('fill-warning');
+        this.dom.safetyAlertBanner.classList.add('banner-warning');
+        this.dom.safetyAlertBanner.style.display = 'flex';
+        this.dom.safetyAlertMessage.innerHTML = `<strong>Peringatan Waspada (${pct}%)!</strong> Total belanja mendekati limit saldo dompet. Sisa saldo: ${Calculator.formatRupiah(summary.remaining)}.`;
+      } else {
+        // Safe (<80%)
+        this.dom.budgetStatusPill.classList.add('pill-safe');
+        this.dom.budgetStatusPill.textContent = `Aman (${pct}%)`;
+        this.dom.budgetProgressFill.classList.add('fill-safe');
+        this.dom.safetyAlertBanner.style.display = 'none';
+      }
     }
   }
 
@@ -746,11 +755,52 @@ class SmartGroceryApp {
   }
 
   /**
-   * Tab 3: Kalkulator Diskon Bertumpuk & Pembanding Kemasan
+   * Tab 3: Kalkulator Diskon Bertumpuk, Pembanding Kemasan & Komparasi Antar Supermarket
    */
   renderCalculatorTab() {
     this.updateValueComparator();
     this.updateCompoundDiscountTool();
+    this.renderCrossStoreComparison();
+  }
+
+  renderCrossStoreComparison(productName) {
+    if (!this.dom.crossStoreResultsContainer) return;
+    const targetProduct = productName || (this.dom.selectCrossStoreProduct ? this.dom.selectCrossStoreProduct.value : 'Beras 5kg');
+    const history = this.store.history || [];
+    const current = this.store.activeSession;
+    const comparisons = Comparator.getCrossStoreComparison(targetProduct, history, current);
+
+    if (comparisons.length === 0) {
+      this.dom.crossStoreResultsContainer.innerHTML = `
+        <div style="text-align: center; color: var(--text-muted); padding: 14px; font-size: 12px;">
+          Belum ada data perbandingan untuk produk ini.
+        </div>
+      `;
+      return;
+    }
+
+    this.dom.crossStoreResultsContainer.innerHTML = comparisons.map((comp) => {
+      const isCheapest = comp.isCheapest;
+      const badgeHtml = isCheapest
+        ? `<span class="cross-store-badge badge-cheapest">🏆 #1 Paling Hemat</span>`
+        : `<span class="cross-store-badge badge-diff">+${Calculator.formatRupiah(comp.deltaVsCheapest)}</span>`;
+
+      return `
+        <div class="cross-store-card ${isCheapest ? 'cheapest' : ''}">
+          <div class="cross-store-info">
+            <div class="cross-store-name">
+              <span>${comp.store}</span>
+              ${comp.isCurrentStore ? '<span style="font-size: 10px; color: var(--cyan);">(Toko Aktif)</span>' : ''}
+            </div>
+            <div class="cross-store-date">${comp.productName} • ${comp.date}</div>
+          </div>
+          <div class="cross-store-price-group">
+            <div class="cross-store-price">${comp.formattedPrice}</div>
+            ${badgeHtml}
+          </div>
+        </div>
+      `;
+    }).join('');
   }
 
   updateValueComparator() {
@@ -1336,6 +1386,12 @@ class SmartGroceryApp {
     const navKey = 'nav' + tabId.replace('tab', '');
     if (this.dom[navKey]) this.dom[navKey].classList.add('active');
 
+    if (tabId === 'tabKalkulator') {
+      this.updateValueComparator();
+      this.updateCompoundDiscountTool();
+      this.renderCrossStoreComparison();
+    }
+
     this.triggerHaptic();
   }
 
@@ -1519,6 +1575,21 @@ class SmartGroceryApp {
         this.showToast('Anda telah keluar dari akun', 'info');
       });
     }
+    if (this.dom.btnProfileSwitchAccount) {
+      this.dom.btnProfileSwitchAccount.addEventListener('click', async () => {
+        soundMgr.playPop();
+        await authMgr.logout();
+        this.closeUserProfileModal();
+        this.showToast('Silakan pilih akun Google baru...', 'info');
+        const res = await authMgr.loginWithGoogle({ prompt: 'select_account' });
+        if (res.success) {
+          soundMgr.playLoginWelcome();
+          this.showToast(`Berhasil masuk sebagai ${res.user.displayName}!`, 'success');
+        } else if (res.needsConsoleActivation) {
+          this.showGateAlert(res.error);
+        }
+      });
+    }
 
     // GPS Detect Button in Store Picker
     this.dom.btnDetectGpsStore.addEventListener('click', () => {
@@ -1679,6 +1750,12 @@ class SmartGroceryApp {
     if (this.dom.checkAuditVat) {
       this.dom.checkAuditVat.addEventListener('change', () => this.updateCompoundDiscountTool());
     }
+    if (this.dom.selectCrossStoreProduct) {
+      this.dom.selectCrossStoreProduct.addEventListener('change', (e) => {
+        soundMgr.playPop();
+        this.renderCrossStoreComparison(e.target.value);
+      });
+    }
 
     // Checkout / Finish Session (F-06 & Ringkasan Akhir)
     this.dom.btnFinishSession.addEventListener('click', () => {
@@ -1690,7 +1767,7 @@ class SmartGroceryApp {
       const summary = Calculator.calculateCartSummary(this.store.activeSession.items, this.store.activeSession.budgetCap);
       const saved = this.store.checkoutAndSaveSession(summary);
       if (saved) {
-        soundMgr.playLoginWelcome();
+        soundMgr.playFirecrackerCelebration();
         this.showToast('Belanja selesai! Struk tersimpan di Riwayat', 'success');
         this.openReceiptDetailModal(saved);
       }

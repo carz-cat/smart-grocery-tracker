@@ -1,7 +1,7 @@
 {
-  "name": "Smart Grocery & Budget Safety Tracker",
-  "short_name": "SmartGrocery",
-  "description": "PWA Pendamping Belanja Bulanan & Pengendali Anggaran Siswa Rantau",
+  "name": "Tala - Tas Belanja Pintar",
+  "short_name": "Tala",
+  "description": "Tala (Tas Belanja) - PWA Pendamping Belanja Bulanan & Pengendali Anggaran",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
