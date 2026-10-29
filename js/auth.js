@@ -65,10 +65,53 @@ class AuthManager {
       if (user) {
         localStorage.setItem('sgt_current_user', JSON.stringify(user));
         localStorage.removeItem('sgt_guest_mode');
+        this.addKnownAccount(user);
       } else {
         localStorage.removeItem('sgt_current_user');
       }
     }
+  }
+
+  getKnownAccounts() {
+    if (typeof localStorage !== 'undefined') {
+      try {
+        const raw = localStorage.getItem('sgt_known_accounts');
+        return raw ? JSON.parse(raw) : [];
+      } catch (_) {
+        return [];
+      }
+    }
+    return [];
+  }
+
+  addKnownAccount(user) {
+    if (!user || !user.uid) return;
+    try {
+      let list = this.getKnownAccounts();
+      list = list.filter(a => a.uid !== user.uid && a.email !== user.email);
+      list.unshift({
+        uid: user.uid,
+        displayName: user.displayName || 'Pengguna',
+        email: user.email,
+        photoURL: user.photoURL || null,
+        provider: user.provider || 'password',
+        lastUsed: new Date().toISOString()
+      });
+      localStorage.setItem('sgt_known_accounts', JSON.stringify(list.slice(0, 5)));
+    } catch (_) {}
+  }
+
+  useSavedAccount(uid) {
+    const list = this.getKnownAccounts();
+    const target = list.find(a => a.uid === uid);
+    if (target) {
+      this.currentUser = target;
+      this.isGuest = false;
+      this.saveLocalUser(target);
+      this.notify();
+      return { success: true, user: target };
+    }
+    return { success: false, error: 'Akun tidak ditemukan' };
   }
 
   setGuestMode(active = true) {

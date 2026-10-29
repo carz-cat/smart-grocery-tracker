@@ -187,15 +187,21 @@ class SmartGroceryApp {
       btnCancelClearCart: document.getElementById('btnCancelClearCart'),
       btnConfirmClearCartAction: document.getElementById('btnConfirmClearCartAction'),
 
-      // Modal User Profile
+      // Modal User Profile & Account Management
       modalUserProfileBackdrop: document.getElementById('modalUserProfileBackdrop'),
       btnCloseProfileModal: document.getElementById('btnCloseProfileModal'),
+      btnCloseProfileModalX: document.getElementById('btnCloseProfileModalX'),
+      btnReturnToLoginScreen: document.getElementById('btnReturnToLoginScreen'),
       profileAvatarLarge: document.getElementById('profileAvatarLarge'),
       profileUserName: document.getElementById('profileUserName'),
       profileUserEmail: document.getElementById('profileUserEmail'),
       profileBadgePill: document.getElementById('profileBadgePill'),
+      profileProviderType: document.getElementById('profileProviderType'),
+      profileUserUid: document.getElementById('profileUserUid'),
+      savedAccountsList: document.getElementById('savedAccountsList'),
       btnProfileSwitchAccount: document.getElementById('btnProfileSwitchAccount'),
       btnLogoutAction: document.getElementById('btnLogoutAction'),
+      btnGateReturnSession: document.getElementById('btnGateReturnSession'),
 
       // Toast
       toastContainer: document.getElementById('toastContainer')
@@ -289,13 +295,130 @@ class SmartGroceryApp {
     }
   }
 
+  showAuthGatekeeper() {
+    if (this.dom.authGatekeeperScreen && this.dom.appShell) {
+      this.dom.authGatekeeperScreen.style.display = 'flex';
+      this.dom.appShell.style.display = 'none';
+      if (this.dom.btnGateReturnSession) {
+        const hasSession = authMgr.isLoggedIn() || authMgr.isGuest;
+        this.dom.btnGateReturnSession.style.display = hasSession ? 'block' : 'none';
+      }
+    }
+  }
+
+  hideAuthGatekeeper() {
+    if (this.dom.authGatekeeperScreen && this.dom.appShell) {
+      this.dom.authGatekeeperScreen.style.display = 'none';
+      this.dom.appShell.style.display = 'flex';
+    }
+  }
+
   openUserProfileModal() {
     soundMgr.playPop();
-    this.dom.modalUserProfileBackdrop.style.display = 'flex';
+    this.renderProfileModalDetails();
+    if (this.dom.modalUserProfileBackdrop) {
+      this.dom.modalUserProfileBackdrop.style.display = 'flex';
+      void this.dom.modalUserProfileBackdrop.offsetWidth;
+      this.dom.modalUserProfileBackdrop.classList.add('open');
+    }
   }
 
   closeUserProfileModal() {
-    this.dom.modalUserProfileBackdrop.style.display = 'none';
+    if (this.dom.modalUserProfileBackdrop) {
+      this.dom.modalUserProfileBackdrop.classList.remove('open');
+      setTimeout(() => {
+        if (!this.dom.modalUserProfileBackdrop?.classList.contains('open')) {
+          this.dom.modalUserProfileBackdrop.style.display = 'none';
+        }
+      }, 200);
+    }
+  }
+
+  renderProfileModalDetails() {
+    const user = authMgr.getUser();
+    const isGuest = authMgr.isGuest;
+
+    if (user) {
+      const name = user.displayName || 'Pengguna';
+      if (this.dom.profileUserName) this.dom.profileUserName.textContent = name;
+      if (this.dom.profileUserEmail) this.dom.profileUserEmail.textContent = user.email || 'Email tidak tercantum';
+      if (this.dom.profileAvatarLarge) {
+        if (user.photoURL) {
+          this.dom.profileAvatarLarge.innerHTML = `<img src="${user.photoURL}" alt="${name}">`;
+        } else {
+          this.dom.profileAvatarLarge.textContent = name[0].toUpperCase();
+        }
+      }
+      if (this.dom.profileBadgePill) {
+        this.dom.profileBadgePill.textContent = user.provider === 'google' ? 'Akun Google Terhubung' : 'Akun Email Terverifikasi';
+      }
+      if (this.dom.profileProviderType) {
+        this.dom.profileProviderType.textContent = user.provider === 'google' ? 'Google Account (OAuth)' : 'Email & Kata Sandi';
+      }
+      if (this.dom.profileUserUid) {
+        this.dom.profileUserUid.textContent = user.uid ? `${user.uid.slice(0, 16)}...` : 'uid-local';
+      }
+    } else if (isGuest) {
+      if (this.dom.profileUserName) this.dom.profileUserName.textContent = 'Mode Tamu (Offline)';
+      if (this.dom.profileUserEmail) this.dom.profileUserEmail.textContent = 'Penyimpanan lokal di browser';
+      if (this.dom.profileAvatarLarge) this.dom.profileAvatarLarge.textContent = '🐾';
+      if (this.dom.profileBadgePill) this.dom.profileBadgePill.textContent = 'Mode Tamu';
+      if (this.dom.profileProviderType) this.dom.profileProviderType.textContent = 'Lokal Browser';
+      if (this.dom.profileUserUid) this.dom.profileUserUid.textContent = 'guest-session';
+    }
+
+    // Render list of saved/known accounts
+    if (this.dom.savedAccountsList) {
+      const knownAccounts = authMgr.getKnownAccounts();
+      if (!knownAccounts || knownAccounts.length === 0) {
+        this.dom.savedAccountsList.innerHTML = `
+          <div style="font-size: 11px; color: var(--text-muted); padding: 4px 0;">
+            Hanya 1 akun aktif pada perangkat ini.
+          </div>
+        `;
+      } else {
+        this.dom.savedAccountsList.innerHTML = knownAccounts.map(acc => {
+          const isCurrent = user && (acc.uid === user.uid || acc.email === user.email);
+          const initial = acc.displayName ? acc.displayName[0].toUpperCase() : 'U';
+          const avatarHtml = acc.photoURL 
+            ? `<img src="${acc.photoURL}" alt="${acc.displayName}" style="width:100%;height:100%;border-radius:50%;">`
+            : initial;
+          
+          return `
+            <div class="saved-account-item ${isCurrent ? 'is-current' : ''}">
+              <div class="saved-account-info">
+                <div class="saved-account-avatar">${avatarHtml}</div>
+                <div class="saved-account-text">
+                  <div class="saved-account-name">${acc.displayName} ${isCurrent ? '<span style="color:var(--cyan);font-size:10px;">(Aktif)</span>' : ''}</div>
+                  <div class="saved-account-email">${acc.email || ''}</div>
+                </div>
+              </div>
+              ${!isCurrent ? `
+                <button type="button" class="btn-use-this-account" data-uid="${acc.uid}">
+                  Gunakan
+                </button>
+              ` : `
+                <span style="font-size: 10px; color: var(--cyan); font-weight: 700;">● Aktif</span>
+              `}
+            </div>
+          `;
+        }).join('');
+
+        // Bind switch buttons in saved accounts list
+        this.dom.savedAccountsList.querySelectorAll('.btn-use-this-account').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            soundMgr.playPop();
+            const targetUid = e.currentTarget.getAttribute('data-uid');
+            const res = authMgr.useSavedAccount(targetUid);
+            if (res.success) {
+              soundMgr.playLoginWelcome();
+              this.showToast(`Beralih ke akun: ${res.user.displayName}`, 'success');
+              this.renderProfileModalDetails();
+            }
+          });
+        });
+      }
+    }
   }
 
   // ==========================================================================
@@ -1555,38 +1678,65 @@ class SmartGroceryApp {
       });
     }
 
-    // User Profile Header Pill & Logout
+    // User Profile Header Pill & Account Management
     if (this.dom.btnUserAuth) {
       this.dom.btnUserAuth.addEventListener('click', () => this.openUserProfileModal());
     }
     if (this.dom.btnCloseProfileModal) {
       this.dom.btnCloseProfileModal.addEventListener('click', () => this.closeUserProfileModal());
     }
+    if (this.dom.btnCloseProfileModalX) {
+      this.dom.btnCloseProfileModalX.addEventListener('click', () => this.closeUserProfileModal());
+    }
     if (this.dom.modalUserProfileBackdrop) {
       this.dom.modalUserProfileBackdrop.addEventListener('click', (e) => {
         if (e.target === this.dom.modalUserProfileBackdrop) this.closeUserProfileModal();
       });
     }
+
+    // Return to Login Screen from Profile Modal
+    if (this.dom.btnReturnToLoginScreen) {
+      this.dom.btnReturnToLoginScreen.addEventListener('click', () => {
+        soundMgr.playPop();
+        this.closeUserProfileModal();
+        this.showAuthGatekeeper();
+      });
+    }
+
+    // Return to Session from Login Screen
+    if (this.dom.btnGateReturnSession) {
+      this.dom.btnGateReturnSession.addEventListener('click', () => {
+        soundMgr.playPop();
+        this.hideAuthGatekeeper();
+      });
+    }
+
+    // Sign Out Action
     if (this.dom.btnLogoutAction) {
       this.dom.btnLogoutAction.addEventListener('click', async () => {
         soundMgr.playDelete();
         await authMgr.logout();
         this.closeUserProfileModal();
         this.showToast('Anda telah keluar dari akun', 'info');
+        this.showAuthGatekeeper();
       });
     }
+
+    // Switch Account Action (Google Sign-In Account Chooser)
     if (this.dom.btnProfileSwitchAccount) {
       this.dom.btnProfileSwitchAccount.addEventListener('click', async () => {
         soundMgr.playPop();
-        await authMgr.logout();
         this.closeUserProfileModal();
-        this.showToast('Silakan pilih akun Google baru...', 'info');
+        this.showToast('Membuka pemilih akun Google...', 'info');
         const res = await authMgr.loginWithGoogle({ prompt: 'select_account' });
         if (res.success) {
           soundMgr.playLoginWelcome();
           this.showToast(`Berhasil masuk sebagai ${res.user.displayName}!`, 'success');
         } else if (res.needsConsoleActivation) {
           this.showGateAlert(res.error);
+          this.showAuthGatekeeper();
+        } else {
+          this.showAuthGatekeeper();
         }
       });
     }

@@ -162,6 +162,9 @@
           <button type="button" class="btn-gate-guest" id="btnGateGuestLogin">
             <span>⚡ Mode Tamu (Coba Langsung Tanpa Login)</span>
           </button>
+          <button type="button" class="btn-gate-return-session" id="btnGateReturnSession" style="display: none;">
+            <span>← Kembali ke Troli Belanja</span>
+          </button>
         </div>
       </div>
     </div>
@@ -977,37 +980,73 @@
         </div>
       </div>
 
-      <!-- Modal 5: User Profile & Account Management -->
+      <!-- Modal 5: User Profile & Account Management Menu -->
       <div class="modal-backdrop" id="modalUserProfileBackdrop" style="display: none;">
         <div class="confirm-dialog-card profile-dialog-card" role="dialog" aria-modal="true" aria-labelledby="profileModalTitle">
-          <div class="profile-header">
-            <div class="profile-avatar-large cat-avatar-glow" id="profileAvatarLarge">🐾</div>
-            <h3 class="profile-user-name" id="profileUserName">Pengguna Tala</h3>
-            <p class="profile-user-email" id="profileUserEmail">email@domain.com</p>
-            <span class="profile-badge-pill" id="profileBadgePill">Akun Google Terhubung</span>
+          <!-- Title Bar with Close (X) -->
+          <div class="profile-title-bar">
+            <h3 id="profileModalTitle">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
+              </svg>
+              <span>Menu Akun &amp; Profil</span>
+            </h3>
+            <button type="button" class="btn-close-profile-x" id="btnCloseProfileModalX" title="Tutup">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="18" y1="6" x2="6" y2="18"/>
+                <line x1="6" y1="6" x2="18" y2="18"/>
+              </svg>
+            </button>
           </div>
 
-          <div class="profile-info-box">
-            <div class="profile-info-row">
-              <span class="info-label">Aplikasi</span>
-              <span class="info-val accent">Tala (Tas Belanja)</span>
+          <!-- Active Account Card (Yang Sedang Digunakan) -->
+          <div class="active-account-card">
+            <div class="active-account-top">
+              <div class="profile-avatar-large cat-avatar-glow" id="profileAvatarLarge">🐾</div>
+              <div class="active-account-text">
+                <div class="active-account-badge-pill">
+                  <span class="active-dot"></span> Sedang Digunakan
+                </div>
+                <h4 class="profile-user-name" id="profileUserName">Pengguna Tala</h4>
+                <p class="profile-user-email" id="profileUserEmail">email@domain.com</p>
+                <span class="profile-provider-badge" id="profileBadgePill">Akun Google Terhubung</span>
+              </div>
             </div>
-            <div class="profile-info-row">
-              <span class="info-label">Tema Estetika</span>
-              <span class="info-val accent">Midnight Ocean Edition</span>
-            </div>
-            <div class="profile-info-row">
-              <span class="info-label">Penyimpanan Akun</span>
-              <span class="info-val accent">Firebase &amp; Lokal Realtime</span>
-            </div>
-            <div class="profile-info-row">
-              <span class="info-label">ID Proyek Firebase</span>
-              <span class="info-val">grocerytracker-9ef9b</span>
+
+            <div class="active-account-meta">
+              <div class="meta-row">
+                <span class="meta-label">Metode Autentikasi:</span>
+                <span class="meta-val" id="profileProviderType">Firebase Google Auth</span>
+              </div>
+              <div class="meta-row">
+                <span class="meta-label">ID Pengguna (UID):</span>
+                <span class="meta-val font-mono" id="profileUserUid" style="font-size: 10px;">uid-session</span>
+              </div>
             </div>
           </div>
 
+          <!-- Menu Akun Tersimpan / Riwayat Akun -->
+          <div class="saved-accounts-section" id="savedAccountsSection">
+            <div class="saved-accounts-title">Daftar Akun Tersimpan di Sesi Ini</div>
+            <div class="saved-accounts-list" id="savedAccountsList">
+              <!-- Dynamically populated via app.js -->
+            </div>
+          </div>
+
+          <!-- Action 1: Kembali ke Halaman Login -->
+          <button type="button" class="btn-profile-login-page" id="btnReturnToLoginScreen" title="Kembali ke halaman login Tala">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+              <polyline points="10 17 15 12 10 7"/>
+              <line x1="15" y1="12" x2="3" y2="12"/>
+            </svg>
+            <span>Kembali ke Halaman Login</span>
+          </button>
+
+          <!-- Action 2 & 3: Ganti Akun & Sign Out -->
           <div class="profile-actions-row">
-            <button type="button" class="btn-profile-switch" id="btnProfileSwitchAccount" title="Masuk dengan Akun Lain">
+            <button type="button" class="btn-profile-switch" id="btnProfileSwitchAccount" title="Masuk dengan Akun Google Lain">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
                 <path d="M3 3v5h5"/>
