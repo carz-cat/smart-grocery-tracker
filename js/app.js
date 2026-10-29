@@ -81,16 +81,14 @@ class SmartGroceryApp {
       safetyAlertBanner: document.getElementById('safetyAlertBanner'),
       safetyAlertMessage: document.getElementById('safetyAlertMessage'),
 
-      // Tab Panels & Bottom Nav (5 Tabs)
+      // Tab Panels & Bottom Nav (4 Core Tabs)
       tabBelanja: document.getElementById('tabBelanja'),
       tabRencana: document.getElementById('tabRencana'),
-      tabKatalog: document.getElementById('tabKatalog'),
       tabKalkulator: document.getElementById('tabKalkulator'),
       tabAnggaran: document.getElementById('tabAnggaran'),
 
       navBelanja: document.getElementById('navBelanja'),
       navRencana: document.getElementById('navRencana'),
-      navKatalog: document.getElementById('navKatalog'),
       navKalkulator: document.getElementById('navKalkulator'),
       navAnggaran: document.getElementById('navAnggaran'),
       navCartBadge: document.getElementById('navCartBadge'),
@@ -114,11 +112,7 @@ class SmartGroceryApp {
       btnTransferAllChecked: document.getElementById('btnTransferAllChecked'),
       checklistItemsContainer: document.getElementById('checklistItemsContainer'),
 
-      // Tab 3: Katalog & Paket Hemat 1-Klik
-      btnOneClickBundleKos: document.getElementById('btnOneClickBundleKos'),
-      catalogGridContainer: document.getElementById('catalogGridContainer'),
-
-      // Tab 4: Kalkulator & Pembanding Kemasan
+      // Tab 3: Kalkulator & Pembanding Kemasan
       inputPkgSizeA: document.getElementById('inputPkgSizeA'),
       inputPkgPriceA: document.getElementById('inputPkgPriceA'),
       pkgUnitCostA: document.getElementById('pkgUnitCostA'),
@@ -313,12 +307,19 @@ class SmartGroceryApp {
     }
     if (this.dom.modalDatePickerBackdrop) {
       this.dom.modalDatePickerBackdrop.style.display = 'flex';
+      void this.dom.modalDatePickerBackdrop.offsetWidth;
+      this.dom.modalDatePickerBackdrop.classList.add('open');
     }
   }
 
   closeDatePickerModal() {
     if (this.dom.modalDatePickerBackdrop) {
-      this.dom.modalDatePickerBackdrop.style.display = 'none';
+      this.dom.modalDatePickerBackdrop.classList.remove('open');
+      setTimeout(() => {
+        if (!this.dom.modalDatePickerBackdrop?.classList.contains('open')) {
+          this.dom.modalDatePickerBackdrop.style.display = 'none';
+        }
+      }, 200);
     }
   }
 
@@ -354,7 +355,7 @@ class SmartGroceryApp {
   }
 
   // ==========================================================================
-  // THEME & SOUND CONTROLS
+  // THEME & SOUND CONTROLS (MINIMALIST & CLEAN)
   // ==========================================================================
 
   applyTheme(theme) {
@@ -363,17 +364,13 @@ class SmartGroceryApp {
       this.dom.themeIconSun.style.display = 'block';
       this.dom.themeIconMoon.style.display = 'none';
       if (this.dom.themeCatBadge) {
-        this.dom.themeCatBadge.textContent = '🐱 White Cat';
-        this.dom.themeCatBadge.style.color = '#0284c7';
-        this.dom.themeCatBadge.style.borderColor = 'rgba(2, 132, 199, 0.4)';
+        this.dom.themeCatBadge.style.display = 'none';
       }
     } else {
       this.dom.themeIconSun.style.display = 'none';
       this.dom.themeIconMoon.style.display = 'block';
       if (this.dom.themeCatBadge) {
-        this.dom.themeCatBadge.textContent = '🐾 Black Cat';
-        this.dom.themeCatBadge.style.color = 'var(--cyan-light)';
-        this.dom.themeCatBadge.style.borderColor = 'rgba(0, 240, 255, 0.35)';
+        this.dom.themeCatBadge.style.display = 'none';
       }
     }
   }
@@ -382,7 +379,7 @@ class SmartGroceryApp {
     const newTheme = this.store.theme === 'dark' ? 'light' : 'dark';
     this.store.setTheme(newTheme);
     this.applyTheme(newTheme);
-    this.showToast(`Mode ${newTheme === 'dark' ? 'Black Cat (Gelap)' : 'White Cat (Terang)'} aktif`, 'info');
+    this.showToast(newTheme === 'dark' ? 'Mode Gelap aktif' : 'Mode Terang aktif', 'info');
   }
 
   updateSoundIcon() {
@@ -416,7 +413,6 @@ class SmartGroceryApp {
     this.renderHeaderAndSafetyCap(session, summary);
     this.renderCartItems(session.items);
     this.renderChecklistTab();
-    this.renderCatalogTab();
     this.renderCalculatorTab();
     this.renderHistoryTab();
     this.renderBudgetTab(session, summary);
@@ -750,48 +746,7 @@ class SmartGroceryApp {
   }
 
   /**
-   * Tab 3: Katalog Supermarket & Paket Hemat 1-Klik
-   */
-  renderCatalogTab() {
-    const container = this.dom.catalogGridContainer;
-    if (!container) return;
-    container.innerHTML = '';
-
-    MASTER_CATALOG.forEach(prod => {
-      const card = document.createElement('div');
-      card.className = 'catalog-product-card';
-
-      card.innerHTML = `
-        <div>
-          <div class="cat-prod-name one-line">${escapeHtml(prod.name)}</div>
-          <div class="cat-prod-unit">${prod.category} • ${prod.unit}</div>
-        </div>
-        <div class="cat-prod-bottom">
-          <span class="cat-prod-price">${Calculator.formatRupiah(prod.benchmarkPrice)}</span>
-          <button type="button" class="btn-quick-add-catalog">+ Troli</button>
-        </div>
-      `;
-
-      card.querySelector('.btn-quick-add-catalog').addEventListener('click', () => {
-        soundMgr.playCatMeow();
-        this.store.addItem({
-          name: prod.name,
-          category: prod.category,
-          unit: prod.unit,
-          qty: 1,
-          unitPrice: prod.benchmarkPrice,
-          discount: '',
-          notes: `Katalog ${prod.store || 'Supermarket'}`
-        });
-        this.showToast(`Ditambahkan ke troli: ${prod.name}`, 'success');
-      });
-
-      container.appendChild(card);
-    });
-  }
-
-  /**
-   * Tab 4: Kalkulator Diskon Bertumpuk & Pembanding Kemasan
+   * Tab 3: Kalkulator Diskon Bertumpuk & Pembanding Kemasan
    */
   renderCalculatorTab() {
     this.updateValueComparator();
@@ -1370,8 +1325,8 @@ class SmartGroceryApp {
 
   switchTab(tabId) {
     this.activeTab = tabId;
-    const allPanels = [this.dom.tabBelanja, this.dom.tabRencana, this.dom.tabKatalog, this.dom.tabKalkulator, this.dom.tabAnggaran];
-    const allNavs = [this.dom.navBelanja, this.dom.navRencana, this.dom.navKatalog, this.dom.navKalkulator, this.dom.navAnggaran];
+    const allPanels = [this.dom.tabBelanja, this.dom.tabRencana, this.dom.tabKalkulator, this.dom.tabAnggaran];
+    const allNavs = [this.dom.navBelanja, this.dom.navRencana, this.dom.navKalkulator, this.dom.navAnggaran];
 
     allPanels.forEach(p => { if (p) p.classList.remove('active'); });
     allNavs.forEach(n => { if (n) n.classList.remove('active'); });
@@ -1400,7 +1355,7 @@ class SmartGroceryApp {
       });
     }
 
-    // 5 Navigation Tabs
+    // 4 Core Navigation Tabs (Troli, Rencana, Hitung, Radar)
     if (this.dom.navBelanja) {
       this.dom.navBelanja.addEventListener('click', () => {
         soundMgr.playPop();
@@ -1411,12 +1366,6 @@ class SmartGroceryApp {
       this.dom.navRencana.addEventListener('click', () => {
         soundMgr.playPop();
         this.switchTab('tabRencana');
-      });
-    }
-    if (this.dom.navKatalog) {
-      this.dom.navKatalog.addEventListener('click', () => {
-        soundMgr.playPop();
-        this.switchTab('tabKatalog');
       });
     }
     if (this.dom.navKalkulator) {
@@ -1432,9 +1381,12 @@ class SmartGroceryApp {
       });
     }
 
-    // Store & Date Modals
+    // Header Store & Date Modals (Klik icon atau teks header langsung)
     if (this.dom.btnOpenStorePicker) {
       this.dom.btnOpenStorePicker.addEventListener('click', () => this.openStorePickerModal());
+    }
+    if (this.dom.headerStoreName) {
+      this.dom.headerStoreName.addEventListener('click', () => this.openStorePickerModal());
     }
     this.dom.btnCloseStorePicker.addEventListener('click', () => this.closeStorePickerModal());
     this.dom.sheetStorePickerBackdrop.addEventListener('click', (e) => {
@@ -1443,6 +1395,9 @@ class SmartGroceryApp {
 
     if (this.dom.btnOpenDatePicker) {
       this.dom.btnOpenDatePicker.addEventListener('click', () => this.openDatePickerModal());
+    }
+    if (this.dom.headerDateDisplay) {
+      this.dom.headerDateDisplay.addEventListener('click', () => this.openDatePickerModal());
     }
     if (this.dom.btnCloseDatePickerModal) {
       this.dom.btnCloseDatePickerModal.addEventListener('click', () => this.closeDatePickerModal());
@@ -1710,18 +1665,7 @@ class SmartGroceryApp {
       });
     }
 
-    // Tab 3: 1-Klik Paket Hemat Kos
-    if (this.dom.btnOneClickBundleKos) {
-      this.dom.btnOneClickBundleKos.addEventListener('click', () => {
-        soundMgr.playCatPurr();
-        setTimeout(() => soundMgr.playCatMeow(), 250);
-        this.store.addPaketHematKos();
-        this.showToast('⚡ Paket Hemat Kos (5 Sembako) berhasil masuk ke troli!', 'success');
-        this.switchTab('tabBelanja');
-      });
-    }
-
-    // Tab 4: Package Comparator Inputs
+    // Tab 3: Package Comparator Inputs
     if (this.dom.inputPkgSizeA && this.dom.inputPkgPriceA) {
       ['input', 'change'].forEach(evt => {
         this.dom.inputPkgSizeA.addEventListener(evt, () => this.updateValueComparator());

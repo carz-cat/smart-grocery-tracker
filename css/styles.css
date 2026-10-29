@@ -5,7 +5,7 @@
    ========================================================================== */
 
 :root {
-  /* DARK THEME (DEFAULT) - "Midnight Ocean Blue & Black Cat" Aesthetics */
+  /* DARK THEME (DEFAULT) - Midnight Ocean Blue Aesthetics */
   --bg-canvas: radial-gradient(circle at 50% 18%, #0d1e3d 0%, #060d1f 65%, #020612 100%);
   --bg-dark: #060b18;
   --bg-card: rgba(13, 24, 48, 0.90);
@@ -33,12 +33,28 @@
   --cat-amber-glow: rgba(255, 159, 28, 0.35);
   --cat-gradient: linear-gradient(135deg, #ff9f1c 0%, #d97706 100%);
 
-  /* Secondary Accents */
-  --emerald: #10b981;
-  --emerald-dark: #059669;
-  --emerald-light: #34d399;
-  --emerald-glow: rgba(16, 185, 129, 0.28);
-  --emerald-gradient: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  /* Primary & Decorative Ocean Blue / Cyan Accents (Green remapped to Ocean Blue) */
+  --emerald: #0ea5e9;
+  --emerald-dark: #0284c7;
+  --emerald-light: #38bdf8;
+  --emerald-glow: rgba(14, 165, 233, 0.28);
+  --emerald-gradient: linear-gradient(135deg, #0284c7 0%, #0ea5e9 100%);
+
+  /* Budget Status Semantic Indicators (Contextually Accurate) */
+  --budget-safe-color: #38bdf8;
+  --budget-safe-bg: rgba(14, 165, 233, 0.15);
+  --budget-safe-border: rgba(56, 189, 248, 0.45);
+  --budget-safe-fill: linear-gradient(90deg, #0284c7 0%, #38bdf8 100%);
+
+  --budget-warning-color: #f59e0b;
+  --budget-warning-bg: rgba(245, 158, 11, 0.20);
+  --budget-warning-border: rgba(245, 158, 11, 0.50);
+  --budget-warning-fill: linear-gradient(90deg, #d97706 0%, #f59e0b 100%);
+
+  --budget-danger-color: #ef4444;
+  --budget-danger-bg: rgba(239, 68, 68, 0.20);
+  --budget-danger-border: rgba(239, 68, 68, 0.65);
+  --budget-danger-fill: linear-gradient(90deg, #dc2626 0%, #ef4444 100%);
 
   --amber: #f59e0b;
   --amber-dark: #d97706;
@@ -75,7 +91,7 @@
   --sab: env(safe-area-inset-bottom, 0px);
 }
 
-/* LIGHT THEME - "White Cat & Sky Mist" Aesthetics */
+/* LIGHT THEME - Crisp Mist & Clear Sky Aesthetics */
 [data-theme="light"] {
   --bg-canvas: radial-gradient(circle at 50% 18%, #f0f6ff 0%, #e2eafc 65%, #cbd5e1 100%);
   --bg-dark: #f8faff;
@@ -107,9 +123,6 @@
   --shadow-md: 0 4px 12px -2px rgba(15, 23, 42, 0.07);
   --shadow-lg: 0 12px 28px -6px rgba(15, 23, 42, 0.1);
   --shadow-fab: 0 8px 25px rgba(2, 132, 199, 0.35);
-  --card-highlight: inset 0 1px 0 rgba(255, 255, 255, 0.9);
-}
-  --shadow-fab: 0 8px 25px rgba(16, 185, 129, 0.35);
   --card-highlight: inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
@@ -592,22 +605,22 @@ input, select, textarea {
 }
 
 .pill-safe {
-  background: rgba(16, 185, 129, 0.15);
-  color: #10b981;
-  border: 1px solid rgba(16, 185, 129, 0.4);
+  background: var(--budget-safe-bg);
+  color: var(--budget-safe-color);
+  border: 1px solid var(--budget-safe-border);
 }
 
 .pill-warning {
-  background: rgba(245, 158, 11, 0.2);
-  color: #f59e0b;
-  border: 1px solid rgba(245, 158, 11, 0.5);
+  background: var(--budget-warning-bg);
+  color: var(--budget-warning-color);
+  border: 1px solid var(--budget-warning-border);
   animation: textGlowPulse 1.8s infinite;
 }
 
 .pill-danger {
-  background: rgba(239, 68, 68, 0.2);
-  color: #ef4444;
-  border: 1px solid rgba(239, 68, 68, 0.6);
+  background: var(--budget-danger-bg);
+  color: var(--budget-danger-color);
+  border: 1px solid var(--budget-danger-border);
   animation: textGlowPulse 1s infinite;
 }
 
@@ -646,17 +659,17 @@ input, select, textarea {
 }
 
 .fill-safe {
-  background: linear-gradient(90deg, #10b981 0%, #06b6d4 100%);
-  box-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
+  background: var(--budget-safe-fill);
+  box-shadow: 0 0 10px rgba(14, 165, 233, 0.4);
 }
 
 .fill-warning {
-  background: linear-gradient(90deg, #f59e0b 0%, #fbbf24 100%);
+  background: var(--budget-warning-fill);
   box-shadow: 0 0 12px rgba(245, 158, 11, 0.5);
 }
 
 .fill-danger {
-  background: linear-gradient(90deg, #ef4444 0%, #dc2626 100%);
+  background: var(--budget-danger-fill);
   box-shadow: 0 0 16px rgba(239, 68, 68, 0.7);
 }
 
@@ -747,13 +760,13 @@ input, select, textarea {
   width: 56px;
   height: 56px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  background: linear-gradient(135deg, #0284c7 0%, #0ea5e9 100%);
   color: #ffffff;
   border: none;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: var(--shadow-fab);
+  box-shadow: 0 8px 25px rgba(2, 132, 199, 0.45);
   cursor: pointer;
   z-index: 45;
   transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.15s;
@@ -1553,7 +1566,7 @@ input, select, textarea {
   backdrop-filter: var(--glass-backdrop-heavy);
   border-top: 1px solid var(--border-medium);
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   padding: 6px 4px calc(6px + var(--sab)) 4px;
   z-index: 40;
   transition: background 0.3s;
@@ -2525,23 +2538,55 @@ input, select, textarea {
 .header-session-quick-info #headerStoreName {
   color: var(--text-secondary);
   font-weight: 600;
-  max-width: 130px;
+  max-width: 140px;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.header-session-quick-info #headerStoreName:hover {
+  color: var(--cyan);
 }
 
 .header-session-quick-info #headerDateDisplay {
-  color: var(--emerald-light);
+  color: var(--cyan-light);
   font-weight: 700;
   font-family: var(--font-mono);
+  cursor: pointer;
+  text-decoration: underline dotted rgba(56, 189, 248, 0.6);
+  text-underline-offset: 3px;
+  transition: all 0.15s ease;
+}
+
+.header-session-quick-info #headerDateDisplay:hover {
+  color: var(--cyan);
+  text-decoration-color: var(--cyan);
 }
 
 /* Date Picker Dialog with Checkmark */
+#modalDatePickerBackdrop {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 120;
+}
+
+#modalDatePickerBackdrop.open {
+  display: flex !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
 .date-dialog-card {
   max-width: 350px;
   width: 90%;
-  padding: 22px 18px;
+  padding: 24px 20px;
   position: relative;
   text-align: center;
+  background: var(--bg-surface);
   border: 1px solid var(--border-medium);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.7);
+  margin: auto;
 }
 
 .date-modal-header {
@@ -2549,15 +2594,15 @@ input, select, textarea {
 }
 
 .date-modal-icon {
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
-  background: var(--emerald-gradient);
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #0284c7 0%, #0ea5e9 100%);
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto 10px;
-  box-shadow: 0 4px 16px var(--emerald-glow);
+  margin: 0 auto 12px;
+  box-shadow: 0 4px 18px rgba(14, 165, 233, 0.4);
 }
 
 .date-modal-header h3 {
@@ -2568,7 +2613,7 @@ input, select, textarea {
 }
 
 .date-modal-desc {
-  font-size: 11.5px;
+  font-size: 12px;
   color: var(--text-secondary);
   line-height: 1.45;
 }
@@ -2583,19 +2628,20 @@ input, select, textarea {
   border: 1px solid var(--border-medium);
   border-radius: var(--radius-md);
   padding: 12px 14px;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 700;
   color: var(--text-primary);
   font-family: var(--font-mono);
   outline: none;
   cursor: pointer;
   text-align: center;
-  transition: border-color 0.2s;
+  transition: all 0.2s;
   min-height: 44px;
 }
 
 .modal-date-picker-input:focus {
-  border-color: var(--emerald);
+  border-color: #0ea5e9;
+  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.25);
 }
 
 .date-actions-row {
@@ -2614,10 +2660,16 @@ input, select, textarea {
   color: var(--text-secondary);
   cursor: pointer;
   transition: all 0.15s;
+  min-height: 44px;
+}
+
+.btn-cancel-date:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-primary);
 }
 
 .btn-confirm-date-check {
-  background: var(--emerald-gradient);
+  background: linear-gradient(135deg, #0284c7 0%, #0ea5e9 100%);
   border: none;
   border-radius: var(--radius-md);
   padding: 11px 14px;
@@ -2625,6 +2677,22 @@ input, select, textarea {
   font-weight: 800;
   color: #fff;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  box-shadow: 0 4px 16px rgba(14, 165, 233, 0.4);
+  min-height: 44px;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.btn-confirm-date-check:hover {
+  box-shadow: 0 6px 20px rgba(14, 165, 233, 0.55);
+}
+
+.btn-confirm-date-check:active {
+  transform: scale(0.98);
+}
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2640,7 +2708,7 @@ input, select, textarea {
 
 
 /* ==========================================================================
-   MIDNIGHT OCEAN BLUE & BLACK CAT - NEW COMPONENT STYLES
+   MIDNIGHT OCEAN BLUE - COMPONENT & AUTH STYLES
    ========================================================================== */
 
 /* Auth Gatekeeper Full-Screen Dedicated View */
@@ -3181,160 +3249,7 @@ input, select, textarea {
 }
 
 /* ==========================================================================
-   TAB 3: KATALOG SUPERMARKET & PAKET HEMAT 1-KLIK
-   ========================================================================== */
-
-.hero-bundle-card {
-  background: linear-gradient(135deg, rgba(13, 28, 60, 0.95) 0%, rgba(8, 16, 36, 0.95) 100%);
-  border: 1px solid var(--cat-amber);
-  border-radius: var(--radius-lg);
-  padding: 18px 16px;
-  margin-bottom: 18px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5), 0 0 20px var(--cat-amber-glow);
-}
-
-.bundle-badge-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 8px;
-}
-
-.bundle-fire-badge {
-  font-size: 11px;
-  font-weight: 800;
-  color: var(--cat-amber-light);
-}
-
-.bundle-discount-pill {
-  background: var(--cat-gradient);
-  color: #fff;
-  font-size: 10px;
-  font-weight: 800;
-  padding: 2px 8px;
-  border-radius: var(--radius-full);
-}
-
-.bundle-title {
-  font-size: 16px;
-  font-weight: 800;
-  color: #ffffff;
-  margin-bottom: 6px;
-}
-
-.bundle-desc {
-  font-size: 12px;
-  color: var(--text-secondary);
-  line-height: 1.45;
-  margin-bottom: 14px;
-}
-
-.bundle-pricing-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-top: 10px;
-  border-top: 1px solid var(--border-subtle);
-}
-
-.bundle-normal-price {
-  font-size: 12px;
-  color: var(--text-muted);
-  display: block;
-}
-
-.bundle-promo-price {
-  font-size: 18px;
-  font-weight: 800;
-  color: var(--cat-amber-light);
-  font-family: var(--font-mono);
-}
-
-.btn-1click-bundle {
-  background: var(--cat-gradient);
-  border: none;
-  border-radius: var(--radius-md);
-  color: #fff;
-  font-size: 13px;
-  font-weight: 800;
-  padding: 10px 16px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  min-height: 44px;
-}
-
-.catalog-shelf-header {
-  margin-bottom: 12px;
-}
-
-.catalog-shelf-header h3 {
-  font-size: 15px;
-  font-weight: 800;
-  color: var(--text-primary);
-}
-
-.catalog-grid-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
-  gap: 10px;
-}
-
-.catalog-product-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-md);
-  padding: 12px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  transition: border-color 0.2s;
-}
-
-.catalog-product-card:hover {
-  border-color: var(--cyan);
-}
-
-.cat-prod-name {
-  font-size: 12.5px;
-  font-weight: 700;
-  color: var(--text-primary);
-  margin-bottom: 4px;
-}
-
-.cat-prod-unit {
-  font-size: 11px;
-  color: var(--text-muted);
-  margin-bottom: 8px;
-}
-
-.cat-prod-bottom {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.cat-prod-price {
-  font-size: 13px;
-  font-weight: 800;
-  color: var(--cyan-light);
-  font-family: var(--font-mono);
-}
-
-.btn-quick-add-catalog {
-  background: rgba(0, 240, 255, 0.15);
-  border: 1px solid var(--cyan);
-  color: var(--cyan-light);
-  border-radius: 6px;
-  padding: 5px 10px;
-  font-size: 11px;
-  font-weight: 800;
-  cursor: pointer;
-}
-
-/* ==========================================================================
-   TAB 4: KALKULATOR DISKON BERTUMPUK & PEMBANDING KEMASAN
+   TAB 3: KALKULATOR DISKON BERTUMPUK & PEMBANDING KEMASAN
    ========================================================================== */
 
 .calc-tool-card {

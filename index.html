@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="theme-color" content="#060b18">
-  <meta name="description" content="Keranjang Pintar - Smart Grocery & Budget Tracker dengan Estetika Midnight Ocean Blue & Black Cat">
+  <meta name="description" content="Keranjang Pintar - Smart Grocery & Budget Safety Tracker dengan Desain Minimalis & Estetika Midnight Ocean">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="KeranjangPintar">
@@ -22,7 +22,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600;700&family=Outfit:wght@500;600;700;800&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="./css/styles.css?v=2.2.0">
+  <link rel="stylesheet" href="./css/styles.css?v=2.3.0">
 </head>
 <body>
   <!-- Desktop Canvas Container -->
@@ -54,34 +54,29 @@
          ========================================================================== -->
     <div class="auth-gatekeeper-screen" id="authGatekeeperScreen" style="display: none;">
       <div class="auth-gate-card">
-        <!-- Cute Black Cat & Cart Brand Mascot -->
+        <!-- Brand Mascot Logo: Ikon Keranjang Belanja Putih, Background Biru Tua & Aksen Telinga Kucing -->
         <div class="cat-brand-header">
-          <div class="cat-mascot-badge">
-            <svg class="cat-ears-svg" width="64" height="64" viewBox="0 0 64 64" fill="none">
-              <!-- Cute Black Cat Head with Ears -->
-              <path d="M16 28 L22 10 L32 20 L42 10 L48 28 C52 35 50 48 32 48 C14 48 12 35 16 28 Z" fill="#080e1e" stroke="#00f0ff" stroke-width="2"/>
-              <!-- Glowing Cat Eyes (Radiant Cyan / Amber Eyes) -->
-              <ellipse cx="25" cy="30" rx="3.5" ry="5" fill="#00f0ff"/>
-              <ellipse cx="39" cy="30" rx="3.5" ry="5" fill="#00f0ff"/>
-              <circle cx="26" cy="29" r="1.5" fill="#ffffff"/>
-              <circle cx="40" cy="29" r="1.5" fill="#ffffff"/>
-              <!-- Cute Nose & Mouth -->
-              <polygon points="32,36 30,34 34,34" fill="#f43f5e"/>
-              <path d="M30 38 Q32 41 34 38" stroke="#cbd5e1" stroke-width="1.5" fill="none"/>
-              <!-- Whiskers -->
-              <line x1="14" y1="33" x2="22" y2="34" stroke="#38bdf8" stroke-width="1.2" opacity="0.8"/>
-              <line x1="13" y1="37" x2="22" y2="37" stroke="#38bdf8" stroke-width="1.2" opacity="0.8"/>
-              <line x1="50" y1="33" x2="42" y2="34" stroke="#38bdf8" stroke-width="1.2" opacity="0.8"/>
-              <line x1="51" y1="37" x2="42" y2="37" stroke="#38bdf8" stroke-width="1.2" opacity="0.8"/>
-              <!-- Mini Shopping Cart Icon at Bottom -->
-              <circle cx="27" cy="56" r="2.5" fill="#ff9f1c"/>
-              <circle cx="37" cy="56" r="2.5" fill="#ff9f1c"/>
-              <path d="M19 44 H23 L26 53 H40 L43 46 H25" stroke="#ff9f1c" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          <div class="cat-mascot-badge" style="background: transparent; border: none; box-shadow: none;">
+            <svg width="72" height="72" viewBox="0 0 64 64" fill="none">
+              <!-- Left Cat Ear on Top -->
+              <polygon points="12,20 20,4 29,16" fill="#071124" stroke="#1e3a6a" stroke-width="2" stroke-linejoin="round"/>
+              <polygon points="15,18 20,8 26,16" fill="#00f0ff" opacity="0.85"/>
+              <!-- Right Cat Ear on Top -->
+              <polygon points="52,20 44,4 35,16" fill="#071124" stroke="#1e3a6a" stroke-width="2" stroke-linejoin="round"/>
+              <polygon points="49,18 44,8 38,16" fill="#00f0ff" opacity="0.85"/>
+              <!-- Dark Blue Rounded Squircle Container -->
+              <rect x="5" y="11" width="54" height="49" rx="14" fill="#09152b" stroke="#1e3a6a" stroke-width="2"/>
+              <rect x="7" y="13" width="50" height="45" rx="12" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+              <!-- White Shopping Cart Icon in Center -->
+              <path d="M15 22h7l5.5 20h22l4.5-14H25.5" stroke="#ffffff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+              <line x1="30" y1="29" x2="50" y2="29" stroke="#ffffff" stroke-width="1.8" opacity="0.85" stroke-linecap="round"/>
+              <circle cx="29" cy="48" r="3.5" fill="#ffffff"/>
+              <circle cx="47" cy="48" r="3.5" fill="#ffffff"/>
             </svg>
           </div>
           <h1 class="cat-app-title">Keranjang Pintar</h1>
-          <p class="cat-app-tagline">Midnight Ocean Blue &amp; Black Cat Edition</p>
-          <div class="cat-pill-badge">🐾 Amankan Saldo &amp; Catat Belanja Hemat</div>
+          <p class="cat-app-tagline">Smart Grocery &amp; Budget Tracker</p>
+          <div class="cat-pill-badge">Amankan Saldo &amp; Belanja Terkendali</div>
         </div>
 
         <!-- Auth Tabs: Masuk vs Daftar -->
@@ -189,22 +184,31 @@
       <header class="app-header">
         <div class="header-top-row">
           <div class="brand-badge">
-            <div class="brand-icon cat-ears-avatar">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="8" cy="21" r="1"/>
-                <circle cx="19" cy="21" r="1"/>
-                <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/>
+            <div class="brand-icon cat-ears-avatar" title="Keranjang Pintar">
+              <svg width="24" height="24" viewBox="0 0 64 64" fill="none">
+                <!-- Left Cat Ear on Top -->
+                <polygon points="12,20 20,4 29,16" fill="#071124" stroke="#1e3a6a" stroke-width="2" stroke-linejoin="round"/>
+                <polygon points="15,18 20,8 26,16" fill="#00f0ff" opacity="0.85"/>
+                <!-- Right Cat Ear on Top -->
+                <polygon points="52,20 44,4 35,16" fill="#071124" stroke="#1e3a6a" stroke-width="2" stroke-linejoin="round"/>
+                <polygon points="49,18 44,8 38,16" fill="#00f0ff" opacity="0.85"/>
+                <!-- Dark Blue Rounded Squircle Container -->
+                <rect x="5" y="11" width="54" height="49" rx="14" fill="#09152b" stroke="#1e3a6a" stroke-width="2"/>
+                <!-- White Shopping Cart Icon in Center -->
+                <path d="M15 22h7l5.5 20h22l4.5-14H25.5" stroke="#ffffff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+                <line x1="30" y1="29" x2="50" y2="29" stroke="#ffffff" stroke-width="1.8" opacity="0.85" stroke-linecap="round"/>
+                <circle cx="29" cy="48" r="3.5" fill="#ffffff"/>
+                <circle cx="47" cy="48" r="3.5" fill="#ffffff"/>
               </svg>
             </div>
             <div class="brand-text">
               <div class="brand-title-wrap">
                 <h1>Smart Grocery</h1>
-                <span class="theme-cat-tag" id="themeCatBadge">🐾 Black Cat</span>
               </div>
               <div class="header-session-quick-info">
-                <span id="headerStoreName" class="one-line">Lotte Mart Grocery - Puri Indah</span>
+                <span id="headerStoreName" class="one-line clickable-store-header" title="Klik untuk ubah lokasi belanja">Lotte Mart Grocery - Puri Indah</span>
                 <span class="dot-separator">•</span>
-                <span id="headerDateDisplay" class="one-line">26 Okt 2026</span>
+                <span id="headerDateDisplay" class="one-line clickable-date-header" title="Klik untuk atur tanggal belanja">26 Okt 2026</span>
               </div>
             </div>
           </div>
@@ -212,7 +216,7 @@
           <!-- Header Actions: Sound, Theme, Lokasi Toko, Tanggal & User Auth -->
           <div class="header-actions">
             <!-- Mini Sound Effects Toggle (Suara Meong / Senyap) -->
-            <button class="theme-toggle-btn cat-sound-btn" id="btnSoundToggle" title="Efek Suara Kucing (Aktif / Senyap)" aria-label="Toggle Sound">
+            <button class="theme-toggle-btn cat-sound-btn" id="btnSoundToggle" title="Efek Suara (Aktif / Senyap)" aria-label="Toggle Sound">
               <!-- Sound On Icon -->
               <svg id="soundIconOn" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
@@ -227,8 +231,8 @@
               </svg>
             </button>
 
-            <!-- Theme Toggle Button (Black Cat Midnight Ocean vs White Cat Luminous) -->
-            <button class="theme-toggle-btn" id="btnThemeToggle" title="Ganti Tema (Black Cat / White Cat)" aria-label="Toggle Theme">
+            <!-- Theme Toggle Button (Gelap / Terang) -->
+            <button class="theme-toggle-btn" id="btnThemeToggle" title="Ganti Tema (Gelap / Terang)" aria-label="Toggle Theme">
               <svg id="themeIconSun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
                 <circle cx="12" cy="12" r="5"/>
                 <line x1="12" y1="1" x2="12" y2="3"/>
@@ -448,42 +452,7 @@
         </section>
 
         <!-- ====================================================================
-             TAB 3: KATALOG SUPERMARKET & PAKET HEMAT 1-KLIK
-             ==================================================================== -->
-        <section class="tab-panel" id="tabKatalog" aria-label="Katalog & Paket Hemat">
-          <!-- Featured: 1-Klik Paket Hemat Kos Hero Card -->
-          <div class="hero-bundle-card">
-            <div class="bundle-badge-row">
-              <span class="bundle-fire-badge">🔥 Rekomendasi Anak Kos</span>
-              <span class="bundle-discount-pill">Hemat 15%</span>
-            </div>
-            <h3 class="bundle-title">1-Klik Paket Hemat Sembako Kos</h3>
-            <p class="bundle-desc">1 Paket lengkap kebutuhan pokok anak rantau: Beras 5kg, Minyak Bimoli 2L, Telur 1kg, Indomie 5pcs, dan Kecap Manis 550ml.</p>
-            
-            <div class="bundle-pricing-row">
-              <div class="bundle-price-details">
-                <span class="bundle-normal-price strikethrough">Rp 172.800</span>
-                <span class="bundle-promo-price">Rp 146.880</span>
-              </div>
-              <button type="button" class="btn-1click-bundle cat-glow-btn" id="btnOneClickBundleKos">
-                <span>⚡ 1-Klik ke Troli</span>
-              </button>
-            </div>
-          </div>
-
-          <!-- Catalog Shelf Filter -->
-          <div class="catalog-shelf-header">
-            <h3 class="one-line">Katalog Produk Supermarket</h3>
-            <p class="one-line" style="font-size: 11px; color: var(--text-muted);">Pilih barang untuk langsung dimasukkan ke keranjang belanja</p>
-          </div>
-
-          <div class="catalog-grid-list" id="catalogGridContainer">
-            <!-- Dynamically populated via app.js -->
-          </div>
-        </section>
-
-        <!-- ====================================================================
-             TAB 4: KALKULATOR DISKON BERTUMPUK & PEMBANDING KEMASAN
+             TAB 3: KALKULATOR DISKON BERTUMPUK & PEMBANDING KEMASAN
              ==================================================================== -->
         <section class="tab-panel" id="tabKalkulator" aria-label="Kalkulator & Komparasi">
           <!-- Card 1: Pembanding Kemasan (Value Comparator Kemasan A vs Kemasan B) -->
@@ -725,18 +694,6 @@
             </svg>
           </div>
           <span class="nav-label one-line">Rencana</span>
-        </button>
-
-        <button class="nav-item" id="navKatalog" data-tab="tabKatalog">
-          <div class="nav-icon-container">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7"/>
-              <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
-              <path d="M15 22v-4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4"/>
-              <path d="M2 7h20"/>
-            </svg>
-          </div>
-          <span class="nav-label one-line">Katalog</span>
         </button>
 
         <button class="nav-item" id="navKalkulator" data-tab="tabKalkulator">
@@ -998,7 +955,7 @@
           <div class="profile-info-box">
             <div class="profile-info-row">
               <span class="info-label">Tema Estetika</span>
-              <span class="info-val accent">Midnight Ocean &amp; Black Cat</span>
+              <span class="info-val accent">Midnight Ocean Edition</span>
             </div>
             <div class="profile-info-row">
               <span class="info-label">Penyimpanan Akun</span>
@@ -1060,16 +1017,16 @@
   </div>
 
   <!-- Firebase SDK & Analytics (Project: grocerytracker-9ef9b) -->
-  <script type="module" src="./js/firebase-config.js?v=2.2.0"></script>
+  <script type="module" src="./js/firebase-config.js?v=2.3.0"></script>
 
   <!-- Main ES Module Application Script -->
-  <script type="module" src="./js/app.js?v=2.2.0"></script>
+  <script type="module" src="./js/app.js?v=2.3.0"></script>
 
   <!-- Service Worker Registration for PWA Standalone Mode -->
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js?v=2.2.0')
+        navigator.serviceWorker.register('./sw.js?v=2.3.0')
           .then(reg => {
             console.log('Service Worker OK:', reg.scope);
             // Check for service worker updates immediately

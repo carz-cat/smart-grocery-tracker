@@ -1,5 +1,5 @@
 // Smart Grocery Tracker Service Worker (Network-First for Live Updates & Offline Fallback)
-const CACHE_NAME = 'sgt-cache-v5';
+const CACHE_NAME = 'sgt-cache-v6';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
