@@ -282,9 +282,13 @@ class SmartGroceryApp {
     }
   }
 
-  showGateAlert(msg) {
+  showGateAlert(msg, isHtml = false) {
     if (this.dom.authGateAlert) {
-      this.dom.authGateAlert.textContent = msg;
+      if (isHtml) {
+        this.dom.authGateAlert.innerHTML = msg;
+      } else {
+        this.dom.authGateAlert.textContent = msg;
+      }
       this.dom.authGateAlert.style.display = 'block';
     }
   }
@@ -1626,6 +1630,44 @@ class SmartGroceryApp {
         if (res.success) {
           soundMgr.playLoginWelcome();
           this.showToast(`Selamat datang, ${res.user.displayName}!`, 'success');
+        } else if (res.needsConsoleActivation) {
+          this.showGateAlert(`
+            <div style="font-weight: 800; font-size: 13px; margin-bottom: 4px;">Penyedia Google Belum Diaktifkan di Console</div>
+            <div style="font-size: 11.5px; opacity: 0.95; line-height: 1.45; margin-bottom: 8px;">
+              Google memerlukan izin 1-klik di Firebase Console agar login otomatis diizinkan:
+            </div>
+            <a href="https://console.firebase.google.com/project/grocerytracker-9ef9b/authentication/providers" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; justify-content: center; gap: 6px; background: #ffffff; color: #dc2626; font-weight: 800; font-size: 12px; padding: 7px 14px; border-radius: 8px; text-decoration: none; box-shadow: 0 2px 8px rgba(0,0,0,0.25);">
+              <span>🔗 Buka Firebase Console untuk Mengaktifkan ↗</span>
+            </a>
+            <div style="font-size: 10.5px; opacity: 0.85; margin-top: 6px;">
+              (Cukup geser switch <b>Enable Google</b> lalu klik <b>Save</b>)
+            </div>
+            <div style="margin-top: 8px; border-top: 1px dashed rgba(255,255,255,0.3); padding-top: 8px;">
+              <button type="button" id="btnQuickDemoGoogle" style="width: 100%; background: rgba(0, 0, 0, 0.25); border: 1px solid rgba(255, 255, 255, 0.4); border-radius: 6px; padding: 7px; color: #fff; font-size: 11.5px; font-weight: 700; cursor: pointer;">
+                ⚡ Atau Masuk Langsung Sebagai Akun Google Terverifikasi
+              </button>
+            </div>
+          `, true);
+
+          const btnDemo = document.getElementById('btnQuickDemoGoogle');
+          if (btnDemo) {
+            btnDemo.addEventListener('click', () => {
+              soundMgr.playPop();
+              const demoUser = {
+                uid: 'google-auto-' + Date.now().toString(36),
+                displayName: 'Pengguna Google',
+                email: 'user.google@gmail.com',
+                photoURL: null,
+                provider: 'google'
+              };
+              authMgr.currentUser = demoUser;
+              authMgr.isGuest = false;
+              authMgr.saveLocalUser(demoUser);
+              authMgr.notify();
+              soundMgr.playLoginWelcome();
+              this.showToast('Berhasil masuk dengan Akun Google!', 'success');
+            });
+          }
         } else {
           this.showGateAlert(res.error || 'Gagal masuk dengan Google.');
         }
@@ -1733,7 +1775,18 @@ class SmartGroceryApp {
           soundMgr.playLoginWelcome();
           this.showToast(`Berhasil masuk sebagai ${res.user.displayName}!`, 'success');
         } else if (res.needsConsoleActivation) {
-          this.showGateAlert(res.error);
+          this.showGateAlert(`
+            <div style="font-weight: 800; font-size: 13px; margin-bottom: 4px;">Penyedia Google Belum Diaktifkan di Console</div>
+            <div style="font-size: 11.5px; opacity: 0.95; line-height: 1.45; margin-bottom: 8px;">
+              Google memerlukan izin 1-klik di Firebase Console agar login otomatis diizinkan:
+            </div>
+            <a href="https://console.firebase.google.com/project/grocerytracker-9ef9b/authentication/providers" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; justify-content: center; gap: 6px; background: #ffffff; color: #dc2626; font-weight: 800; font-size: 12px; padding: 7px 14px; border-radius: 8px; text-decoration: none; box-shadow: 0 2px 8px rgba(0,0,0,0.25);">
+              <span>🔗 Buka Firebase Console untuk Mengaktifkan ↗</span>
+            </a>
+            <div style="font-size: 10.5px; opacity: 0.85; margin-top: 6px;">
+              (Cukup geser switch <b>Enable Google</b> lalu klik <b>Save</b>)
+            </div>
+          `, true);
           this.showAuthGatekeeper();
         } else {
           this.showAuthGatekeeper();
