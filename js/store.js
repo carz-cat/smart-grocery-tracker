@@ -165,7 +165,8 @@ const STORAGE_KEYS = {
 };
 
 export class GroceryStoreManager {
-  constructor() {
+  constructor(userId = null) {
+    this.userId = userId;
     this.activeSession = this.loadActiveSession();
     this.history = this.loadHistory();
     this.stores = this.loadStores();
@@ -188,6 +189,21 @@ export class GroceryStoreManager {
 
     // Connect to Server SSE for true multi-device realtime synchronization (F-06B)
     this.initServerRealtimeSync();
+  }
+
+  setUserId(userId) {
+    this.userId = userId || null;
+    this.activeSession = this.loadActiveSession();
+    this.history = this.loadHistory();
+    this.stores = this.loadStores();
+    this.notify();
+  }
+
+  getStorageKey(baseKey) {
+    if (this.userId && this.userId !== 'default' && this.userId !== 'guest') {
+      return `${baseKey}_${this.userId}`;
+    }
+    return baseKey;
   }
 
   initServerRealtimeSync() {
@@ -250,7 +266,7 @@ export class GroceryStoreManager {
   loadActiveSession() {
     try {
       if (typeof localStorage !== 'undefined') {
-        const data = localStorage.getItem(STORAGE_KEYS.ACTIVE_SESSION);
+        const data = localStorage.getItem(this.getStorageKey(STORAGE_KEYS.ACTIVE_SESSION));
         if (data) {
           const parsed = JSON.parse(data);
           if (!parsed.store) parsed.store = 'Lotte Mart Grocery - Puri Indah';
@@ -267,7 +283,7 @@ export class GroceryStoreManager {
   saveActiveSession(shouldBroadcast = true) {
     try {
       if (typeof localStorage !== 'undefined') {
-        localStorage.setItem(STORAGE_KEYS.ACTIVE_SESSION, JSON.stringify(this.activeSession));
+        localStorage.setItem(this.getStorageKey(STORAGE_KEYS.ACTIVE_SESSION), JSON.stringify(this.activeSession));
       }
       if (shouldBroadcast) {
         this.broadcastUpdate();
@@ -279,7 +295,7 @@ export class GroceryStoreManager {
   loadHistory() {
     try {
       if (typeof localStorage !== 'undefined') {
-        const data = localStorage.getItem(STORAGE_KEYS.HISTORY);
+        const data = localStorage.getItem(this.getStorageKey(STORAGE_KEYS.HISTORY));
         if (data) {
           const parsed = JSON.parse(data);
           if (Array.isArray(parsed) && parsed.length > 0) {
@@ -291,7 +307,7 @@ export class GroceryStoreManager {
     const initial = JSON.parse(JSON.stringify(INITIAL_HISTORICAL_SESSIONS));
     try {
       if (typeof localStorage !== 'undefined') {
-        localStorage.setItem(STORAGE_KEYS.HISTORY, JSON.stringify(initial));
+        localStorage.setItem(this.getStorageKey(STORAGE_KEYS.HISTORY), JSON.stringify(initial));
       }
     } catch (e) {}
     return initial;
@@ -300,7 +316,7 @@ export class GroceryStoreManager {
   saveHistory() {
     try {
       if (typeof localStorage !== 'undefined') {
-        localStorage.setItem(STORAGE_KEYS.HISTORY, JSON.stringify(this.history));
+        localStorage.setItem(this.getStorageKey(STORAGE_KEYS.HISTORY), JSON.stringify(this.history));
       }
       this.notify();
     } catch (e) {}
@@ -309,7 +325,7 @@ export class GroceryStoreManager {
   loadStores() {
     try {
       if (typeof localStorage !== 'undefined') {
-        const data = localStorage.getItem(STORAGE_KEYS.CUSTOM_STORES);
+        const data = localStorage.getItem(this.getStorageKey(STORAGE_KEYS.CUSTOM_STORES));
         if (data) {
           const parsed = JSON.parse(data);
           if (Array.isArray(parsed)) {
@@ -324,7 +340,7 @@ export class GroceryStoreManager {
   saveStores() {
     try {
       if (typeof localStorage !== 'undefined') {
-        localStorage.setItem(STORAGE_KEYS.CUSTOM_STORES, JSON.stringify(this.stores));
+        localStorage.setItem(this.getStorageKey(STORAGE_KEYS.CUSTOM_STORES), JSON.stringify(this.stores));
       }
     } catch (e) {}
   }

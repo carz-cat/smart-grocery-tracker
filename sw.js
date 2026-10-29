@@ -1,5 +1,5 @@
 // Smart Grocery Tracker Service Worker
-const CACHE_NAME = 'sgt-cache-v2';
+const CACHE_NAME = 'sgt-cache-v3';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -8,6 +8,8 @@ const ASSETS_TO_CACHE = [
   './js/store.js',
   './js/calculator.js',
   './js/comparator.js',
+  './js/sound.js',
+  './js/auth.js',
   './js/app.js',
   './js/firebase-config.js',
   './icons/icon.svg'

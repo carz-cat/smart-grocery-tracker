@@ -69,14 +69,35 @@
             </div>
             <div class="brand-text">
               <h1>Smart Grocery</h1>
-              <span>Budget Safety Tracker</span>
+              <div class="header-session-quick-info">
+                <span id="headerStoreName" class="one-line">Lotte Mart Grocery - Puri Indah</span>
+                <span class="dot-separator">•</span>
+                <span id="headerDateDisplay" class="one-line">26 Okt 2026</span>
+              </div>
             </div>
           </div>
 
-          <!-- Header Actions: Theme Toggle (Dark / Light Mode) -->
+          <!-- Header Actions: Sound, Theme, Lokasi Toko, Tanggal & User Auth -->
           <div class="header-actions">
-            <button class="theme-toggle-btn" id="btnThemeToggle" title="Ganti Tema (Dark / Light)">
-              <svg id="themeIconSun" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+            <!-- Mini Sound Effects Toggle -->
+            <button class="theme-toggle-btn" id="btnSoundToggle" title="Suara Interaksi (Aktif / Senyap)" aria-label="Toggle Sound">
+              <!-- Sound On Icon -->
+              <svg id="soundIconOn" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+              </svg>
+              <!-- Sound Muted Icon -->
+              <svg id="soundIconMute" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                <line x1="23" y1="9" x2="17" y2="15"/>
+                <line x1="17" y1="9" x2="23" y2="15"/>
+              </svg>
+            </button>
+
+            <!-- Theme Toggle Button -->
+            <button class="theme-toggle-btn" id="btnThemeToggle" title="Ganti Tema (Dark / Light)" aria-label="Toggle Theme">
+              <svg id="themeIconSun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
                 <circle cx="12" cy="12" r="5"/>
                 <line x1="12" y1="1" x2="12" y2="3"/>
                 <line x1="12" y1="21" x2="12" y2="23"/>
@@ -87,41 +108,42 @@
                 <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
                 <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
               </svg>
-              <svg id="themeIconMoon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <svg id="themeIconMoon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
               </svg>
             </button>
-          </div>
-        </div>
 
-        <!-- Session Controls: Store Picker & Date Picker (F-01) -->
-        <div class="session-controls-bar">
-          <div class="store-selector-trigger" id="btnOpenStorePicker" role="button" tabindex="0">
-            <div class="store-info">
-              <div class="store-icon-pill">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/>
-                  <circle cx="12" cy="10" r="3"/>
+            <!-- Lokasi Toko Icon Button (Disamping Tombol Tema) -->
+            <button class="theme-toggle-btn" id="btnOpenStorePicker" title="Pilih Lokasi Supermarket / Toko" aria-label="Pilih Lokasi Toko">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/>
+                <circle cx="12" cy="10" r="3"/>
+              </svg>
+            </button>
+
+            <!-- Atur Tanggal Icon Button (Disamping Tombol Tema) -->
+            <button class="theme-toggle-btn" id="btnOpenDatePicker" title="Atur Tanggal Belanja" aria-label="Atur Tanggal Belanja">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect width="18" height="18" x="3" y="4" rx="2" ry="2"/>
+                <line x1="16" x2="16" y1="2" y2="6"/>
+                <line x1="8" x2="8" y1="2" y2="6"/>
+                <line x1="3" x2="21" y1="10" y2="10"/>
+              </svg>
+            </button>
+
+            <!-- Hidden input for backwards compatibility -->
+            <input type="date" id="sessionDatePicker" style="display: none;" aria-label="Tanggal Sesi Belanja">
+
+            <!-- User Auth Pill / Avatar Button -->
+            <button class="header-auth-pill" id="btnUserAuth" title="Akun Pengguna">
+              <div class="auth-avatar-mini" id="headerUserAvatar">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+                  <circle cx="12" cy="7" r="4"/>
                 </svg>
               </div>
-              <div class="store-names">
-                <span class="label-mini">Lokasi Toko</span>
-                <span class="store-name-text one-line" id="headerStoreName">Lotte Mart Grocery - Puri Indah</span>
-              </div>
-            </div>
-            <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="m6 9 6 6 6-6"/>
-            </svg>
-          </div>
-
-          <div class="date-selector-box" title="Pilih tanggal belanja">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <rect width="18" height="18" x="3" y="4" rx="2" ry="2"/>
-              <line x1="16" x2="16" y1="2" y2="6"/>
-              <line x1="8" x2="8" y1="2" y2="6"/>
-              <line x1="3" x2="21" y1="10" y2="10"/>
-            </svg>
-            <input type="date" id="sessionDatePicker" aria-label="Tanggal Sesi Belanja">
+              <span class="auth-label-text one-line" id="headerAuthLabel">Masuk</span>
+            </button>
           </div>
         </div>
 
@@ -634,6 +656,157 @@
           <div class="confirm-actions-row">
             <button type="button" class="btn-confirm-cancel" id="btnCancelClearCart">Batal</button>
             <button type="button" class="btn-confirm-delete" id="btnConfirmClearCartAction">Ya, Hapus Semua</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal 5: Auth Screen & Gatekeeper (Google Login, Email Login & Sign Up) -->
+      <div class="modal-backdrop" id="modalAuthBackdrop" style="display: none;">
+        <div class="confirm-dialog-card auth-dialog-card" role="dialog" aria-modal="true" aria-labelledby="authModalTitle">
+          <button class="sheet-close-btn auth-close-x" id="btnCloseAuthModal" aria-label="Tutup">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"/>
+              <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
+          
+          <div class="auth-header">
+            <div class="auth-brand-logo">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="8" cy="21" r="1"/>
+                <circle cx="19" cy="21" r="1"/>
+                <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/>
+              </svg>
+            </div>
+            <h3 class="auth-title" id="authModalTitle">Akun Smart Grocery</h3>
+            <p class="auth-subtitle">Simpan troli belanja dan riwayat struk multi-toko langsung ke akun Anda</p>
+          </div>
+
+          <!-- Auth Switcher: Masuk vs Daftar -->
+          <div class="auth-tabs-row">
+            <button type="button" class="auth-tab-btn active" id="tabBtnLogin">Masuk</button>
+            <button type="button" class="auth-tab-btn" id="tabBtnRegister">Daftar Akun</button>
+          </div>
+
+          <!-- Error / Info Alert -->
+          <div class="auth-alert-box" id="authAlertBox" style="display: none;"></div>
+
+          <!-- Google One-Click Login -->
+          <button class="btn-google-login" id="btnGoogleLogin" type="button">
+            <svg class="google-icon" width="18" height="18" viewBox="0 0 24 24">
+              <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+              <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+              <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+              <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+            </svg>
+            <span>Masuk dengan Akun Google</span>
+          </button>
+
+          <div class="auth-divider">
+            <span>atau dengan email</span>
+          </div>
+
+          <!-- Form 1: Login Form -->
+          <form id="formLogin" class="auth-form-body">
+            <div class="auth-field">
+              <label for="loginEmail">Email</label>
+              <input type="email" id="loginEmail" placeholder="nama@email.com" autocomplete="email" required>
+            </div>
+            <div class="auth-field">
+              <label for="loginPassword">Kata Sandi</label>
+              <input type="password" id="loginPassword" placeholder="Minimal 6 karakter" autocomplete="current-password" required>
+            </div>
+            <button type="submit" class="btn-auth-submit" id="btnSubmitLogin">Masuk ke Akun</button>
+          </form>
+
+          <!-- Form 2: Register Form -->
+          <form id="formRegister" class="auth-form-body" style="display: none;">
+            <div class="auth-field">
+              <label for="regName">Nama Lengkap</label>
+              <input type="text" id="regName" placeholder="Contoh: Rian Pratama" autocomplete="name" required>
+            </div>
+            <div class="auth-field">
+              <label for="regEmail">Email</label>
+              <input type="email" id="regEmail" placeholder="nama@email.com" autocomplete="email" required>
+            </div>
+            <div class="auth-field">
+              <label for="regPassword">Kata Sandi</label>
+              <input type="password" id="regPassword" placeholder="Minimal 6 karakter" autocomplete="new-password" required>
+            </div>
+            <button type="submit" class="btn-auth-submit" id="btnSubmitRegister">Daftar Akun Baru</button>
+          </form>
+
+          <div class="auth-guest-row">
+            <button type="button" class="btn-guest-link" id="btnContinueGuest">
+              Lanjutkan sebagai Tamu (Mode Offline)
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal 6: User Profile & Account Management -->
+      <div class="modal-backdrop" id="modalUserProfileBackdrop" style="display: none;">
+        <div class="confirm-dialog-card profile-dialog-card" role="dialog" aria-modal="true" aria-labelledby="profileModalTitle">
+          <div class="profile-header">
+            <div class="profile-avatar-large" id="profileAvatarLarge">U</div>
+            <h3 class="profile-user-name" id="profileUserName">Nama Pengguna</h3>
+            <p class="profile-user-email" id="profileUserEmail">email@domain.com</p>
+            <span class="profile-badge-pill" id="profileBadgePill">Akun Google Terhubung</span>
+          </div>
+
+          <div class="profile-info-box">
+            <div class="profile-info-row">
+              <span class="info-label">Penyimpanan Akun</span>
+              <span class="info-val accent">Tersinkronisasi Otomatis</span>
+            </div>
+            <div class="profile-info-row">
+              <span class="info-label">ID Proyek Firebase</span>
+              <span class="info-val">grocerytracker-9ef9b</span>
+            </div>
+          </div>
+
+          <div class="profile-actions-row">
+            <button type="button" class="btn-profile-close" id="btnCloseProfileModal">Tutup</button>
+            <button type="button" class="btn-profile-logout" id="btnLogoutAction">Keluar (Logout)</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal 7: Date Picker Modal dengan Tombol Konfirmasi Centang -->
+      <div class="modal-backdrop" id="modalDatePickerBackdrop" style="display: none;">
+        <div class="confirm-dialog-card date-dialog-card" role="dialog" aria-modal="true" aria-labelledby="dateModalTitle">
+          <button class="sheet-close-btn auth-close-x" id="btnCloseDatePickerModal" aria-label="Tutup">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"/>
+              <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
+          
+          <div class="date-modal-header">
+            <div class="date-modal-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2">
+                <rect width="18" height="18" x="3" y="4" rx="2" ry="2"/>
+                <line x1="16" x2="16" y1="2" y2="6"/>
+                <line x1="8" x2="8" y1="2" y2="6"/>
+                <line x1="3" x2="21" y1="10" y2="10"/>
+              </svg>
+            </div>
+            <h3 id="dateModalTitle">Atur Tanggal Belanja</h3>
+            <p class="date-modal-desc">Pilih tanggal transaksi di bawah, lalu tekan tombol centang untuk mengonfirmasi perubahan.</p>
+          </div>
+
+          <div class="date-input-container">
+            <input type="date" id="inputModalDateSelection" class="modal-date-picker-input" aria-label="Tanggal Transaksi">
+          </div>
+
+          <div class="date-actions-row">
+            <button type="button" class="btn-cancel-date" id="btnCancelDateChange">Batal</button>
+            <button type="button" class="btn-confirm-date-check" id="btnConfirmDateWithCheck" title="Konfirmasi Perubahan Tanggal">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+              <span>Konfirmasi Tanggal</span>
+            </button>
           </div>
         </div>
       </div>

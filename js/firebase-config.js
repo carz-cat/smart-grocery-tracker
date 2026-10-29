@@ -1,10 +1,20 @@
 /**
- * Firebase App & Google Analytics Initialization
+ * Firebase App, Google Analytics & Authentication
  * Project: grocerytracker-9ef9b
  */
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
 import { getAnalytics, isSupported } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-analytics.js";
+import { 
+  getAuth, 
+  signInWithPopup, 
+  GoogleAuthProvider, 
+  signInWithEmailAndPassword, 
+  createUserWithEmailAndPassword, 
+  signOut, 
+  onAuthStateChanged,
+  updateProfile 
+} from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
 
 export const firebaseConfig = {
   apiKey: "AIzaSyDsQJnaG88UWoliGvAOU5cvf9ctJrIJ4Rg",
@@ -18,11 +28,14 @@ export const firebaseConfig = {
 
 export let app = null;
 export let analytics = null;
+export let auth = null;
+export let googleProvider = null;
 
 try {
   app = initializeApp(firebaseConfig);
   console.log("Firebase initialized successfully for project:", firebaseConfig.projectId);
 
+  // Initialize Analytics
   isSupported().then((supported) => {
     if (supported) {
       analytics = getAnalytics(app);
@@ -31,6 +44,21 @@ try {
   }).catch((err) => {
     console.debug("Firebase Analytics not supported in this environment:", err.message);
   });
+
+  // Initialize Auth
+  auth = getAuth(app);
+  googleProvider = new GoogleAuthProvider();
+  googleProvider.setCustomParameters({ prompt: 'select_account' });
+  console.log("Firebase Auth initialized.");
 } catch (error) {
   console.warn("Firebase initialization skipped or offline:", error.message);
 }
+
+export { 
+  signInWithPopup, 
+  signInWithEmailAndPassword, 
+  createUserWithEmailAndPassword, 
+  signOut, 
+  onAuthStateChanged, 
+  updateProfile 
+};

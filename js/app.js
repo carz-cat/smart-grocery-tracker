@@ -6,6 +6,8 @@
 import { GroceryStoreManager, CATEGORIES, UNITS, MASTER_CATALOG } from './store.js';
 import { Calculator } from './calculator.js';
 import { Comparator } from './comparator.js';
+import { soundMgr } from './sound.js';
+import { authMgr } from './auth.js';
 
 class SmartGroceryApp {
   constructor() {
@@ -13,6 +15,7 @@ class SmartGroceryApp {
     this.activeTab = 'tabBelanja';
     this.selectedCategoryFilter = 'ALL';
     this.isDesktopExpanded = false;
+    this.lastBudgetStatus = 'SAFE';
 
     // DOM Elements Cache
     this.dom = {
@@ -20,6 +23,16 @@ class SmartGroceryApp {
       btnToggleWidth: document.getElementById('btnToggleWidth'),
       btnResetData: document.getElementById('btnResetData'),
       
+      // Mini Sound Toggle
+      btnSoundToggle: document.getElementById('btnSoundToggle'),
+      soundIconOn: document.getElementById('soundIconOn'),
+      soundIconMute: document.getElementById('soundIconMute'),
+
+      // User Auth Button & Header Pill
+      btnUserAuth: document.getElementById('btnUserAuth'),
+      headerUserAvatar: document.getElementById('headerUserAvatar'),
+      headerAuthLabel: document.getElementById('headerAuthLabel'),
+
       // Theme Toggle
       btnThemeToggle: document.getElementById('btnThemeToggle'),
       themeIconSun: document.getElementById('themeIconSun'),
@@ -27,12 +40,21 @@ class SmartGroceryApp {
 
       // Header & Session
       headerStoreName: document.getElementById('headerStoreName'),
+      headerDateDisplay: document.getElementById('headerDateDisplay'),
       btnOpenStorePicker: document.getElementById('btnOpenStorePicker'),
+      btnOpenDatePicker: document.getElementById('btnOpenDatePicker'),
       sessionDatePicker: document.getElementById('sessionDatePicker'),
       islandItemCount: document.getElementById('islandItemCount'),
       tickerItemCount: document.getElementById('tickerItemCount'),
       tickerTotalQty: document.getElementById('tickerTotalQty'),
       tickerGrandTotal: document.getElementById('tickerGrandTotal'),
+
+      // Date Picker Modal with Checkmark
+      modalDatePickerBackdrop: document.getElementById('modalDatePickerBackdrop'),
+      btnCloseDatePickerModal: document.getElementById('btnCloseDatePickerModal'),
+      inputModalDateSelection: document.getElementById('inputModalDateSelection'),
+      btnCancelDateChange: document.getElementById('btnCancelDateChange'),
+      btnConfirmDateWithCheck: document.getElementById('btnConfirmDateWithCheck'),
 
       // Safety Cap Bar
       budgetStatusPill: document.getElementById('budgetStatusPill'),
@@ -119,6 +141,31 @@ class SmartGroceryApp {
       btnCancelClearCart: document.getElementById('btnCancelClearCart'),
       btnConfirmClearCartAction: document.getElementById('btnConfirmClearCartAction'),
 
+      // Modal Auth Gatekeeper
+      modalAuthBackdrop: document.getElementById('modalAuthBackdrop'),
+      btnCloseAuthModal: document.getElementById('btnCloseAuthModal'),
+      tabBtnLogin: document.getElementById('tabBtnLogin'),
+      tabBtnRegister: document.getElementById('tabBtnRegister'),
+      authAlertBox: document.getElementById('authAlertBox'),
+      btnGoogleLogin: document.getElementById('btnGoogleLogin'),
+      formLogin: document.getElementById('formLogin'),
+      loginEmail: document.getElementById('loginEmail'),
+      loginPassword: document.getElementById('loginPassword'),
+      formRegister: document.getElementById('formRegister'),
+      regName: document.getElementById('regName'),
+      regEmail: document.getElementById('regEmail'),
+      regPassword: document.getElementById('regPassword'),
+      btnContinueGuest: document.getElementById('btnContinueGuest'),
+
+      // Modal User Profile
+      modalUserProfileBackdrop: document.getElementById('modalUserProfileBackdrop'),
+      btnCloseProfileModal: document.getElementById('btnCloseProfileModal'),
+      profileAvatarLarge: document.getElementById('profileAvatarLarge'),
+      profileUserName: document.getElementById('profileUserName'),
+      profileUserEmail: document.getElementById('profileUserEmail'),
+      profileBadgePill: document.getElementById('profileBadgePill'),
+      btnLogoutAction: document.getElementById('btnLogoutAction'),
+
       // Toast
       toastContainer: document.getElementById('toastContainer')
     };
@@ -128,10 +175,21 @@ class SmartGroceryApp {
 
   init() {
     this.applyTheme(this.store.theme);
+    this.updateSoundIcon();
     this.renderQuickStaplesChips();
     this.renderCategoryFilterChips();
     this.bindUnitButtons();
     this.bindEvents();
+
+    // Subscribe to auth state updates
+    authMgr.onUserChange((user, isGuest) => {
+      this.updateAuthUI(user, isGuest);
+      if (user) {
+        this.store.setUserId(user.uid);
+      } else {
+        this.store.setUserId(null);
+      }
+    });
 
     // Subscribe to store updates
     this.store.subscribe(() => {
@@ -146,6 +204,155 @@ class SmartGroceryApp {
 
     // Initial staple comparison
     this.runStapleComparison('Minyak Goreng Bimoli 2L');
+
+    // Show Auth Gatekeeper prompt if not logged in and not guest
+    if (!authMgr.isLoggedIn() && !authMgr.isGuest) {
+      setTimeout(() => {
+        this.openAuthModal();
+      }, 700);
+    }
+  }
+
+  /**
+   * Sound Manager UI Sync
+   */
+  updateSoundIcon() {
+    const enabled = soundMgr.isEnabled();
+    if (this.dom.soundIconOn && this.dom.soundIconMute) {
+      this.dom.soundIconOn.style.display = enabled ? 'block' : 'none';
+      this.dom.soundIconMute.style.display = enabled ? 'none' : 'block';
+    }
+  }
+
+  toggleSound() {
+    const isNowEnabled = soundMgr.toggle();
+    this.updateSoundIcon();
+    this.showToast(`Suara interaksi: ${isNowEnabled ? 'Aktif' : 'Senyap'}`, 'info');
+  }
+
+  /**
+   * Auth UI Orchestrator
+   */
+  updateAuthUI(user, isGuest) {
+    if (user) {
+      const firstName = user.displayName ? user.displayName.split(' ')[0] : 'Akun';
+      this.dom.headerAuthLabel.textContent = firstName;
+
+      if (user.photoURL) {
+        this.dom.headerUserAvatar.innerHTML = `<img src="${user.photoURL}" alt="${escapeHtml(firstName)}" />`;
+        this.dom.profileAvatarLarge.innerHTML = `<img src="${user.photoURL}" alt="${escapeHtml(user.displayName)}" />`;
+      } else {
+        const initial = (user.displayName || user.email || 'U').charAt(0).toUpperCase();
+        this.dom.headerUserAvatar.textContent = initial;
+        this.dom.profileAvatarLarge.textContent = initial;
+      }
+
+      this.dom.profileUserName.textContent = user.displayName || 'Pengguna Smart Grocery';
+      this.dom.profileUserEmail.textContent = user.email || 'Akun Lokal';
+      this.dom.profileBadgePill.textContent = user.provider === 'google' ? 'Akun Google Terhubung' : 'Akun Terdaftar';
+      this.dom.profileBadgePill.style.display = 'inline-block';
+    } else {
+      this.dom.headerAuthLabel.textContent = isGuest ? 'Tamu' : 'Masuk';
+      this.dom.headerUserAvatar.innerHTML = `
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+          <circle cx="12" cy="7" r="4"/>
+        </svg>
+      `;
+    }
+  }
+
+  openAuthModal() {
+    soundMgr.playPop();
+    this.dom.modalAuthBackdrop.style.display = 'flex';
+    this.dom.authAlertBox.style.display = 'none';
+    this.switchAuthTab('login');
+  }
+
+  closeAuthModal() {
+    this.dom.modalAuthBackdrop.style.display = 'none';
+  }
+
+  openUserProfileModal() {
+    soundMgr.playPop();
+    this.dom.modalUserProfileBackdrop.style.display = 'flex';
+  }
+
+  closeUserProfileModal() {
+    this.dom.modalUserProfileBackdrop.style.display = 'none';
+  }
+
+  switchAuthTab(tab) {
+    soundMgr.playPop();
+    if (tab === 'login') {
+      this.dom.tabBtnLogin.classList.add('active');
+      this.dom.tabBtnRegister.classList.remove('active');
+      this.dom.formLogin.style.display = 'flex';
+      this.dom.formRegister.style.display = 'none';
+    } else {
+      this.dom.tabBtnRegister.classList.add('active');
+      this.dom.tabBtnLogin.classList.remove('active');
+      this.dom.formRegister.style.display = 'flex';
+      this.dom.formLogin.style.display = 'none';
+    }
+    this.dom.authAlertBox.style.display = 'none';
+  }
+
+  showAuthError(message) {
+    this.dom.authAlertBox.textContent = message;
+    this.dom.authAlertBox.style.display = 'block';
+    this.triggerHaptic();
+  }
+
+  /**
+   * Date Picker with Checkmark Confirmation (User Request)
+   */
+  openDatePickerModal() {
+    soundMgr.playPop();
+    const curDate = this.store.activeSession.date || new Date().toISOString().split('T')[0];
+    if (this.dom.inputModalDateSelection) {
+      this.dom.inputModalDateSelection.value = curDate;
+    }
+    if (this.dom.modalDatePickerBackdrop) {
+      this.dom.modalDatePickerBackdrop.style.display = 'flex';
+    }
+  }
+
+  closeDatePickerModal() {
+    if (this.dom.modalDatePickerBackdrop) {
+      this.dom.modalDatePickerBackdrop.style.display = 'none';
+    }
+  }
+
+  confirmDateChange() {
+    const chosen = this.dom.inputModalDateSelection?.value;
+    if (!chosen) {
+      soundMgr.playWarning();
+      this.showToast('Pilih tanggal terlebih dahulu', 'warning');
+      return;
+    }
+    this.store.setDate(chosen);
+    if (this.dom.sessionDatePicker) {
+      this.dom.sessionDatePicker.value = chosen;
+    }
+    soundMgr.playSuccess();
+    this.closeDatePickerModal();
+    this.showToast(`Tanggal transaksi dikonfirmasi: ${this.formatDisplayDate(chosen)}`, 'success');
+  }
+
+  formatDisplayDate(dateStr) {
+    if (!dateStr) return '26 Okt 2026';
+    try {
+      const parts = dateStr.split('-');
+      if (parts.length === 3) {
+        const year = parts[0];
+        const monthNum = parseInt(parts[1], 10);
+        const day = parseInt(parts[2], 10);
+        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+        return `${day} ${months[monthNum - 1] || parts[1]} ${year}`;
+      }
+    } catch (_) {}
+    return dateStr;
   }
 
   /**
@@ -187,6 +394,9 @@ class SmartGroceryApp {
    */
   renderHeaderAndSafetyCap(session, summary) {
     this.dom.headerStoreName.textContent = session.store;
+    if (this.dom.headerDateDisplay) {
+      this.dom.headerDateDisplay.textContent = this.formatDisplayDate(session.date);
+    }
     this.dom.islandItemCount.textContent = `${summary.itemCount} Items`;
     this.dom.tickerItemCount.textContent = summary.itemCount;
     this.dom.tickerTotalQty.textContent = summary.totalQty % 1 === 0 ? summary.totalQty : summary.totalQty.toFixed(1);
@@ -194,6 +404,14 @@ class SmartGroceryApp {
 
     this.dom.navCartBadge.textContent = summary.itemCount;
     this.dom.navCartBadge.style.display = summary.itemCount > 0 ? 'flex' : 'none';
+
+    // Sound alert when entering WARNING or DANGER budget state
+    if (summary.budgetStatus !== this.lastBudgetStatus) {
+      if (summary.budgetStatus === 'WARNING' || summary.budgetStatus === 'DANGER') {
+        soundMgr.playWarning();
+      }
+      this.lastBudgetStatus = summary.budgetStatus;
+    }
 
     // Safety Cap Status
     this.dom.capSpentText.textContent = Calculator.formatRupiah(summary.totalFinal);
@@ -392,6 +610,7 @@ class SmartGroceryApp {
       minusBtn.addEventListener('click', (e) => {
         e.stopPropagation();
         this.triggerHaptic();
+        soundMgr.playPop();
         let newQty = Math.max(0.1, Number((item.qty - 1).toFixed(2)));
         if (item.unit === 'kg' && item.qty <= 1 && item.qty > 0.25) {
           newQty = Math.max(0.1, Number((item.qty - 0.25).toFixed(2)));
@@ -402,6 +621,7 @@ class SmartGroceryApp {
       plusBtn.addEventListener('click', (e) => {
         e.stopPropagation();
         this.triggerHaptic();
+        soundMgr.playPop();
         let newQty = Number((item.qty + 1).toFixed(2));
         if (item.unit === 'kg' && item.qty < 1) {
           newQty = Number((item.qty + 0.25).toFixed(2));
@@ -412,6 +632,7 @@ class SmartGroceryApp {
       qtyInput.addEventListener('change', (e) => {
         const val = parseFloat(e.target.value);
         if (!isNaN(val) && val > 0) {
+          soundMgr.playPop();
           this.store.updateItem(item.id, { qty: val });
         } else {
           e.target.value = item.qty;
@@ -420,12 +641,14 @@ class SmartGroceryApp {
 
       editBtn.addEventListener('click', (e) => {
         e.stopPropagation();
+        soundMgr.playPop();
         this.openAddItemModal(item);
       });
 
       removeBtn.addEventListener('click', (e) => {
         e.stopPropagation();
         this.triggerHaptic();
+        soundMgr.playDelete();
         this.store.removeItem(item.id);
         this.showToast(`Item "${item.name}" dihapus`, 'warning');
       });
@@ -743,6 +966,7 @@ class SmartGroceryApp {
    * Modal: Supermarket Location Selector (F-01)
    */
   openStorePickerModal() {
+    soundMgr.playPop();
     const container = this.dom.storeListContainer;
     container.innerHTML = '';
 
@@ -777,6 +1001,7 @@ class SmartGroceryApp {
       `;
 
       btn.addEventListener('click', () => {
+        soundMgr.playPop();
         this.store.setStore(storeName);
         this.closeStorePickerModal();
         this.showToast(`Lokasi toko: ${storeName}`, 'success');
@@ -1016,36 +1241,198 @@ class SmartGroceryApp {
    * Setup all event listeners
    */
   bindEvents() {
+    // Sound Toggle Button
+    if (this.dom.btnSoundToggle) {
+      this.dom.btnSoundToggle.addEventListener('click', () => {
+        this.toggleSound();
+      });
+    }
+
     // Theme Switcher
     this.dom.btnThemeToggle.addEventListener('click', () => {
+      soundMgr.playPop();
       this.toggleTheme();
     });
 
     // Navigation Tabs
-    this.dom.navBelanja.addEventListener('click', () => this.switchTab('tabBelanja'));
-    this.dom.navRiwayat.addEventListener('click', () => this.switchTab('tabRiwayat'));
-    this.dom.navAnggaran.addEventListener('click', () => this.switchTab('tabAnggaran'));
-
-    // Date Picker (F-01)
-    this.dom.sessionDatePicker.addEventListener('change', (e) => {
-      this.store.setDate(e.target.value);
-      this.showToast(`Tanggal sesi diubah`, 'info');
+    this.dom.navBelanja.addEventListener('click', () => {
+      soundMgr.playPop();
+      this.switchTab('tabBelanja');
+    });
+    this.dom.navRiwayat.addEventListener('click', () => {
+      soundMgr.playPop();
+      this.switchTab('tabRiwayat');
+    });
+    this.dom.navAnggaran.addEventListener('click', () => {
+      soundMgr.playPop();
+      this.switchTab('tabAnggaran');
     });
 
-    // Store Picker Modal Trigger (F-01)
-    this.dom.btnOpenStorePicker.addEventListener('click', () => this.openStorePickerModal());
+    // Store Picker Modal Trigger (Icon beside theme toggle)
+    if (this.dom.btnOpenStorePicker) {
+      this.dom.btnOpenStorePicker.addEventListener('click', () => this.openStorePickerModal());
+    }
     this.dom.btnCloseStorePicker.addEventListener('click', () => this.closeStorePickerModal());
     this.dom.sheetStorePickerBackdrop.addEventListener('click', (e) => {
       if (e.target === this.dom.sheetStorePickerBackdrop) this.closeStorePickerModal();
     });
 
+    // Date Picker Modal Trigger with Checkmark Confirmation (Icon beside theme toggle)
+    if (this.dom.btnOpenDatePicker) {
+      this.dom.btnOpenDatePicker.addEventListener('click', () => this.openDatePickerModal());
+    }
+    if (this.dom.btnCloseDatePickerModal) {
+      this.dom.btnCloseDatePickerModal.addEventListener('click', () => this.closeDatePickerModal());
+    }
+    if (this.dom.btnCancelDateChange) {
+      this.dom.btnCancelDateChange.addEventListener('click', () => this.closeDatePickerModal());
+    }
+    if (this.dom.btnConfirmDateWithCheck) {
+      this.dom.btnConfirmDateWithCheck.addEventListener('click', () => this.confirmDateChange());
+    }
+    if (this.dom.modalDatePickerBackdrop) {
+      this.dom.modalDatePickerBackdrop.addEventListener('click', (e) => {
+        if (e.target === this.dom.modalDatePickerBackdrop) this.closeDatePickerModal();
+      });
+    }
+
+    // Date Picker Input fallback (F-01)
+    if (this.dom.sessionDatePicker) {
+      this.dom.sessionDatePicker.addEventListener('change', (e) => {
+        this.store.setDate(e.target.value);
+        if (this.dom.headerDateDisplay) {
+          this.dom.headerDateDisplay.textContent = this.formatDisplayDate(e.target.value);
+        }
+      });
+    }
+
+    // User Auth & Profile Modal Triggers
+    if (this.dom.btnUserAuth) {
+      this.dom.btnUserAuth.addEventListener('click', () => {
+        soundMgr.playPop();
+        if (authMgr.isLoggedIn()) {
+          this.openUserProfileModal();
+        } else {
+          this.openAuthModal();
+        }
+      });
+    }
+
+    if (this.dom.btnCloseAuthModal) {
+      this.dom.btnCloseAuthModal.addEventListener('click', () => this.closeAuthModal());
+    }
+    if (this.dom.modalAuthBackdrop) {
+      this.dom.modalAuthBackdrop.addEventListener('click', (e) => {
+        if (e.target === this.dom.modalAuthBackdrop) this.closeAuthModal();
+      });
+    }
+
+    // Auth Tabs Switcher
+    if (this.dom.tabBtnLogin) {
+      this.dom.tabBtnLogin.addEventListener('click', () => this.switchAuthTab('login'));
+    }
+    if (this.dom.tabBtnRegister) {
+      this.dom.tabBtnRegister.addEventListener('click', () => this.switchAuthTab('register'));
+    }
+
+    // Google Sign-In
+    if (this.dom.btnGoogleLogin) {
+      this.dom.btnGoogleLogin.addEventListener('click', async () => {
+        soundMgr.playPop();
+        this.dom.btnGoogleLogin.disabled = true;
+        this.dom.btnGoogleLogin.style.opacity = '0.7';
+        const res = await authMgr.loginWithGoogle();
+        this.dom.btnGoogleLogin.disabled = false;
+        this.dom.btnGoogleLogin.style.opacity = '1';
+
+        if (res.success) {
+          soundMgr.playSuccess();
+          this.closeAuthModal();
+          this.showToast(`Selamat datang, ${res.user.displayName}!`, 'success');
+        } else if (res.needsConsoleActivation) {
+          this.showAuthError(res.error);
+        } else {
+          this.showAuthError(res.error || 'Gagal masuk dengan Google.');
+        }
+      });
+    }
+
+    // Email Login Submit
+    if (this.dom.formLogin) {
+      this.dom.formLogin.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        soundMgr.playPop();
+        const email = this.dom.loginEmail.value.trim();
+        const pass = this.dom.loginPassword.value;
+        const res = await authMgr.loginWithEmail(email, pass);
+        if (res.success) {
+          soundMgr.playSuccess();
+          this.closeAuthModal();
+          this.showToast(`Berhasil masuk: ${res.user.displayName}`, 'success');
+        } else {
+          this.showAuthError(res.error || 'Login gagal.');
+        }
+      });
+    }
+
+    // Email Register Submit
+    if (this.dom.formRegister) {
+      this.dom.formRegister.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        soundMgr.playPop();
+        const name = this.dom.regName.value.trim();
+        const email = this.dom.regEmail.value.trim();
+        const pass = this.dom.regPassword.value;
+        const res = await authMgr.registerWithEmail(email, pass, name);
+        if (res.success) {
+          soundMgr.playSuccess();
+          this.closeAuthModal();
+          this.showToast(`Akun berhasil dibuat! Selamat datang, ${name}`, 'success');
+        } else {
+          this.showAuthError(res.error || 'Pendaftaran gagal.');
+        }
+      });
+    }
+
+    // Continue as Guest
+    if (this.dom.btnContinueGuest) {
+      this.dom.btnContinueGuest.addEventListener('click', () => {
+        soundMgr.playPop();
+        authMgr.setGuestMode(true);
+        this.closeAuthModal();
+        this.showToast('Melanjutkan sebagai Tamu (Mode Offline)', 'info');
+      });
+    }
+
+    // Profile Modal Actions
+    if (this.dom.btnCloseProfileModal) {
+      this.dom.btnCloseProfileModal.addEventListener('click', () => this.closeUserProfileModal());
+    }
+    if (this.dom.modalUserProfileBackdrop) {
+      this.dom.modalUserProfileBackdrop.addEventListener('click', (e) => {
+        if (e.target === this.dom.modalUserProfileBackdrop) this.closeUserProfileModal();
+      });
+    }
+    if (this.dom.btnLogoutAction) {
+      this.dom.btnLogoutAction.addEventListener('click', async () => {
+        soundMgr.playDelete();
+        await authMgr.logout();
+        this.closeUserProfileModal();
+        this.showToast('Anda telah keluar dari akun', 'info');
+      });
+    }
+
     // GPS Detect Button in Store Picker
-    this.dom.btnDetectGpsStore.addEventListener('click', () => this.detectGpsLocation());
+    this.dom.btnDetectGpsStore.addEventListener('click', () => {
+      soundMgr.playPop();
+      this.detectGpsLocation();
+    });
 
     // Add Custom Store
     this.dom.btnAddCustomStore.addEventListener('click', () => {
       const val = this.dom.inputNewStore.value.trim();
       if (val) {
+        soundMgr.playAdd();
         this.store.addStore(val);
         this.store.setStore(val);
         this.dom.inputNewStore.value = '';
@@ -1056,6 +1443,7 @@ class SmartGroceryApp {
 
     // Single Floating Action Button (FAB) at Bottom Right
     this.dom.btnFloatingAdd.addEventListener('click', () => {
+      soundMgr.playPop();
       this.openAddItemModal();
     });
 
@@ -1131,11 +1519,13 @@ class SmartGroceryApp {
         this.store.updateItem(editId, {
           name, category, unit, qty, unitPrice, discount, notes
         });
+        soundMgr.playPop();
         this.showToast(`Berhasil update: "${name}"`, 'success');
       } else {
         this.store.addItem({
           name, category, unit, qty, unitPrice, discount, notes
         });
+        soundMgr.playAdd();
         this.showToast(`Ditambahkan ke troli: "${name}"`, 'success');
       }
 
@@ -1145,12 +1535,14 @@ class SmartGroceryApp {
     // Checkout / Finish Session (F-06)
     this.dom.btnFinishSession.addEventListener('click', () => {
       if (this.store.activeSession.items.length === 0) {
+        soundMgr.playWarning();
         this.showToast('Troli belanja masih kosong!', 'warning');
         return;
       }
       const summary = Calculator.calculateCartSummary(this.store.activeSession.items, this.store.activeSession.budgetCap);
       const saved = this.store.checkoutAndSaveSession(summary);
       if (saved) {
+        soundMgr.playSuccess();
         this.showToast('Belanja selesai! Struk tersimpan di Riwayat', 'success');
         this.switchTab('tabRiwayat');
       }
@@ -1159,17 +1551,21 @@ class SmartGroceryApp {
     // Dedicated Button: Clear All Cart Items via Non-Blocking Modal (F-06A & UX)
     this.dom.btnQuickClearCart.addEventListener('click', () => {
       if (this.store.activeSession.items.length === 0) {
+        soundMgr.playPop();
         this.showToast('Troli belanja sudah kosong', 'info');
         return;
       }
+      soundMgr.playWarning();
       this.dom.modalConfirmClearCartBackdrop.classList.add('open');
     });
 
     this.dom.btnCancelClearCart.addEventListener('click', () => {
+      soundMgr.playPop();
       this.dom.modalConfirmClearCartBackdrop.classList.remove('open');
     });
 
     this.dom.btnConfirmClearCartAction.addEventListener('click', () => {
+      soundMgr.playDelete();
       this.store.clearActiveCart();
       this.dom.modalConfirmClearCartBackdrop.classList.remove('open');
       this.showToast('Seluruh barang di troli telah dikosongkan', 'warning');
