@@ -211,7 +211,7 @@
                 <span class="brand-subtitle-tag">Tas Belanja</span>
               </div>
               <div class="header-session-quick-info">
-                <span id="headerStoreName" class="one-line clickable-store-header" title="Klik untuk ubah lokasi belanja">Lotte Mart Grocery - Puri Indah</span>
+                <span id="headerStoreName" class="one-line static-store-header" title="Lokasi Supermarket Aktif">Lotte Mart Grocery - Puri Indah</span>
                 <span class="dot-separator">•</span>
                 <span id="headerDateDisplay" class="one-line clickable-date-header" title="Klik untuk atur tanggal belanja">26 Okt 2026</span>
               </div>
@@ -476,6 +476,19 @@
               </div>
             </div>
 
+            <div class="pkg-unit-selector-row" style="margin-bottom: 10px;">
+              <label for="selectComparatorUnit" class="form-label one-line">Satuan Ukuran</label>
+              <select id="selectComparatorUnit" class="checklist-cat-select" style="min-height: 38px; width: 100%;">
+                <option value="gram" selected>Gram (g)</option>
+                <option value="kg">Kilogram (kg)</option>
+                <option value="ml">Mililiter (ml)</option>
+                <option value="liter">Liter (L)</option>
+                <option value="lembar">Lembar / Sheet (Tissue/Kertas)</option>
+                <option value="butir">Butir / Pcs (Telur/Butiran)</option>
+                <option value="sachet">Sachet / Bungkus</option>
+              </select>
+            </div>
+
             <div class="package-comparator-grid">
               <!-- Opsi Kemasan A -->
               <div class="pkg-box pkg-box-a">
@@ -589,12 +602,21 @@
             <div class="store-compare-selector-wrap" style="margin-top: 10px;">
               <label class="form-label one-line" for="selectCrossStoreProduct">Pilih Bahan Pokok</label>
               <select id="selectCrossStoreProduct" class="checklist-cat-select" style="width: 100%; min-height: 44px; margin-top: 4px;">
-                <option value="Beras 5kg">🌾 Beras 5kg (Rojolele)</option>
-                <option value="Minyak Goreng 2L">🧂 Minyak Goreng 2L (Bimoli)</option>
-                <option value="Telur 1kg">🥛 Telur Ayam 1kg</option>
-                <option value="Garam 500g">🧂 Garam Dapur 500g</option>
-                <option value="Sabun Cuci">🧼 Sabun Cuci</option>
-                <option value="Wajan">🍳 Wajan</option>
+                <option value="Beras 5kg">🌾 Beras 5kg (Rojolele / Premium)</option>
+                <option value="Minyak Goreng 2L">🧂 Minyak Goreng 2L (Bimoli / Sania)</option>
+                <option value="Telur Ayam 1kg">🥚 Telur Ayam Negeri 1kg</option>
+                <option value="Gula Pasir 1kg">🍬 Gula Pasir Putih 1kg (Gulaku)</option>
+                <option value="Tepung Terigu 1kg">🌾 Tepung Terigu 1kg (Segitiga Biru)</option>
+                <option value="Garam Dapur 500g">🧂 Garam Dapur Beriodium 500g</option>
+                <option value="Sabun Cuci Piring 800ml">🧼 Sabun Cuci Piring 800ml (Sunlight)</option>
+                <option value="Deterjen Bubuk 800g">🧺 Deterjen Bubuk 800g (Rinso)</option>
+                <option value="Susu UHT Full Cream 1L">🥛 Susu UHT Full Cream 1L (Ultra Milk)</option>
+                <option value="Mie Instan Dus (40 bks)">🍜 Mie Instan Goreng Dus (40 bks)</option>
+                <option value="Kopi Bubuk 150g">☕ Kopi Bubuk 150g (Kapal Api)</option>
+                <option value="Kecap Manis 550ml">🍶 Kecap Manis 550ml (Bango)</option>
+                <option value="Daging Ayam Broiler 1kg">🍗 Daging Ayam Broiler Segar 1kg</option>
+                <option value="Bawang Merah 500g">🧅 Bawang Merah Brebes 500g</option>
+                <option value="Wajan Anti Lengket 24cm">🍳 Wajan Frypan Anti Lengket 24cm</option>
               </select>
             </div>
 
@@ -667,30 +689,7 @@
             </div>
           </div>
 
-          <!-- Multi-Store Price Comparison Matrix Tool (F-06 & F-04) -->
-          <div class="multi-store-card" style="margin-top: 14px;">
-            <div class="multi-store-title">
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#00f0ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="18" x2="18" y1="20" y2="10"/>
-                <line x1="12" x2="12" y1="20" y2="4"/>
-                <line x1="6" x2="6" y1="20" y2="14"/>
-              </svg>
-              <span class="one-line">Cek Harga Bahan Pokok Antar Supermarket</span>
-            </div>
-            <p class="multi-store-desc">Cek harga komparasi di Lotte Mart, Super Indo, &amp; Indomaret Fresh.</p>
-            <div class="search-comparison-box">
-              <input type="text" class="search-comparison-input" id="inputCompareSearch" placeholder="Contoh: Minyak Goreng, Beras, Telur..." value="Beras 5kg">
-              <button class="btn-icon-soft" id="btnExecuteSearchCompare" title="Cari">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <circle cx="11" cy="11" r="8"/>
-                  <path d="m21 21-4.3-4.3"/>
-                </svg>
-              </button>
-            </div>
-            <div class="comparison-results-box" id="comparisonResultsContainer">
-              <!-- Dynamically populated -->
-            </div>
-          </div>
+
 
           <!-- Saved Sessions Timeline -->
           <div class="history-section-wrap" style="margin-top: 14px;">
@@ -817,14 +816,14 @@
 
             <!-- Product Name (STRICTLY REQUIRED - F-01) -->
             <div class="form-field">
-              <label class="form-label one-line" for="inputItemName">Nama Produk * (Wajib Diisi)</label>
+              <label class="form-label one-line" for="inputItemName">Nama Produk : (Wajib Diisi)</label>
               <input type="text" id="inputItemName" class="input-text" placeholder="Contoh: Beras Rojolele, Minyak Goreng 2L" required autocomplete="off">
               <span id="itemNameError" style="font-size: 11px; color: var(--crimson); display: none; font-weight: 700;">Wajib mengisi nama barang!</span>
             </div>
 
             <!-- Category (Includes 'Bahan Pokok' for Skenario Uji 1) -->
             <div class="form-field">
-              <label class="form-label one-line" for="selectItemCategory">Kategori Produk *</label>
+              <label class="form-label one-line" for="selectItemCategory">Kategori Produk :</label>
               <select id="selectItemCategory" class="select-input">
                 <option value="Bahan Pokok">🌾 Bahan Pokok</option>
                 <option value="Minyak & Bumbu">🧂 Minyak &amp; Bumbu</option>
@@ -843,7 +842,7 @@
 
             <!-- Satuan Harus Ada Tombol (Includes 'karung/5kg' for Skenario Uji 1) -->
             <div class="form-field">
-              <label class="form-label one-line">Pilih Tombol Satuan Barang *</label>
+              <label class="form-label one-line">Pilih Satuan Barang :</label>
               <div class="unit-buttons-grid" id="unitButtonsGrid">
                 <button type="button" class="btn-unit-chip" data-unit="karung/5kg">karung/5kg</button>
                 <button type="button" class="btn-unit-chip active" data-unit="pcs">pcs</button>
@@ -861,12 +860,12 @@
             <!-- Quantity & Unit Price in Grid -->
             <div class="form-grid-2">
               <div class="form-field">
-                <label class="form-label one-line" for="inputItemQty">Jumlah (Qty) *</label>
+                <label class="form-label one-line" for="inputItemQty">Jumlah (Qty) :</label>
                 <input type="number" step="any" min="0.1" id="inputItemQty" class="input-text input-large-numeric" value="1" inputmode="decimal" required>
               </div>
 
               <div class="form-field">
-                <label class="form-label one-line" for="inputItemUnitPrice">Harga Satuan (Rp) *</label>
+                <label class="form-label one-line" for="inputItemUnitPrice" id="labelItemUnitPrice">Harga Satuan :</label>
                 <input type="text" id="inputItemUnitPrice" class="input-text input-large-numeric" placeholder="Contoh: 74.000" inputmode="numeric" required>
               </div>
             </div>
@@ -1003,35 +1002,85 @@
           <!-- Active Account Card (Yang Sedang Digunakan) -->
           <div class="active-account-card">
             <div class="active-account-top">
-              <div class="profile-avatar-large cat-avatar-glow" id="profileAvatarLarge">🐾</div>
+              <div class="profile-avatar-upload-wrap">
+                <div class="profile-avatar-large cat-avatar-glow" id="profileAvatarLarge">🐾</div>
+                <label for="inputProfilePhotoUpload" class="btn-avatar-upload-badge" title="Ganti Foto Profil" aria-label="Ganti Foto Profil">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                    <circle cx="12" cy="13" r="4"/>
+                  </svg>
+                </label>
+                <input type="file" id="inputProfilePhotoUpload" accept="image/*" style="display: none;">
+              </div>
               <div class="active-account-text">
-                <div class="active-account-badge-pill">
-                  <span class="active-dot"></span> Sedang Digunakan
-                </div>
+                <div class="profile-meta-label">Nama Pengguna</div>
                 <h4 class="profile-user-name" id="profileUserName">Pengguna Tala</h4>
-                <p class="profile-user-email" id="profileUserEmail">email@domain.com</p>
-                <span class="profile-provider-badge" id="profileBadgePill">Akun Google Terhubung</span>
+                <div class="profile-login-time-wrap">
+                  <span class="profile-meta-label">Waktu Masuk :</span>
+                  <span class="profile-login-time-text" id="profileLoginTime">-</span>
+                </div>
+                <p class="profile-user-email" id="profileUserEmail" style="display: none;">email@domain.com</p>
+                <span class="profile-provider-badge" id="profileBadgePill" style="display: none;">Akun Aktif</span>
               </div>
             </div>
 
-            <div class="active-account-meta">
-              <div class="meta-row">
-                <span class="meta-label">Metode Autentikasi:</span>
-                <span class="meta-val" id="profileProviderType">Firebase Google Auth</span>
+            <!-- Pilihan Mata Uang Belanja Multi-Negara -->
+            <div class="profile-currency-box" style="margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--border-subtle);">
+              <label class="profile-meta-label" for="selectAppCurrency">Mata Uang Belanja :</label>
+              <select id="selectAppCurrency" class="checklist-cat-select" style="min-height: 38px; width: 100%; margin-top: 4px;">
+                <option value="IDR" selected>🇮🇩 Rupiah Indonesia (Rp - IDR)</option>
+                <option value="USD">🇺🇸 US Dollar ($ - USD)</option>
+                <option value="EUR">🇪🇺 Euro (€ - EUR)</option>
+                <option value="JPY">🇯🇵 Japanese Yen (¥ - JPY)</option>
+                <option value="SGD">🇸🇬 Singapore Dollar (S$ - SGD)</option>
+                <option value="MYR">🇲🇾 Malaysian Ringgit (RM - MYR)</option>
+                <option value="GBP">🇬🇧 British Pound (£ - GBP)</option>
+                <option value="AUD">🇦🇺 Australian Dollar (A$ - AUD)</option>
+              </select>
+            </div>
+
+            <!-- Password Field & Show/Hide Eye Toggle -->
+            <div class="profile-password-section">
+              <div class="profile-meta-label">Kata Sandi Akun</div>
+              <div class="profile-password-display-row">
+                <input type="password" class="profile-password-field" id="profilePasswordField" value="••••••••" readonly aria-label="Kata Sandi">
+                <button type="button" class="btn-toggle-profile-pw" id="btnToggleProfilePassword" title="Tampilkan / Sembunyikan Kata Sandi" aria-label="Toggle Kata Sandi">
+                  <svg id="iconProfilePwEye" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                  </svg>
+                </button>
               </div>
-              <div class="meta-row">
-                <span class="meta-label">ID Pengguna (UID):</span>
-                <span class="meta-val font-mono" id="profileUserUid" style="font-size: 10px;">uid-session</span>
+            </div>
+
+            <!-- Fitur Ganti Kata Sandi -->
+            <div class="change-password-box">
+              <button type="button" class="btn-toggle-change-pw" id="btnToggleChangePwForm">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                </svg>
+                <span>Ganti Kata Sandi</span>
+              </button>
+
+              <div class="change-pw-collapse-panel" id="changePwCollapsePanel" style="display: none;">
+                <div class="form-field" style="margin-top: 8px;">
+                  <label class="form-label" for="inputNewPassword">Kata Sandi Baru</label>
+                  <input type="password" id="inputNewPassword" class="input-text" placeholder="Minimal 6 karakter" autocomplete="new-password">
+                </div>
+                <div class="form-field" style="margin-top: 6px;">
+                  <label class="form-label" for="inputConfirmNewPassword">Konfirmasi Kata Sandi Baru</label>
+                  <input type="password" id="inputConfirmNewPassword" class="input-text" placeholder="Ulangi kata sandi baru" autocomplete="new-password">
+                </div>
+                <div id="changePwFeedback" class="change-pw-feedback" style="display: none; margin-top: 6px;"></div>
+                <button type="button" class="btn-save-new-pw" id="btnSaveNewPassword" style="margin-top: 8px; width: 100%;">Simpan Kata Sandi Baru</button>
               </div>
             </div>
           </div>
 
-          <!-- Menu Akun Tersimpan / Riwayat Akun -->
-          <div class="saved-accounts-section" id="savedAccountsSection">
-            <div class="saved-accounts-title">Daftar Akun Tersimpan di Sesi Ini</div>
-            <div class="saved-accounts-list" id="savedAccountsList">
-              <!-- Dynamically populated via app.js -->
-            </div>
+          <!-- Hidden container for compatibility -->
+          <div class="saved-accounts-section" id="savedAccountsSection" style="display: none;">
+            <div class="saved-accounts-list" id="savedAccountsList"></div>
           </div>
 
           <!-- Action 1: Kembali ke Halaman Login -->
@@ -1109,6 +1158,9 @@
 
     </main>
   </div>
+
+  <!-- Celebratory Golden Stars Falling Animation Overlay on Successful Login -->
+  <div id="loginStarCelebrationOverlay" class="login-star-celebration-overlay" aria-hidden="true"></div>
 
   <!-- Firebase SDK & Analytics (Project: grocerytracker-9ef9b) -->
   <script type="module" src="./js/firebase-config.js?v=2.4.0"></script>

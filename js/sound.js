@@ -167,50 +167,54 @@ class SoundManager {
   }
 
   /**
-   * 4. Celebratory Login Welcome Fanfare ("Selamat Anda telah login!")
+   * 4. Celebratory Login Light Applause (Tepuk tangan ringan cheerful membawa suasana congrats)
    */
-  playLoginWelcome() {
+  playLightApplause() {
     if (!this.enabled) return;
     this.initAudio();
     if (!this.audioCtx) return;
 
     try {
       const now = this.audioCtx.currentTime;
-      const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
-      const duration = 0.08;
+      // 14 gentle, cheerful handclaps spread over ~2.0 seconds
+      const clapOffsets = [
+        0, 0.12, 0.22, 0.34, 0.46, 0.60, 0.74, 0.90, 1.08, 1.28, 1.48, 1.68, 1.88, 2.08
+      ];
 
-      notes.forEach((freq, idx) => {
-        const noteStart = now + idx * duration;
-        const osc = this.audioCtx.createOscillator();
+      clapOffsets.forEach((offset, idx) => {
+        const clapTime = now + offset;
+        const bufferSize = Math.floor(this.audioCtx.sampleRate * 0.045);
+        const buffer = this.audioCtx.createBuffer(1, bufferSize, this.audioCtx.sampleRate);
+        const data = buffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) {
+          data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (bufferSize * 0.30));
+        }
+
+        const noise = this.audioCtx.createBufferSource();
+        noise.buffer = buffer;
+
+        const filter = this.audioCtx.createBiquadFilter();
+        filter.type = 'bandpass';
+        filter.frequency.setValueAtTime(1100 + (idx % 4) * 75, clapTime);
+        filter.Q.setValueAtTime(2.2, clapTime);
+
         const gain = this.audioCtx.createGain();
+        const baseVol = 0.16 + (Math.sin(idx) * 0.03);
+        gain.gain.setValueAtTime(baseVol, clapTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, clapTime + 0.045);
 
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(freq, noteStart);
-
-        gain.gain.setValueAtTime(0.15, noteStart);
-        gain.gain.exponentialRampToValueAtTime(0.001, noteStart + duration * 1.6);
-
-        osc.connect(gain);
+        noise.connect(filter);
+        filter.connect(gain);
         gain.connect(this.audioCtx.destination);
 
-        osc.start(noteStart);
-        osc.stop(noteStart + duration * 1.6);
+        noise.start(clapTime);
+        noise.stop(clapTime + 0.045);
       });
-
-      // Sweet kitten meow at the end of fanfare
-      setTimeout(() => this.playCatMeow(), 360);
-
-      // Friendly speech announcement if supported by browser
-      if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
-        try {
-          const utter = new SpeechSynthesisUtterance('Selamat, Anda telah masuk ke Tala!');
-          utter.lang = 'id-ID';
-          utter.rate = 1.05;
-          utter.pitch = 1.25;
-          setTimeout(() => window.speechSynthesis.speak(utter), 420);
-        } catch (_) {}
-      }
     } catch (_) {}
+  }
+
+  playLoginWelcome() {
+    this.playLightApplause();
   }
 
   /**

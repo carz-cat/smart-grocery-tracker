@@ -13,7 +13,8 @@ import {
   createUserWithEmailAndPassword, 
   signOut, 
   onAuthStateChanged, 
-  updateProfile 
+  updateProfile,
+  updatePassword 
 } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
 import { 
   getFirestore, 
@@ -73,6 +74,7 @@ export {
   signOut, 
   onAuthStateChanged, 
   updateProfile,
+  updatePassword,
   doc,
   setDoc,
   getDoc,

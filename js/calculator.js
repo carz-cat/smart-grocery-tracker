@@ -3,20 +3,58 @@
  * Module: Calculator (Diskon Bertingkat, Perhitungan Kuantitas, Audit PPN & Pembanding Kemasan)
  */
 
+export const CURRENCIES = {
+  IDR: { code: 'IDR', symbol: 'Rp', name: 'Rupiah Indonesia (IDR)', locale: 'id-ID', prefix: 'Rp ' },
+  USD: { code: 'USD', symbol: '$', name: 'US Dollar (USD)', locale: 'en-US', prefix: '$' },
+  EUR: { code: 'EUR', symbol: '€', name: 'Euro (EUR)', locale: 'de-DE', prefix: '€' },
+  JPY: { code: 'JPY', symbol: '¥', name: 'Japanese Yen (JPY)', locale: 'ja-JP', prefix: '¥' },
+  SGD: { code: 'SGD', symbol: 'S$', name: 'Singapore Dollar (SGD)', locale: 'en-SG', prefix: 'S$' },
+  MYR: { code: 'MYR', symbol: 'RM', name: 'Malaysian Ringgit (MYR)', locale: 'ms-MY', prefix: 'RM ' },
+  GBP: { code: 'GBP', symbol: '£', name: 'British Pound (GBP)', locale: 'en-GB', prefix: '£' },
+  AUD: { code: 'AUD', symbol: 'A$', name: 'Australian Dollar (AUD)', locale: 'en-AU', prefix: 'A$' }
+};
+
 export const Calculator = {
+  currentCurrency: (typeof localStorage !== 'undefined' && localStorage.getItem('sgt_currency')) || 'IDR',
+
+  getCurrencyConfig() {
+    return CURRENCIES[this.currentCurrency] || CURRENCIES.IDR;
+  },
+
+  setCurrency(code) {
+    if (CURRENCIES[code]) {
+      this.currentCurrency = code;
+      if (typeof localStorage !== 'undefined') {
+        localStorage.setItem('sgt_currency', code);
+      }
+    }
+  },
+
   /**
-   * Format number as Indonesian Rupiah string (e.g., Rp 75.000)
+   * Format number as localized currency string (dynamic based on selected currency)
+   * @param {number} amount 
+   * @param {boolean} includePrefix 
+   * @returns {string}
+   */
+  formatCurrency(amount, includePrefix = true) {
+    if (isNaN(amount) || amount === null || amount === undefined) {
+      const cfg = this.getCurrencyConfig();
+      return includePrefix ? `${cfg.prefix}0` : '0';
+    }
+    const cfg = this.getCurrencyConfig();
+    const rounded = Math.round(amount);
+    const formatted = new Intl.NumberFormat(cfg.locale).format(rounded);
+    return includePrefix ? `${cfg.prefix}${formatted}` : formatted;
+  },
+
+  /**
+   * Format number as currency string (backward-compatible alias for formatCurrency)
    * @param {number} amount 
    * @param {boolean} includePrefix 
    * @returns {string}
    */
   formatRupiah(amount, includePrefix = true) {
-    if (isNaN(amount) || amount === null || amount === undefined) {
-      return includePrefix ? 'Rp 0' : '0';
-    }
-    const rounded = Math.round(amount);
-    const formatted = new Intl.NumberFormat('id-ID').format(rounded);
-    return includePrefix ? `Rp ${formatted}` : formatted;
+    return this.formatCurrency(amount, includePrefix);
   },
 
   /**
@@ -27,9 +65,9 @@ export const Calculator = {
   parseNumber(value) {
     if (typeof value === 'number') return isNaN(value) ? 0 : value;
     if (!value) return 0;
-    // Remove "Rp", dots, spaces
+    // Remove currency prefixes (Rp, $, €, ¥, S$, RM, £, A$), dots, spaces
     const cleanStr = value.toString()
-      .replace(/Rp/gi, '')
+      .replace(/(Rp|USD|\$|EUR|€|JPY|¥|SGD|S\$|MYR|RM|GBP|£|AUD|A\$)/gi, '')
       .replace(/\s+/g, '')
       .replace(/\./g, '')
       .replace(/,/g, '.');
@@ -260,20 +298,29 @@ export const Calculator = {
     const unitCostA = pA / sA; // Rp per unit
     const unitCostB = pB / sB; // Rp per unit
 
+    let baseAmount = 1000;
+    if (unit === 'kg' || unit === 'liter') baseAmount = 1;
+    else if (unit === 'lembar') baseAmount = 100;
+    else if (unit === 'butir' || unit === 'sachet') baseAmount = 10;
+    else if (unit === 'gram' || unit === 'ml') baseAmount = 1000;
+
     let winner = 'EQUAL';
     let savingsPercent = 0;
     let savingsNominalPerHundred = 0;
+    let savingsNominalPerBase = 0;
     let recommendation = 'Kedua kemasan memiliki harga satuan yang sama.';
 
     if (unitCostA < unitCostB) {
       winner = 'A';
       savingsPercent = ((unitCostB - unitCostA) / unitCostB) * 100;
       savingsNominalPerHundred = (unitCostB - unitCostA) * 100;
+      savingsNominalPerBase = (unitCostB - unitCostA) * baseAmount;
       recommendation = `Opsi Kemasan A lebih hemat ${savingsPercent.toFixed(1)}% per ${unit}!`;
     } else if (unitCostB < unitCostA) {
       winner = 'B';
       savingsPercent = ((unitCostA - unitCostB) / unitCostA) * 100;
       savingsNominalPerHundred = (unitCostA - unitCostB) * 100;
+      savingsNominalPerBase = (unitCostA - unitCostB) * baseAmount;
       recommendation = `Opsi Kemasan B lebih hemat ${savingsPercent.toFixed(1)}% per ${unit}!`;
     }
 
@@ -285,9 +332,11 @@ export const Calculator = {
       priceB: pB,
       unitCostB,
       unit,
+      baseAmount,
       winner,
       savingsPercent: Math.round(savingsPercent * 10) / 10,
       savingsNominalPerHundred: Math.round(savingsNominalPerHundred),
+      savingsNominalPerBase: Math.round(savingsNominalPerBase),
       recommendation
     };
   },

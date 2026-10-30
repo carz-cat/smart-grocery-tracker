@@ -1,5 +1,5 @@
 // Tala (Tas Belanja) Service Worker (Network-First for Live Updates & Offline Fallback)
-const CACHE_NAME = 'sgt-cache-v9';
+const CACHE_NAME = 'sgt-cache-v11';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',

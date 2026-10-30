@@ -199,6 +199,7 @@ input, select, textarea {
 .desktop-canvas {
   width: 100vw;
   height: 100vh;
+  height: 100dvh;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -223,7 +224,9 @@ input, select, textarea {
   width: 100%;
   max-width: 430px;
   height: 100%;
+  height: 100dvh;
   max-height: 100vh;
+  max-height: 100dvh;
   background-color: var(--bg-dark);
   position: relative;
   display: flex;
@@ -239,6 +242,7 @@ input, select, textarea {
   .desktop-canvas {
     width: 100vw;
     height: 100vh;
+    height: 100dvh;
     padding: 0;
     margin: 0;
   }
@@ -247,6 +251,7 @@ input, select, textarea {
     max-width: 100%;
     width: 100%;
     height: 100vh;
+    height: 100dvh;
     border-radius: 0;
     border: none;
     box-shadow: none;
@@ -260,11 +265,21 @@ input, select, textarea {
     display: none;
   }
 
-  .app-header, .safety-cap-container, .app-main-content, .bottom-nav-bar {
+  .app-header, .safety-cap-container, .app-main-content {
     max-width: 900px;
     width: 100%;
     margin-left: auto;
     margin-right: auto;
+  }
+
+  .bottom-nav-bar {
+    max-width: 900px;
+    width: 100%;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    border-left: 1px solid var(--border-medium);
+    border-right: 1px solid var(--border-medium);
+    border-radius: 16px 16px 0 0;
   }
 
   .grocery-items-list {
@@ -1581,7 +1596,8 @@ input, select, textarea {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   padding: 6px 4px calc(6px + var(--sab)) 4px;
-  z-index: 40;
+  z-index: 85;
+  -webkit-backdrop-filter: var(--glass-backdrop-heavy);
   transition: background 0.3s;
 }
 
@@ -2479,6 +2495,58 @@ input, select, textarea {
   gap: 12px;
 }
 
+.profile-avatar-upload-wrap {
+  position: relative;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.btn-avatar-upload-badge {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--ocean-blue);
+  border: 2px solid var(--bg-surface);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  transition: all 0.2s ease;
+}
+
+.btn-avatar-upload-badge:hover {
+  background: var(--cyan);
+  transform: scale(1.08);
+}
+
+.profile-login-time-wrap {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 3px;
+  font-size: 10.5px;
+}
+
+.profile-login-time-text {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--cyan-light);
+}
+
+[data-theme="light"] .profile-login-time-text {
+  color: #0284c7 !important;
+}
+
+[data-theme="light"] .btn-avatar-upload-badge {
+  border-color: #ffffff !important;
+}
+
 .profile-avatar-large {
   width: 52px;
   height: 52px;
@@ -2553,29 +2621,214 @@ input, select, textarea {
   margin-top: 2px;
 }
 
-.active-account-meta {
-  margin-top: 10px;
-  padding-top: 8px;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.meta-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.profile-meta-label {
   font-size: 11px;
-}
-
-.meta-label {
-  color: var(--text-muted);
-}
-
-.meta-val {
   font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+.profile-password-section {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.profile-password-display-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.profile-password-field {
+  flex: 1;
+  min-height: 40px;
+  background: var(--bg-input);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-md);
+  padding: 0 12px;
   color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 600;
+  outline: none;
+  letter-spacing: 1.5px;
+}
+
+.btn-toggle-profile-pw {
+  min-height: 40px;
+  min-width: 44px;
+  padding: 0 10px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-md);
+  color: var(--cyan);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.btn-toggle-profile-pw:hover {
+  background: rgba(2, 132, 199, 0.2);
+}
+
+.change-password-box {
+  margin-top: 12px;
+}
+
+.btn-toggle-change-pw {
+  width: 100%;
+  min-height: 38px;
+  background: rgba(2, 132, 199, 0.12);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  border-radius: var(--radius-md);
+  color: var(--cyan-light);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.15s ease;
+}
+
+.btn-toggle-change-pw:hover {
+  background: rgba(2, 132, 199, 0.22);
+}
+
+.change-pw-collapse-panel {
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  margin-top: 8px;
+}
+
+.btn-save-new-pw {
+  min-height: 42px;
+  background: var(--ocean-gradient);
+  border: none;
+  border-radius: var(--radius-md);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(2, 132, 199, 0.35);
+  transition: all 0.15s ease;
+}
+
+.btn-save-new-pw:active {
+  transform: scale(0.98);
+}
+
+.change-pw-feedback {
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+}
+
+.change-pw-feedback.success {
+  background: rgba(34, 197, 94, 0.15);
+  border: 1px solid rgba(34, 197, 94, 0.35);
+  color: #22c55e;
+}
+
+.change-pw-feedback.error {
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  color: #ef4444;
+}
+
+/* Light Theme Overrides for User Profile Modal */
+[data-theme="light"] .profile-dialog-card {
+  background: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+  box-shadow: 0 20px 45px rgba(15, 23, 42, 0.15) !important;
+}
+
+[data-theme="light"] .btn-close-profile-x {
+  background: #f1f5f9 !important;
+  color: #475569 !important;
+}
+
+[data-theme="light"] .btn-close-profile-x:hover {
+  background: #e2e8f0 !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .active-account-card {
+  background: linear-gradient(135deg, #f0f7ff 0%, #e0f2fe 100%) !important;
+  border: 1px solid #bae6fd !important;
+  box-shadow: 0 2px 8px rgba(2, 132, 199, 0.08) !important;
+}
+
+[data-theme="light"] .profile-user-name {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .profile-meta-label {
+  color: #64748b !important;
+}
+
+[data-theme="light"] .profile-password-field {
+  background: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .btn-toggle-profile-pw {
+  background: #f1f5f9 !important;
+  border: 1px solid #cbd5e1 !important;
+  color: #0284c7 !important;
+}
+
+[data-theme="light"] .btn-toggle-profile-pw:hover {
+  background: #e2e8f0 !important;
+}
+
+[data-theme="light"] .btn-toggle-change-pw {
+  background: #e0f2fe !important;
+  border: 1px solid #7dd3fc !important;
+  color: #0369a1 !important;
+}
+
+[data-theme="light"] .change-pw-collapse-panel {
+  background: #f8fafc !important;
+  border: 1px solid #e2e8f0 !important;
+}
+
+[data-theme="light"] .change-pw-collapse-panel .input-text {
+  background: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .btn-profile-switch {
+  background: #f8fafc !important;
+  border: 1px solid #cbd5e1 !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .btn-profile-switch:hover {
+  background: #f1f5f9 !important;
+}
+
+[data-theme="light"] .btn-profile-logout {
+  background: #fef2f2 !important;
+  border: 1px solid #fecaca !important;
+  color: #dc2626 !important;
+}
+
+[data-theme="light"] .btn-profile-close-full {
+  background: #f1f5f9 !important;
+  border: 1px solid #cbd5e1 !important;
+  color: #475569 !important;
 }
 
 /* Saved Accounts List Section */
@@ -2807,15 +3060,14 @@ input, select, textarea {
 }
 
 .header-session-quick-info #headerStoreName {
-  color: var(--text-secondary);
+  color: var(--text-muted);
+  font-size: 11px;
   font-weight: 600;
-  max-width: 140px;
-  cursor: pointer;
-  transition: color 0.15s ease;
-}
-
-.header-session-quick-info #headerStoreName:hover {
-  color: var(--cyan);
+  max-width: 130px;
+  cursor: default;
+  pointer-events: none;
+  user-select: text;
+  letter-spacing: -0.1px;
 }
 
 .header-session-quick-info #headerDateDisplay {
@@ -3756,3 +4008,58 @@ input, select, textarea {
   background: rgba(148, 163, 184, 0.15);
   color: var(--text-muted);
 }
+
+/* ====================================================================
+   CELEBRATORY GOLDEN FALLING STARS ANIMATION (LOGIN CONGRATS)
+   ==================================================================== */
+.login-star-celebration-overlay {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 99999;
+  overflow: hidden;
+  display: none;
+}
+
+.login-star-celebration-overlay.active {
+  display: block;
+}
+
+.celebration-sparkle-star {
+  position: absolute;
+  top: -30px;
+  color: #fbbf24;
+  user-select: none;
+  pointer-events: none;
+  filter: drop-shadow(0 0 8px rgba(251, 191, 36, 0.85)) drop-shadow(0 0 16px rgba(245, 158, 11, 0.5));
+  will-change: transform, opacity;
+  animation-name: starFallTwinkle;
+  animation-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  animation-fill-mode: forwards;
+}
+
+@keyframes starFallTwinkle {
+  0% {
+    transform: translateY(-40px) translateX(0) rotate(0deg) scale(0.5);
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+    transform: translateY(12vh) translateX(var(--drift-x, 15px)) rotate(60deg) scale(1.15);
+  }
+  50% {
+    opacity: 0.95;
+    transform: translateY(50vh) translateX(calc(var(--drift-x, 15px) * -1)) rotate(180deg) scale(1);
+  }
+  85% {
+    opacity: 0.85;
+    transform: translateY(85vh) translateX(var(--drift-x, 15px)) rotate(300deg) scale(0.9);
+  }
+  100% {
+    transform: translateY(106vh) translateX(0) rotate(360deg) scale(0.4);
+    opacity: 0;
+  }
+}
+

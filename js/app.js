@@ -193,7 +193,19 @@ class SmartGroceryApp {
       btnCloseProfileModalX: document.getElementById('btnCloseProfileModalX'),
       btnReturnToLoginScreen: document.getElementById('btnReturnToLoginScreen'),
       profileAvatarLarge: document.getElementById('profileAvatarLarge'),
+      inputProfilePhotoUpload: document.getElementById('inputProfilePhotoUpload'),
       profileUserName: document.getElementById('profileUserName'),
+      profileLoginTime: document.getElementById('profileLoginTime'),
+      selectAppCurrency: document.getElementById('selectAppCurrency'),
+      profilePasswordField: document.getElementById('profilePasswordField'),
+      btnToggleProfilePassword: document.getElementById('btnToggleProfilePassword'),
+      iconProfilePwEye: document.getElementById('iconProfilePwEye'),
+      btnToggleChangePwForm: document.getElementById('btnToggleChangePwForm'),
+      changePwCollapsePanel: document.getElementById('changePwCollapsePanel'),
+      inputNewPassword: document.getElementById('inputNewPassword'),
+      inputConfirmNewPassword: document.getElementById('inputConfirmNewPassword'),
+      btnSaveNewPassword: document.getElementById('btnSaveNewPassword'),
+      changePwFeedback: document.getElementById('changePwFeedback'),
       profileUserEmail: document.getElementById('profileUserEmail'),
       profileBadgePill: document.getElementById('profileBadgePill'),
       profileProviderType: document.getElementById('profileProviderType'),
@@ -202,6 +214,11 @@ class SmartGroceryApp {
       btnProfileSwitchAccount: document.getElementById('btnProfileSwitchAccount'),
       btnLogoutAction: document.getElementById('btnLogoutAction'),
       btnGateReturnSession: document.getElementById('btnGateReturnSession'),
+
+      // Value Comparator Unit & Multi-Currency Labels
+      selectComparatorUnit: document.getElementById('selectComparatorUnit'),
+      labelItemUnitPrice: document.getElementById('labelItemUnitPrice'),
+      loginStarCelebrationOverlay: document.getElementById('loginStarCelebrationOverlay'),
 
       // Toast
       toastContainer: document.getElementById('toastContainer')
@@ -216,6 +233,7 @@ class SmartGroceryApp {
     this.renderQuickStaplesChips();
     this.renderCategoryFilterChips();
     this.bindUnitButtons();
+    this.updateCurrencyLabels();
     this.bindEvents();
 
     // Subscribe to auth state updates (Gatekeeper logic)
@@ -257,20 +275,39 @@ class SmartGroceryApp {
     if (user) {
       const displayName = user.displayName || 'Pengguna';
       this.dom.headerAuthLabel.textContent = displayName.split(' ')[0];
-      this.dom.headerUserAvatar.innerHTML = `<span style="font-weight: 800; font-size: 11px;">${displayName[0].toUpperCase()}</span>`;
-      this.dom.profileAvatarLarge.textContent = displayName[0].toUpperCase();
+      if (user.photoURL) {
+        this.dom.headerUserAvatar.innerHTML = `<img src="${user.photoURL}" alt="${displayName}" class="avatar-photo-round">`;
+        this.dom.profileAvatarLarge.innerHTML = `<img src="${user.photoURL}" alt="${displayName}" class="avatar-photo-round">`;
+      } else {
+        this.dom.headerUserAvatar.innerHTML = `<span style="font-weight: 800; font-size: 11px;">${displayName[0].toUpperCase()}</span>`;
+        this.dom.profileAvatarLarge.textContent = displayName[0].toUpperCase();
+      }
       this.dom.profileUserName.textContent = displayName;
-      this.dom.profileUserEmail.textContent = user.email || 'Akun Terdaftar';
-      this.dom.profileBadgePill.textContent = user.provider === 'google' ? 'Akun Google Terhubung' : 'Akun Email Terverifikasi';
-      this.dom.profileBadgePill.style.display = 'inline-block';
+      if (this.dom.profileLoginTime) {
+        this.dom.profileLoginTime.textContent = authMgr.getLoginTime(user.uid);
+      }
+      if (this.dom.profileUserEmail) {
+        this.dom.profileUserEmail.textContent = user.email || 'Akun Terdaftar';
+      }
+      if (this.dom.profileBadgePill) {
+        this.dom.profileBadgePill.textContent = user.provider === 'google' ? 'Akun Google Terhubung' : 'Akun Email Terverifikasi';
+        this.dom.profileBadgePill.style.display = 'inline-block';
+      }
     } else if (isGuest) {
       this.dom.headerAuthLabel.textContent = 'Tamu';
       this.dom.headerUserAvatar.innerHTML = `<span>🐾</span>`;
       this.dom.profileAvatarLarge.textContent = '🐾';
       this.dom.profileUserName.textContent = 'Mode Tamu (Offline)';
-      this.dom.profileUserEmail.textContent = 'Penyimpanan lokal di browser';
-      this.dom.profileBadgePill.textContent = 'Mode Tamu';
-      this.dom.profileBadgePill.style.display = 'inline-block';
+      if (this.dom.profileLoginTime) {
+        this.dom.profileLoginTime.textContent = authMgr.getLoginTime('guest');
+      }
+      if (this.dom.profileUserEmail) {
+        this.dom.profileUserEmail.textContent = 'Penyimpanan lokal di browser';
+      }
+      if (this.dom.profileBadgePill) {
+        this.dom.profileBadgePill.textContent = 'Mode Tamu';
+        this.dom.profileBadgePill.style.display = 'inline-block';
+      }
     } else {
       this.dom.headerAuthLabel.textContent = 'Masuk';
       this.dom.headerUserAvatar.innerHTML = `
@@ -345,10 +382,13 @@ class SmartGroceryApp {
     if (user) {
       const name = user.displayName || 'Pengguna';
       if (this.dom.profileUserName) this.dom.profileUserName.textContent = name;
+      if (this.dom.profileLoginTime) {
+        this.dom.profileLoginTime.textContent = authMgr.getLoginTime(user.uid);
+      }
       if (this.dom.profileUserEmail) this.dom.profileUserEmail.textContent = user.email || 'Email tidak tercantum';
       if (this.dom.profileAvatarLarge) {
         if (user.photoURL) {
-          this.dom.profileAvatarLarge.innerHTML = `<img src="${user.photoURL}" alt="${name}">`;
+          this.dom.profileAvatarLarge.innerHTML = `<img src="${user.photoURL}" alt="${name}" class="avatar-photo-round">`;
         } else {
           this.dom.profileAvatarLarge.textContent = name[0].toUpperCase();
         }
@@ -364,12 +404,43 @@ class SmartGroceryApp {
       }
     } else if (isGuest) {
       if (this.dom.profileUserName) this.dom.profileUserName.textContent = 'Mode Tamu (Offline)';
+      if (this.dom.profileLoginTime) {
+        this.dom.profileLoginTime.textContent = authMgr.getLoginTime('guest');
+      }
       if (this.dom.profileUserEmail) this.dom.profileUserEmail.textContent = 'Penyimpanan lokal di browser';
       if (this.dom.profileAvatarLarge) this.dom.profileAvatarLarge.textContent = '🐾';
       if (this.dom.profileBadgePill) this.dom.profileBadgePill.textContent = 'Mode Tamu';
       if (this.dom.profileProviderType) this.dom.profileProviderType.textContent = 'Lokal Browser';
       if (this.dom.profileUserUid) this.dom.profileUserUid.textContent = 'guest-session';
     }
+
+    // Password & Mask Reset
+    const storedPw = authMgr.getUserPasswordLocally(user?.uid);
+    if (this.dom.profilePasswordField) {
+      this.dom.profilePasswordField.value = storedPw || '••••••••';
+      this.dom.profilePasswordField.type = 'password';
+    }
+    if (this.dom.iconProfilePwEye) {
+      this.dom.iconProfilePwEye.innerHTML = `
+        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+        <circle cx="12" cy="12" r="3"/>
+      `;
+    }
+
+    // Currency Setting
+    if (this.dom.selectAppCurrency) {
+      this.dom.selectAppCurrency.value = Calculator.currentCurrency;
+    }
+
+    // Change Password Collapse Panel Reset
+    if (this.dom.changePwCollapsePanel) {
+      this.dom.changePwCollapsePanel.style.display = 'none';
+    }
+    if (this.dom.changePwFeedback) {
+      this.dom.changePwFeedback.style.display = 'none';
+    }
+    if (this.dom.inputNewPassword) this.dom.inputNewPassword.value = '';
+    if (this.dom.inputConfirmNewPassword) this.dom.inputConfirmNewPassword.value = '';
 
     // Render list of saved/known accounts
     if (this.dom.savedAccountsList) {
@@ -415,7 +486,7 @@ class SmartGroceryApp {
             const targetUid = e.currentTarget.getAttribute('data-uid');
             const res = authMgr.useSavedAccount(targetUid);
             if (res.success) {
-              soundMgr.playLoginWelcome();
+              this.triggerLoginCelebration();
               this.showToast(`Beralih ke akun: ${res.user.displayName}`, 'success');
               this.renderProfileModalDetails();
             }
@@ -423,6 +494,57 @@ class SmartGroceryApp {
         });
       }
     }
+  }
+
+  updateCurrencyLabels() {
+    const cfg = Calculator.getCurrencyConfig();
+    if (this.dom.labelItemUnitPrice) {
+      this.dom.labelItemUnitPrice.textContent = `Harga Satuan (${cfg.symbol}) :`;
+    }
+    const unitPriceInput = this.dom.inputItemUnitPrice;
+    if (unitPriceInput && unitPriceInput.placeholder) {
+      unitPriceInput.placeholder = `Contoh: ${Calculator.formatCurrency(74000, false)}`;
+    }
+  }
+
+  triggerLoginStarCelebration() {
+    const overlay = this.dom.loginStarCelebrationOverlay;
+    if (!overlay) return;
+    overlay.innerHTML = '';
+    overlay.classList.add('active');
+
+    const starsCount = 42;
+    const starGlyphs = ['★', '✦', '✧', '⭐', '✨'];
+    for (let i = 0; i < starsCount; i++) {
+      const star = document.createElement('div');
+      star.className = 'celebration-sparkle-star';
+      star.textContent = starGlyphs[Math.floor(Math.random() * starGlyphs.length)];
+
+      const left = Math.random() * 96 + 2;
+      const duration = 1.3 + Math.random() * 0.9;
+      const delay = Math.random() * 0.65;
+      const size = 14 + Math.random() * 16;
+      const drift = (Math.random() * 40 - 20) + 'px';
+
+      star.style.left = `${left}%`;
+      star.style.fontSize = `${size}px`;
+      star.style.animationDuration = `${duration}s`;
+      star.style.animationDelay = `${delay}s`;
+      star.style.setProperty('--drift-x', drift);
+
+      overlay.appendChild(star);
+    }
+
+    if (this._starCelebrationTimeout) clearTimeout(this._starCelebrationTimeout);
+    this._starCelebrationTimeout = setTimeout(() => {
+      overlay.classList.remove('active');
+      overlay.innerHTML = '';
+    }, 2400);
+  }
+
+  triggerLoginCelebration() {
+    soundMgr.playLightApplause();
+    this.triggerLoginStarCelebration();
   }
 
   // ==========================================================================
@@ -1564,12 +1686,9 @@ class SmartGroceryApp {
       });
     }
 
-    // Header Store & Date Modals (Klik icon atau teks header langsung)
+    // Header Store Picker (Hanya bisa dibuka melalui tombol Pilih Lokasi Supermarket / Toko)
     if (this.dom.btnOpenStorePicker) {
       this.dom.btnOpenStorePicker.addEventListener('click', () => this.openStorePickerModal());
-    }
-    if (this.dom.headerStoreName) {
-      this.dom.headerStoreName.addEventListener('click', () => this.openStorePickerModal());
     }
     this.dom.btnCloseStorePicker.addEventListener('click', () => this.closeStorePickerModal());
     this.dom.sheetStorePickerBackdrop.addEventListener('click', (e) => {
@@ -1628,7 +1747,7 @@ class SmartGroceryApp {
         const res = await authMgr.loginWithGoogle();
         this.dom.btnGateGoogleLogin.disabled = false;
         if (res.success) {
-          soundMgr.playLoginWelcome();
+          this.triggerLoginCelebration();
           this.showToast(`Selamat datang, ${res.user.displayName}!`, 'success');
         } else if (res.needsConsoleActivation) {
           this.showGateAlert(`
@@ -1664,7 +1783,7 @@ class SmartGroceryApp {
               authMgr.isGuest = false;
               authMgr.saveLocalUser(demoUser);
               authMgr.notify();
-              soundMgr.playLoginWelcome();
+              this.triggerLoginCelebration();
               this.showToast('Berhasil masuk dengan Akun Google!', 'success');
             });
           }
@@ -1684,7 +1803,7 @@ class SmartGroceryApp {
         const pass = this.dom.gateLoginPassword.value;
         const res = await authMgr.loginWithEmail(email, pass);
         if (res.success) {
-          soundMgr.playLoginWelcome();
+          this.triggerLoginCelebration();
           this.showToast(`Berhasil masuk: ${res.user.displayName}`, 'success');
         } else {
           this.showGateAlert(res.error || 'Login gagal.');
@@ -1703,7 +1822,7 @@ class SmartGroceryApp {
         const pass = this.dom.gateRegPassword.value;
         const res = await authMgr.registerWithEmail(email, pass, name);
         if (res.success) {
-          soundMgr.playLoginWelcome();
+          this.triggerLoginCelebration();
           this.showToast(`Akun berhasil dibuat! Selamat datang, ${name}`, 'success');
         } else {
           this.showGateAlert(res.error || 'Pendaftaran gagal.');
@@ -1772,7 +1891,7 @@ class SmartGroceryApp {
         this.showToast('Membuka pemilih akun Google...', 'info');
         const res = await authMgr.loginWithGoogle({ prompt: 'select_account' });
         if (res.success) {
-          soundMgr.playLoginWelcome();
+          this.triggerLoginCelebration();
           this.showToast(`Berhasil masuk sebagai ${res.user.displayName}!`, 'success');
         } else if (res.needsConsoleActivation) {
           this.showGateAlert(`
@@ -1792,6 +1911,144 @@ class SmartGroceryApp {
           this.showAuthGatekeeper();
         }
       });
+    }
+
+    // Ganti Foto Profil (Upload / Unggah Foto)
+    if (this.dom.inputProfilePhotoUpload) {
+      this.dom.inputProfilePhotoUpload.addEventListener('change', async (e) => {
+        const file = e.target.files && e.target.files[0];
+        if (!file) return;
+
+        if (!file.type.startsWith('image/')) {
+          this.showToast('Silakan pilih file gambar (JPG/PNG).', 'error');
+          return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = async (ev) => {
+          const img = new Image();
+          img.onload = async () => {
+            const canvas = document.createElement('canvas');
+            canvas.width = 160;
+            canvas.height = 160;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, 160, 160);
+            const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.85);
+
+            const res = await authMgr.updateProfilePhoto(compressedDataUrl);
+            if (res.success) {
+              soundMgr.playPop();
+              this.showToast('Foto profil berhasil diperbarui!', 'success');
+              if (this.dom.headerUserAvatar) {
+                this.dom.headerUserAvatar.innerHTML = `<img src="${compressedDataUrl}" alt="Avatar" class="avatar-photo-round">`;
+              }
+              if (this.dom.profileAvatarLarge) {
+                this.dom.profileAvatarLarge.innerHTML = `<img src="${compressedDataUrl}" alt="Avatar" class="avatar-photo-round">`;
+              }
+            } else {
+              this.showToast(res.error || 'Gagal memperbarui foto profil.', 'error');
+            }
+          };
+          img.src = ev.target.result;
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    // Toggle Tampilkan / Sembunyikan Kata Sandi
+    if (this.dom.btnToggleProfilePassword && this.dom.profilePasswordField) {
+      this.dom.btnToggleProfilePassword.addEventListener('click', () => {
+        soundMgr.playPop();
+        const isPassword = this.dom.profilePasswordField.type === 'password';
+        this.dom.profilePasswordField.type = isPassword ? 'text' : 'password';
+        if (this.dom.iconProfilePwEye) {
+          this.dom.iconProfilePwEye.innerHTML = isPassword
+            ? `<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+               <line x1="1" y1="1" x2="23" y2="23"/>`
+            : `<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+               <circle cx="12" cy="12" r="3"/>`;
+        }
+      });
+    }
+
+    // Toggle Form Ganti Kata Sandi
+    if (this.dom.btnToggleChangePwForm && this.dom.changePwCollapsePanel) {
+      this.dom.btnToggleChangePwForm.addEventListener('click', () => {
+        soundMgr.playPop();
+        const isOpen = this.dom.changePwCollapsePanel.style.display !== 'none';
+        this.dom.changePwCollapsePanel.style.display = isOpen ? 'none' : 'block';
+        if (this.dom.changePwFeedback) this.dom.changePwFeedback.style.display = 'none';
+      });
+    }
+
+    // Simpan Kata Sandi Baru
+    if (this.dom.btnSaveNewPassword) {
+      this.dom.btnSaveNewPassword.addEventListener('click', async () => {
+        const newPw = this.dom.inputNewPassword?.value || '';
+        const confirmPw = this.dom.inputConfirmNewPassword?.value || '';
+
+        if (!newPw || newPw.length < 6) {
+          if (this.dom.changePwFeedback) {
+            this.dom.changePwFeedback.className = 'change-pw-feedback error';
+            this.dom.changePwFeedback.textContent = 'Kata sandi baru minimal 6 karakter.';
+            this.dom.changePwFeedback.style.display = 'block';
+          }
+          return;
+        }
+
+        if (newPw !== confirmPw) {
+          if (this.dom.changePwFeedback) {
+            this.dom.changePwFeedback.className = 'change-pw-feedback error';
+            this.dom.changePwFeedback.textContent = 'Konfirmasi kata sandi tidak cocok.';
+            this.dom.changePwFeedback.style.display = 'block';
+          }
+          return;
+        }
+
+        const res = await authMgr.changePassword(newPw);
+        if (res.success) {
+          soundMgr.playPop();
+          if (this.dom.changePwFeedback) {
+            this.dom.changePwFeedback.className = 'change-pw-feedback success';
+            this.dom.changePwFeedback.textContent = 'Kata sandi berhasil diubah!';
+            this.dom.changePwFeedback.style.display = 'block';
+          }
+          if (this.dom.profilePasswordField) {
+            this.dom.profilePasswordField.value = newPw;
+          }
+          if (this.dom.inputNewPassword) this.dom.inputNewPassword.value = '';
+          if (this.dom.inputConfirmNewPassword) this.dom.inputConfirmNewPassword.value = '';
+          this.showToast('Kata sandi berhasil diperbarui!', 'success');
+          setTimeout(() => {
+            if (this.dom.changePwCollapsePanel) this.dom.changePwCollapsePanel.style.display = 'none';
+          }, 1600);
+        } else {
+          if (this.dom.changePwFeedback) {
+            this.dom.changePwFeedback.className = 'change-pw-feedback error';
+            this.dom.changePwFeedback.textContent = res.error || 'Gagal mengubah kata sandi.';
+            this.dom.changePwFeedback.style.display = 'block';
+          }
+        }
+      });
+    }
+
+    // Pemilihan Mata Uang Belanja Multi-Negara
+    if (this.dom.selectAppCurrency) {
+      this.dom.selectAppCurrency.value = Calculator.currentCurrency;
+      this.dom.selectAppCurrency.addEventListener('change', (e) => {
+        soundMgr.playPop();
+        const code = e.target.value;
+        Calculator.setCurrency(code);
+        this.updateCurrencyLabels();
+        this.store.notify();
+        const cfg = Calculator.getCurrencyConfig();
+        this.showToast(`Mata uang belanja diubah ke: ${cfg.name}`, 'info');
+      });
+    }
+
+    // Pembanding Kemasan Unit Selector
+    if (this.dom.selectComparatorUnit) {
+      this.dom.selectComparatorUnit.addEventListener('change', () => this.updateValueComparator());
     }
 
     // GPS Detect Button in Store Picker

@@ -6,6 +6,102 @@
 import { Calculator } from './calculator.js';
 import { MASTER_CATALOG } from './store.js';
 
+const STAPLE_BENCHMARK_PRICES = {
+  'beras': [
+    { store: 'Pasar Tradisional Puri Indah', price: 71000, date: '25 Okt 2026', unit: 'karung/5kg' },
+    { store: 'Lotte Mart Grocery - Puri Indah', price: 74000, date: '26 Okt 2026', unit: 'karung/5kg' },
+    { store: 'Super Indo - Intercon Kebon Jeruk', price: 74500, date: '20 Okt 2026', unit: 'karung/5kg' },
+    { store: 'Alfamidi Super - Palmerah', price: 76000, date: '18 Okt 2026', unit: 'karung/5kg' },
+    { store: 'Hypermart - Puri Indah', price: 77500, date: '15 Okt 2026', unit: 'karung/5kg' }
+  ],
+  'minyak': [
+    { store: 'Super Indo - Intercon Kebon Jeruk', price: 38500, date: '20 Okt 2026', unit: 'pouch 2L' },
+    { store: 'Pasar Tradisional Puri Indah', price: 41000, date: '25 Okt 2026', unit: 'curah 2L' },
+    { store: 'Lotte Mart Grocery - Puri Indah', price: 43000, date: '26 Okt 2026', unit: 'pouch 2L' },
+    { store: 'Indomaret Fresh - Kemanggisan', price: 44000, date: '14 Okt 2026', unit: 'pouch 2L' },
+    { store: 'Alfamidi Super - Palmerah', price: 44500, date: '18 Okt 2026', unit: 'pouch 2L' }
+  ],
+  'telur': [
+    { store: 'Pasar Tradisional Puri Indah', price: 26000, date: '25 Okt 2026', unit: 'kg' },
+    { store: 'Lotte Mart Grocery - Puri Indah', price: 28000, date: '26 Okt 2026', unit: 'kg' },
+    { store: 'Super Indo - Intercon Kebon Jeruk', price: 29000, date: '20 Okt 2026', unit: 'kg' },
+    { store: 'Indomaret Fresh - Kemanggisan', price: 30000, date: '14 Okt 2026', unit: 'pack' },
+    { store: 'Hypermart - Puri Indah', price: 31000, date: '16 Okt 2026', unit: 'pack' }
+  ],
+  'gula': [
+    { store: 'Pasar Tradisional Puri Indah', price: 16500, date: '25 Okt 2026', unit: 'kg' },
+    { store: 'Super Indo - Intercon Kebon Jeruk', price: 17500, date: '20 Okt 2026', unit: 'kg' },
+    { store: 'Lotte Mart Grocery - Puri Indah', price: 18000, date: '26 Okt 2026', unit: 'kg' },
+    { store: 'Indomaret Fresh - Kemanggisan', price: 18500, date: '14 Okt 2026', unit: 'kg' }
+  ],
+  'tepung': [
+    { store: 'Pasar Tradisional Puri Indah', price: 11000, date: '25 Okt 2026', unit: 'kg' },
+    { store: 'Lotte Mart Grocery - Puri Indah', price: 12500, date: '26 Okt 2026', unit: 'kg' },
+    { store: 'Super Indo - Intercon Kebon Jeruk', price: 12900, date: '20 Okt 2026', unit: 'kg' },
+    { store: 'Alfamidi Super - Palmerah', price: 13500, date: '18 Okt 2026', unit: 'kg' }
+  ],
+  'garam': [
+    { store: 'Pasar Tradisional Puri Indah', price: 4000, date: '25 Okt 2026', unit: 'pack 500g' },
+    { store: 'Lotte Mart Grocery - Puri Indah', price: 5000, date: '26 Okt 2026', unit: 'pack 500g' },
+    { store: 'Super Indo - Intercon Kebon Jeruk', price: 5500, date: '20 Okt 2026', unit: 'pack 500g' },
+    { store: 'Indomaret Fresh - Kemanggisan', price: 6000, date: '14 Okt 2026', unit: 'pack 500g' }
+  ],
+  'sabun': [
+    { store: 'Super Indo - Intercon Kebon Jeruk', price: 14500, date: '20 Okt 2026', unit: 'refill 800ml' },
+    { store: 'Lotte Mart Grocery - Puri Indah', price: 15500, date: '26 Okt 2026', unit: 'refill 800ml' },
+    { store: 'Indomaret Fresh - Kemanggisan', price: 16500, date: '14 Okt 2026', unit: 'refill 800ml' },
+    { store: 'Hypermart - Puri Indah', price: 17000, date: '16 Okt 2026', unit: 'refill 800ml' }
+  ],
+  'deterjen': [
+    { store: 'Lotte Mart Grocery - Puri Indah', price: 21500, date: '26 Okt 2026', unit: 'pack 800g' },
+    { store: 'Super Indo - Intercon Kebon Jeruk', price: 22000, date: '20 Okt 2026', unit: 'pack 800g' },
+    { store: 'Alfamidi Super - Palmerah', price: 23500, date: '18 Okt 2026', unit: 'pack 800g' },
+    { store: 'Indomaret Fresh - Kemanggisan', price: 24000, date: '14 Okt 2026', unit: 'pack 800g' }
+  ],
+  'susu': [
+    { store: 'Super Indo - Intercon Kebon Jeruk', price: 18900, date: '20 Okt 2026', unit: '1L' },
+    { store: 'Lotte Mart Grocery - Puri Indah', price: 19500, date: '26 Okt 2026', unit: '1L' },
+    { store: 'Indomaret Fresh - Kemanggisan', price: 20500, date: '14 Okt 2026', unit: '1L' },
+    { store: 'Grand Lucky Superstore - Meruya', price: 22000, date: '12 Okt 2026', unit: '1L' }
+  ],
+  'mie': [
+    { store: 'Pasar Tradisional Puri Indah', price: 118000, date: '25 Okt 2026', unit: 'dus (40 pcs)' },
+    { store: 'Lotte Mart Grocery - Puri Indah', price: 122000, date: '26 Okt 2026', unit: 'dus (40 pcs)' },
+    { store: 'Super Indo - Intercon Kebon Jeruk', price: 124000, date: '20 Okt 2026', unit: 'dus (40 pcs)' },
+    { store: 'Indomaret Fresh - Kemanggisan', price: 128000, date: '14 Okt 2026', unit: 'dus (40 pcs)' }
+  ],
+  'kopi': [
+    { store: 'Pasar Tradisional Puri Indah', price: 12000, date: '25 Okt 2026', unit: 'pack 150g' },
+    { store: 'Lotte Mart Grocery - Puri Indah', price: 13500, date: '26 Okt 2026', unit: 'pack 150g' },
+    { store: 'Indomaret Fresh - Kemanggisan', price: 14000, date: '14 Okt 2026', unit: 'pack 150g' },
+    { store: 'Alfamidi Super - Palmerah', price: 14500, date: '18 Okt 2026', unit: 'pack 150g' }
+  ],
+  'kecap': [
+    { store: 'Super Indo - Intercon Kebon Jeruk', price: 17500, date: '20 Okt 2026', unit: 'pouch 550ml' },
+    { store: 'Lotte Mart Grocery - Puri Indah', price: 18500, date: '26 Okt 2026', unit: 'pouch 550ml' },
+    { store: 'Indomaret Fresh - Kemanggisan', price: 19500, date: '14 Okt 2026', unit: 'pouch 550ml' },
+    { store: 'Hypermart - Puri Indah', price: 20000, date: '16 Okt 2026', unit: 'pouch 550ml' }
+  ],
+  'ayam': [
+    { store: 'Pasar Tradisional Puri Indah', price: 34000, date: '25 Okt 2026', unit: 'ekor/kg' },
+    { store: 'Super Indo - Intercon Kebon Jeruk', price: 38900, date: '20 Okt 2026', unit: 'ekor/kg' },
+    { store: 'Lotte Mart Grocery - Puri Indah', price: 39500, date: '26 Okt 2026', unit: 'ekor/kg' },
+    { store: 'Hypermart - Puri Indah', price: 42000, date: '16 Okt 2026', unit: 'ekor/kg' }
+  ],
+  'bawang': [
+    { store: 'Pasar Tradisional Puri Indah', price: 18000, date: '25 Okt 2026', unit: '500g' },
+    { store: 'Lotte Mart Grocery - Puri Indah', price: 22000, date: '26 Okt 2026', unit: '500g' },
+    { store: 'Super Indo - Intercon Kebon Jeruk', price: 23500, date: '20 Okt 2026', unit: '500g' },
+    { store: 'Indomaret Fresh - Kemanggisan', price: 25000, date: '14 Okt 2026', unit: '500g' }
+  ],
+  'wajan': [
+    { store: 'Pasar Tradisional Puri Indah', price: 65000, date: '25 Okt 2026', unit: 'pcs' },
+    { store: 'Super Indo - Intercon Kebon Jeruk', price: 79900, date: '20 Okt 2026', unit: 'pcs' },
+    { store: 'Lotte Mart Grocery - Puri Indah', price: 100000, date: '26 Okt 2026', unit: 'pcs' },
+    { store: 'Hypermart - Puri Indah', price: 110000, date: '16 Okt 2026', unit: 'pcs' }
+  ]
+};
+
 export const Comparator = {
   /**
    * Normalize product name for reliable matching
@@ -244,7 +340,7 @@ export const Comparator = {
 
     // 1. Check current active session
     if (currentSession && Array.isArray(currentSession.items)) {
-      const activeItem = currentSession.items.find(it => this.getSimilarity(it.name, norm) >= 0.75);
+      const activeItem = currentSession.items.find(it => this.getSimilarity(it.name, norm) >= 0.70);
       if (activeItem) {
         storeMap.set(currentSession.store, {
           store: currentSession.store,
@@ -261,7 +357,7 @@ export const Comparator = {
     // 2. Check history sessions
     for (const session of historySessions) {
       for (const item of session.items) {
-        if (this.getSimilarity(item.name, norm) >= 0.75) {
+        if (this.getSimilarity(item.name, norm) >= 0.70) {
           // If already encountered this store, keep the latest one
           if (!storeMap.has(session.store) || new Date(session.date) > new Date(storeMap.get(session.store).date)) {
             storeMap.set(session.store, {
@@ -278,9 +374,29 @@ export const Comparator = {
       }
     }
 
-    // 3. Fallback benchmark catalog if fewer than 2 stores
+    // 3. Match against rich STAPLE_BENCHMARK_PRICES for realistic multi-store comparison
+    for (const [key, storeEntries] of Object.entries(STAPLE_BENCHMARK_PRICES)) {
+      if (norm.includes(key)) {
+        storeEntries.forEach(entry => {
+          if (!storeMap.has(entry.store)) {
+            storeMap.set(entry.store, {
+              store: entry.store,
+              date: entry.date,
+              unitPrice: entry.price,
+              unit: entry.unit,
+              discount: '',
+              productName: productName,
+              isCurrentStore: currentSession && currentSession.store === entry.store
+            });
+          }
+        });
+        break;
+      }
+    }
+
+    // 4. Fallback to MASTER_CATALOG if needed
     if (storeMap.size < 2) {
-      const catalogMatches = MASTER_CATALOG.filter(cat => this.getSimilarity(cat.name, norm) >= 0.75);
+      const catalogMatches = MASTER_CATALOG.filter(cat => this.getSimilarity(cat.name, norm) >= 0.70);
       catalogMatches.forEach(cat => {
         const storeName = cat.store || 'Pasar Tradisional / Grosir';
         if (!storeMap.has(storeName)) {

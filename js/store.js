@@ -210,25 +210,31 @@ export class GroceryStoreManager {
     this.firestoreOnSnapshot = null;
     this.firestoreUnsubscribe = null;
     this.lastLocalWriteTimestamp = 0;
+    this._firestoreInitPromise = null;
     this.initFirestoreRealtimeSync();
   }
 
   async initFirestoreRealtimeSync() {
     if (typeof window === 'undefined') return;
+    if (this._firestoreInitPromise) return this._firestoreInitPromise;
 
-    try {
-      const fb = await import('./firebase-config.js');
-      if (fb && fb.db && fb.onSnapshot && fb.doc) {
-        this.firestoreDb = fb.db;
-        this.firestoreDoc = fb.doc;
-        this.firestoreSetDoc = fb.setDoc;
-        this.firestoreOnSnapshot = fb.onSnapshot;
+    this._firestoreInitPromise = (async () => {
+      try {
+        const fb = await import('./firebase-config.js');
+        if (fb && fb.db && fb.onSnapshot && fb.doc) {
+          this.firestoreDb = fb.db;
+          this.firestoreDoc = fb.doc;
+          this.firestoreSetDoc = fb.setDoc;
+          this.firestoreOnSnapshot = fb.onSnapshot;
 
-        this.listenToFirestoreSession();
+          this.listenToFirestoreSession();
+        }
+      } catch (err) {
+        console.warn('Firestore realtime sync dynamic import notice:', err.message);
       }
-    } catch (err) {
-      console.warn('Firestore realtime sync dynamic import notice:', err.message);
-    }
+    })();
+
+    return this._firestoreInitPromise;
   }
 
   getFirestoreDocId() {
@@ -251,29 +257,45 @@ export class GroceryStoreManager {
       const docRef = this.firestoreDoc(this.firestoreDb, 'grocery_sessions', docId);
 
       this.firestoreUnsubscribe = this.firestoreOnSnapshot(docRef, (docSnap) => {
+        // If snapshot is from a pending local write, ignore to avoid feedback loops
+        if (docSnap.metadata && docSnap.metadata.hasPendingWrites) {
+          return;
+        }
+
         if (docSnap.exists()) {
           const cloudData = docSnap.data();
-          if (cloudData && cloudData.updatedAt && cloudData.updatedAt !== this.lastLocalWriteTimestamp) {
-            // Received cloud update from another device (HP, tablet, or PC)!
-            this.activeSession.store = cloudData.store || this.activeSession.store;
-            this.activeSession.date = cloudData.date || this.activeSession.date;
-            if (cloudData.budgetCap !== undefined) {
-              this.activeSession.budgetCap = cloudData.budgetCap;
-            }
-            if (Array.isArray(cloudData.items)) {
-              this.activeSession.items = cloudData.items;
-            }
+          if (cloudData) {
+            const cloudItemsStr = JSON.stringify(cloudData.items || []);
+            const localItemsStr = JSON.stringify(this.activeSession.items || []);
+            const itemsChanged = cloudItemsStr !== localItemsStr;
+            const budgetChanged = cloudData.budgetCap !== undefined && cloudData.budgetCap !== this.activeSession.budgetCap;
+            const storeChanged = Boolean(cloudData.store && cloudData.store !== this.activeSession.store);
+            const dateChanged = Boolean(cloudData.date && cloudData.date !== this.activeSession.date);
 
-            // Persist to local storage
-            try {
-              if (typeof localStorage !== 'undefined') {
-                localStorage.setItem(this.getStorageKey(STORAGE_KEYS.ACTIVE_SESSION), JSON.stringify(this.activeSession));
+            if (itemsChanged || budgetChanged || storeChanged || dateChanged) {
+              if (cloudData.store) this.activeSession.store = cloudData.store;
+              if (cloudData.date) this.activeSession.date = cloudData.date;
+              if (cloudData.budgetCap !== undefined) {
+                this.activeSession.budgetCap = cloudData.budgetCap;
               }
-            } catch (_) {}
+              if (Array.isArray(cloudData.items)) {
+                this.activeSession.items = cloudData.items;
+              }
 
-            // Re-render UI on this device instantly without reloading!
-            this.notify(false);
+              // Persist to local storage
+              try {
+                if (typeof localStorage !== 'undefined') {
+                  localStorage.setItem(this.getStorageKey(STORAGE_KEYS.ACTIVE_SESSION), JSON.stringify(this.activeSession));
+                }
+              } catch (_) {}
+
+              // Re-render UI on this device instantly without reloading!
+              this.notify(false);
+            }
           }
+        } else {
+          // If cloud doc does not exist yet, sync current local session to cloud
+          this.syncToFirestore();
         }
       }, (err) => {
         console.warn('Firestore onSnapshot listener notice:', err.message);
@@ -284,6 +306,9 @@ export class GroceryStoreManager {
   }
 
   async syncToFirestore() {
+    if (!this.firestoreDb) {
+      await this.initFirestoreRealtimeSync();
+    }
     if (!this.firestoreDb || !this.firestoreSetDoc || !this.firestoreDoc) return;
 
     try {
@@ -311,7 +336,13 @@ export class GroceryStoreManager {
     this.history = this.loadHistory();
     this.stores = this.loadStores();
     this.checklist = this.loadChecklist();
-    this.listenToFirestoreSession();
+    if (this._firestoreInitPromise) {
+      this._firestoreInitPromise.then(() => {
+        this.listenToFirestoreSession();
+      });
+    } else {
+      this.initFirestoreRealtimeSync();
+    }
     this.notify();
   }
 

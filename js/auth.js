@@ -11,7 +11,8 @@ import {
   createUserWithEmailAndPassword, 
   signOut, 
   onAuthStateChanged,
-  updateProfile 
+  updateProfile,
+  updatePassword 
 } from './firebase-config.js';
 
 class AuthManager {
@@ -36,11 +37,12 @@ class AuthManager {
       try {
         onAuthStateChanged(auth, (firebaseUser) => {
           if (firebaseUser) {
+            const customPhoto = (typeof localStorage !== 'undefined' && localStorage.getItem(`sgt_user_photo_${firebaseUser.uid}`)) || null;
             this.currentUser = {
               uid: firebaseUser.uid,
               displayName: firebaseUser.displayName || firebaseUser.email?.split('@')[0] || 'Pengguna',
               email: firebaseUser.email,
-              photoURL: firebaseUser.photoURL || null,
+              photoURL: customPhoto || firebaseUser.photoURL || null,
               provider: firebaseUser.providerData[0]?.providerId || 'password'
             };
             this.isGuest = false;
@@ -99,6 +101,133 @@ class AuthManager {
       });
       localStorage.setItem('sgt_known_accounts', JSON.stringify(list.slice(0, 5)));
     } catch (_) {}
+  }
+
+  recordLoginTime(uid = null) {
+    const targetUid = uid || this.currentUser?.uid || 'guest';
+    const now = new Date();
+    const timeStr = now.toLocaleDateString('id-ID', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric'
+    }) + ', ' + now.toLocaleTimeString('id-ID', {
+      hour: '2-digit',
+      minute: '2-digit'
+    }) + ' WIB';
+
+    if (typeof localStorage !== 'undefined') {
+      try {
+        localStorage.setItem(`sgt_login_time_${targetUid}`, timeStr);
+      } catch (_) {}
+    }
+    return timeStr;
+  }
+
+  getLoginTime(uid = null) {
+    const targetUid = uid || this.currentUser?.uid || 'guest';
+    if (typeof localStorage !== 'undefined') {
+      try {
+        const stored = localStorage.getItem(`sgt_login_time_${targetUid}`);
+        if (stored) return stored;
+      } catch (_) {}
+    }
+    return this.recordLoginTime(targetUid);
+  }
+
+  async updateProfilePhoto(photoDataUrl) {
+    if (!photoDataUrl) return { success: false, error: 'Foto tidak valid.' };
+    
+    if (!this.currentUser) {
+      this.currentUser = {
+        uid: 'user_' + Date.now(),
+        displayName: 'Pengguna Tala',
+        email: 'pengguna@tala.app',
+        photoURL: photoDataUrl,
+        provider: 'local'
+      };
+    } else {
+      this.currentUser.photoURL = photoDataUrl;
+    }
+
+    this.saveLocalUser(this.currentUser);
+    if (typeof localStorage !== 'undefined' && this.currentUser.uid) {
+      try {
+        localStorage.setItem(`sgt_user_photo_${this.currentUser.uid}`, photoDataUrl);
+      } catch (_) {}
+    }
+
+    if (auth && auth.currentUser && typeof updateProfile === 'function') {
+      try {
+        await updateProfile(auth.currentUser, { photoURL: photoDataUrl });
+      } catch (err) {
+        console.warn('Firebase updateProfile photo error:', err.message);
+      }
+    }
+
+    this.notify();
+    return { success: true, photoURL: photoDataUrl };
+  }
+
+  saveUserPasswordLocally(uid, password) {
+    if (!uid || !password || typeof localStorage === 'undefined') return;
+    try {
+      localStorage.setItem(`sgt_user_pw_${uid}`, password);
+    } catch (_) {}
+  }
+
+  getUserPasswordLocally(uid = null) {
+    if (typeof localStorage === 'undefined') return null;
+    const targetUid = uid || this.currentUser?.uid;
+    if (!targetUid) return null;
+    try {
+      const pw = localStorage.getItem(`sgt_user_pw_${targetUid}`);
+      if (pw) return pw;
+
+      const db = JSON.parse(localStorage.getItem('sgt_local_accounts') || '[]');
+      const found = db.find(acc => acc.uid === targetUid || (this.currentUser && acc.email?.toLowerCase() === this.currentUser.email?.toLowerCase()));
+      if (found && found.password) return found.password;
+    } catch (_) {}
+    return null;
+  }
+
+  async changePassword(newPassword) {
+    if (!newPassword || newPassword.length < 6) {
+      return { success: false, error: 'Kata sandi baru minimal 6 karakter.' };
+    }
+
+    // 1. Try Firebase Auth updatePassword if available
+    if (auth && auth.currentUser && typeof updatePassword === 'function') {
+      try {
+        await updatePassword(auth.currentUser, newPassword);
+        this.saveUserPasswordLocally(this.currentUser?.uid, newPassword);
+        return { success: true };
+      } catch (err) {
+        if (err.code === 'auth/requires-recent-login') {
+          return { success: false, error: 'Sesi login telah kedaluwarsa. Silakan keluar dan masuk kembali.' };
+        }
+        console.warn('Firebase Auth updatePassword error:', err.message);
+      }
+    }
+
+    // 2. Update local storage & accounts db
+    if (this.currentUser) {
+      try {
+        const uid = this.currentUser.uid;
+        this.saveUserPasswordLocally(uid, newPassword);
+
+        const db = JSON.parse(localStorage.getItem('sgt_local_accounts') || '[]');
+        const idx = db.findIndex(acc => acc.uid === uid || (this.currentUser.email && acc.email?.toLowerCase() === this.currentUser.email?.toLowerCase()));
+        if (idx !== -1) {
+          db[idx].password = newPassword;
+          localStorage.setItem('sgt_local_accounts', JSON.stringify(db));
+        }
+        return { success: true };
+      } catch (_) {
+        return { success: false, error: 'Gagal memperbarui kata sandi lokal.' };
+      }
+    }
+
+    return { success: false, error: 'Tidak ada sesi pengguna aktif.' };
   }
 
   useSavedAccount(uid) {
@@ -203,6 +332,7 @@ class AuthManager {
           photoURL: u.photoURL || null,
           provider: 'password'
         };
+        this.saveUserPasswordLocally(u.uid, password);
         this.isGuest = false;
         this.saveLocalUser(this.currentUser);
         this.notify();
@@ -250,6 +380,7 @@ class AuthManager {
           photoURL: null,
           provider: 'password'
         };
+        this.saveUserPasswordLocally(u.uid, password);
         this.isGuest = false;
         this.saveLocalUser(this.currentUser);
         this.notify();
@@ -286,6 +417,7 @@ class AuthManager {
         photoURL: null,
         provider: 'local'
       };
+      this.saveUserPasswordLocally(found.uid, password);
       this.isGuest = false;
       this.saveLocalUser(this.currentUser);
       this.notify();
@@ -307,6 +439,7 @@ class AuthManager {
       localStorage.setItem('sgt_local_accounts', JSON.stringify(db));
 
       this.currentUser = { uid, displayName, email, photoURL: null, provider: 'local' };
+      this.saveUserPasswordLocally(uid, password);
       this.isGuest = false;
       this.saveLocalUser(this.currentUser);
       this.notify();
